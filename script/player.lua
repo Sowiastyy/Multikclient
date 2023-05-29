@@ -17,9 +17,10 @@ function Player:draw()
 end
 
 function Player:toString()
-    return string.format("Player { id = %d, x = %d, y = %d, size = %d, color = { %d, %d, %d } }",
-    self.id, self.x, self.y, self.size, self.color[1], self.color[2], self.color[3])
+    return string.format("PLAYER|%d|%d|%d|%d|%d|%d|%d",
+        self.id, self.x, self.y, self.size, self.color[1], self.color[2], self.color[3])
 end
+
 ---comment
 ---@param stateChangedCallback function
 function Player:controller(stateChangedCallback)
@@ -45,13 +46,13 @@ function Player:controller(stateChangedCallback)
     end
 end
 function Player:fromString(str)
-    local id, x, y, size, r, g, b = str:match("Player { id = (%-?%d+), x = (%-?%d+), y = (%-?%d+), size = (%-?%d+), color = { (%-?%d+), (%-?%d+), (%-?%d+) } }")
-    print(id, x, y, size, r, g, b )
-    self.id=tonumber(id)
+    local id, x, y, size, r, g, b = str:match("PLAYER|%d+|%d+|%d+|%d+|%d+|%d+|%d+")
+    self.id = tonumber(id)
     self.x = tonumber(x)
     self.y = tonumber(y)
     self.size = tonumber(size)
     self.color = { tonumber(r), tonumber(g), tonumber(b) }
 end
+
 
 return Player
