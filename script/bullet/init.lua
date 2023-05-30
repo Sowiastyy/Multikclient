@@ -1,29 +1,30 @@
 local Bullet = {}
 local stats = require("script.bullet.stats")
 
-function Bullet:new(x, y, targetX, targetY, parent, type)
-    local angle = self:getAngle(targetX, targetY)
+function Bullet:new(x, y, angle, parent, type)
     local bullet = {
     x = x,
     y = y,
     angle = angle,
     type = type or "basic",
-    parent = parent or ""
+    parent = parent or "",
+    life = stats[type or "basic"].life
     }
     setmetatable(bullet, self)
     self.__index = self
     return bullet
 end
 
-function Bullet:getAngle(targetX, targetY)
-    local dx = targetX - self.x
-    local dy = targetY - self.y
+function Bullet:getAngle(x, y, targetX, targetY)
+    local dx = targetX - x
+    local dy = targetY - y
     return math.atan2(dy, dx)
 end
 
 function Bullet:update(dt)
     self.x = self.x + math.cos(self.angle) * stats[self.type].speed * dt
     self.y = self.y + math.sin(self.angle) * stats[self.type].speed * dt
+    self.life=self.life-dt
 end
 
 function Bullet:draw()

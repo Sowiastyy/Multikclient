@@ -27,31 +27,34 @@ function Player:controller(stateChangedCallback)
     local stateChanged = false
     if love.keyboard.isDown("up") then
         stateChanged=true
-        LocalPlayer.y=LocalPlayer.y-10
+        LocalPlayer.y=LocalPlayer.y-5
     end
     if love.keyboard.isDown("down") then
         stateChanged=true
-        LocalPlayer.y=LocalPlayer.y+10
+        LocalPlayer.y=LocalPlayer.y+5
     end
     if love.keyboard.isDown("left") then
         stateChanged=true
-        LocalPlayer.x=LocalPlayer.x-10
+        LocalPlayer.x=LocalPlayer.x-5
     end
     if love.keyboard.isDown("right") then
         stateChanged=true
-        LocalPlayer.x=LocalPlayer.x+10
+        LocalPlayer.x=LocalPlayer.x+5
     end
     if stateChanged and stateChangedCallback then
         stateChangedCallback()
     end
 end
 function Player:fromString(str)
-    local id, x, y, size, r, g, b = str:match("PLAYER|%d+|%d+|%d+|%d+|%d+|%d+|%d+")
-    self.id = tonumber(id)
-    self.x = tonumber(x)
-    self.y = tonumber(y)
-    self.size = tonumber(size)
-    self.color = { tonumber(r), tonumber(g), tonumber(b) }
+    local parts = {}
+    for part in str:gmatch("([^|]+)") do
+        table.insert(parts, part)
+    end
+    self.id = tonumber(parts[2])
+    self.x = tonumber(parts[3])
+    self.y = tonumber(parts[4])
+    self.size = tonumber(parts[5])
+    self.color = { tonumber(parts[6]), tonumber(parts[7]), tonumber(parts[8]) }
 end
 
 
