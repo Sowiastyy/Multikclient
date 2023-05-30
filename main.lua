@@ -1,19 +1,25 @@
 ---@diagnostic disable: missing-parameter, duplicate-set-field
 local Player = require("script.player")
+local Bullet = require("script.bullet")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 print(client.socket)
 
 LocalPlayer = Player:new(200, 200, 32, {1, 1, 1})
+LocalBullets =  {}
+Bullets = {}
 Players = {}
 
 function client:onmessage(s)
     print(s)
     if s:find("YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
-    elseif s:find("Player") then
+    elseif s:find("PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
         Players[newPlayerData.id]=newPlayerData
+    elseif s:find("BULLET") then
+        local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
+        newBulletData :fromString(s)
     end
 end
 
