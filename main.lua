@@ -1,19 +1,29 @@
 ---@diagnostic disable: missing-parameter, duplicate-set-field
 local Player = require("script.player")
 local Bullet = require("script.bullet")
+local Enemy = require("script.enemy")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 print(client.socket)
 
-LocalPlayer = Player:new(200, 200, 32, {1, 1, 1})
-LocalBullets =  {}
-AllyBullets = {}
-EnemyBullets = {}
-Players = {}
+
+local LocalBullets =  {}
+local AllyBullets = {}
+local EnemyBullets = {}
+
+local LocalPlayer = Player:new(200, 200, 32, {1, 1, 1})
+local Players = {}
+local Enemies = {}
+
+
 
 function client:onmessage(s)
     print(s)
     if s:find("^YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
+    elseif s:find("^ENEMY") then
+        local newEnemyData= Enemy:new(0)
+        newEnemyData :fromString(s)
+        Enemies[newEnemyData.id]=newEnemyData
     elseif s:find("^PLAYER") then
         print("znajdujesz mnie?")
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
@@ -77,4 +87,5 @@ function love.draw()
     drawObjectsArray(Players)
     drawObjectsArray(LocalBullets)
     drawObjectsArray(AllyBullets)
+    drawObjectsArray(Enemies)
 end

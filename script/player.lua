@@ -25,21 +25,21 @@ end
 ---@param stateChangedCallback function
 function Player:controller(stateChangedCallback)
     local stateChanged = false
-    if love.keyboard.isDown("up") then
+    if love.keyboard.isDown("w") then
         stateChanged=true
-        LocalPlayer.y=LocalPlayer.y-5
+        self.y=self.y-5
     end
-    if love.keyboard.isDown("down") then
+    if love.keyboard.isDown("s") then
         stateChanged=true
-        LocalPlayer.y=LocalPlayer.y+5
+        self.y=self.y+5
     end
-    if love.keyboard.isDown("left") then
+    if love.keyboard.isDown("a") then
         stateChanged=true
-        LocalPlayer.x=LocalPlayer.x-5
+        self.x=self.x-5
     end
-    if love.keyboard.isDown("right") then
+    if love.keyboard.isDown("d") then
         stateChanged=true
-        LocalPlayer.x=LocalPlayer.x+5
+        self.x=self.x+5
     end
     if stateChanged and stateChangedCallback then
         stateChangedCallback()
