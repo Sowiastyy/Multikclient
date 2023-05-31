@@ -22,10 +22,9 @@ function client:onmessage(s)
         LocalPlayer.id = tonumber(string.sub(s, 8))
     elseif s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
-        newEnemyData :fromString(s)
+        newEnemyData:fromString(s)
         Enemies[newEnemyData.id]=newEnemyData
     elseif s:find("^PLAYER") then
-        print("znajdujesz mnie?")
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
         if newPlayerData.id then
@@ -35,7 +34,11 @@ function client:onmessage(s)
     elseif s:find("^BULLET") then
         local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
         newBulletData :fromString(s)
-        table.insert(AllyBullets, newBulletData)
+        if newBulletData.parent=="enm" then
+            table.insert(AllyBullets, newBulletData)
+        else
+            table.insert(EnemyBullets, newBulletData)
+        end
     end
 end
 
@@ -68,6 +71,7 @@ function love.update(dt)
     end)
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
+    updateBullets(EnemyBullets, dt)
 end
 function love.mousepressed(x, y, button)
     if button == 1 then -- lewy przycisk myszy
@@ -87,5 +91,6 @@ function love.draw()
     drawObjectsArray(Players)
     drawObjectsArray(LocalBullets)
     drawObjectsArray(AllyBullets)
+    drawObjectsArray(EnemyBullets)
     drawObjectsArray(Enemies)
 end
