@@ -2,7 +2,8 @@
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
 print(client.socket)
 
 
