@@ -48,9 +48,8 @@ local function getEntity(s)
     elseif s:find("^PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
-        if newPlayerData.id then
-            Players[newPlayerData.id]=newPlayerData
-        end
+        if newPlayerData.id==LocalPlayer.id then return end
+        Players[newPlayerData.id]=newPlayerData
     end
 end
 function client:onmessage(s)
@@ -107,6 +106,7 @@ end
 function love.quit()
     client:send("DEL_PLAYER|"..LocalPlayer.id)
     print("QUIT")
+    love.timer.sleep(1)
 
 end
 function love.mousepressed(x, y, button)
