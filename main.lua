@@ -18,7 +18,7 @@ local Enemies = {}
 
 
 function client:onmessage(s)
-    print(s)
+    --print(s)
     if s:find("^YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
     elseif s:find("^ENEMY") then
@@ -73,6 +73,11 @@ function love.update(dt)
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
     updateBullets(EnemyBullets, dt)
+end
+function love.quit()
+    client:send("DEL_PLAYER|"..LocalPlayer.id)
+    print("QUIT")
+
 end
 function love.mousepressed(x, y, button)
     if button == 1 then -- lewy przycisk myszy
