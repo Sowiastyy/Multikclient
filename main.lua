@@ -1,4 +1,5 @@
 ---@diagnostic disable: missing-parameter, duplicate-set-field
+love.graphics.setDefaultFilter("nearest", "nearest")
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
@@ -6,6 +7,7 @@ local camera = require("lib.camera")
 local sti = require("lib/sti")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
+
 print(client.socket)
 
 local cam = camera()
@@ -13,7 +15,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
 
-local LocalPlayer = Player:new(400, 300, 64, {1, 1, 1})
+local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
 
@@ -59,7 +61,7 @@ local function getEntity(s)
         newBulletData :fromString(s)
         if newBulletData.parent=="enm" then
             table.insert(EnemyBullets, newBulletData)
-        elseif not newBulletData.parentID==LocalPlayer.id then
+        elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
             table.insert(AllyBullets, newBulletData)
         end
     elseif s:find("^PLAYER") then
@@ -114,11 +116,18 @@ function love.update(dt)
             table.remove(EnemyBullets, key)
         end
     end
+    
     for index, enemy in pairs(Enemies) do
-        for key, bullet in pairs(LocalBullets) do
-            if LocalPlayer.checkBulletCollision(enemy, bullet) then
-                table.remove(LocalBullets, key)
-                client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+        if enemy then
+            for key, bullet in pairs(LocalBullets) do
+                if LocalPlayer.checkBulletCollision(enemy, bullet) then
+                    table.remove(LocalBullets, key)
+                    client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+                end
+            end
+            if enemy.hp<=0 then
+                Enemies[index] = nil
+                table.remove(Enemies, index)
             end
         end
     end
@@ -164,19 +173,15 @@ end
 end--]]
 local function drawObjectsArray(array)
     for _, value in pairs(array) do
-        if value.hp then
-            if value.hp<=0 then
-                goto continue
-            end
+        if value then
+            value:draw()
         end
-        value:draw()
-        ::continue::
     end
 end
 function love.draw()
     gameMap:draw()
     cam:attach()
-    
+
         LocalPlayer:draw()
         drawObjectsArray(Players)
         drawObjectsArray(LocalBullets)

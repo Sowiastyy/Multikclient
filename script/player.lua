@@ -1,10 +1,10 @@
-local Player = {} 
+local Player = {}
 function Player:new(x, y, size, color)
     local player = {
         x = x,
         y = y,
         size = size,
-        color = color,
+        hero = hero,
         hp = 100,
         spd = 10,
         
@@ -22,13 +22,17 @@ function Player:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.setColor(self.color)
-    love.graphics.rectangle("fill", self.x-(self.size/2), self.y-(self.size/2), self.size, self.size)
+    love.graphics.rectangle("line", x, y, 64, 64)
+    local scale = 4
+    love.graphics.scale(scale, scale)
+    local img=love.graphics.newImage("img/characters/"..self.hero..".png")
+    love.graphics.draw(img, quad, x/scale-8, y/scale-8)
+    love.graphics.scale(1/scale, 1/scale)
 end
 
 function Player:toString()
-    return string.format("PLAYER|%d|%d|%d|%f|%d|%d|%d|%d",
-        self.id, self.x, self.y, self.hp, self.size, self.color[1], self.color[2], self.color[3])
+    return string.format("PLAYER|%d|%d|%d|%f|%d|%s",
+        self.id, self.x, self.y, self.hp, self.size, self.hero)
 end
 
 ---comment
@@ -101,7 +105,7 @@ function Player:fromString(str)
     self.y = tonumber(parts[4])
     self.hp = tonumber(parts[5])
     self.size = tonumber(parts[6])
-    self.color = { tonumber(parts[7]), tonumber(parts[8]), tonumber(parts[9]) }
+    self.hero = parts[7]
 end
 
 
