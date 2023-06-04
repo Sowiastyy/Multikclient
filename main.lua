@@ -1,10 +1,14 @@
 ---@diagnostic disable: missing-parameter, duplicate-set-field
+love.graphics.setDefaultFilter("nearest", "nearest")
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
+
+
+
 print(client.socket)
 
 local cam = camera()
@@ -12,7 +16,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
 
-local LocalPlayer = Player:new(400, 300, 64, {1, 1, 1})
+local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
 
@@ -43,7 +47,6 @@ end
 print(createEntitiesList("ENTITIES[{PLAYER|3|450|500|32|1|1|1}{ENEMY|1|300|300|200|testEnemy}]"))
 local function getEntity(s)
     if s:find("^ENEMY") then
-        print("ENEMY")
         local newEnemyData= Enemy:new(0)
         newEnemyData:fromString(s)
         Enemies[newEnemyData.id]=newEnemyData
@@ -160,7 +163,6 @@ end
 function love.draw()
     love.graphics.setBackgroundColor(0.34, 0.75, 0.2)
     cam:attach()
-        
         LocalPlayer:draw()
         drawObjectsArray(Players)
         drawObjectsArray(LocalBullets)
