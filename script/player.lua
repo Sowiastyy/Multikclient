@@ -1,5 +1,8 @@
 local Player = {}
-function Player:new(x, y, size, color)
+local playerIMG=love.graphics.newImage("img/characters/Warrior-Blue.png")
+local quad = love.graphics.newQuad(0, 0, 32, 32, playerIMG:getDimensions())
+
+function Player:new(x, y, size, hero)
     local player = {
         x = x,
         y = y,
