@@ -1,4 +1,4 @@
-local Player = {}
+local Player = {} 
 function Player:new(x, y, size, color)
     local player = {
         x = x,
@@ -7,6 +7,7 @@ function Player:new(x, y, size, color)
         color = color,
         hp = 100,
         spd = 10,
+        
     }
     setmetatable(player, self)
     self.__index = self

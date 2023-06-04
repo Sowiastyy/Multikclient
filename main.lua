@@ -3,6 +3,7 @@ local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
+local sti = require("lib/sti")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
 print(client.socket)
@@ -16,6 +17,10 @@ local LocalPlayer = Player:new(400, 300, 64, {1, 1, 1})
 local Players = {}
 local Enemies = {}
 
+local bulletokres = 0.2
+local dupa = bulletokres
+
+local gameMap = sti("maps/mapa2.lua") 
 
 local function createEntitiesList(inputString)
 local entitiesList = {}
@@ -125,6 +130,20 @@ function love.update(dt)
 
     cam:lookAt(LocalPlayer.x, LocalPlayer.y)
     
+    
+    if love.mouse.isDown(1) then
+        
+        dupa = dupa - dt
+        if dupa<0 then
+            local x, y = love.mouse.getPosition( )
+            local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
+            client:send(bullet:toString())
+            table.insert(LocalBullets, bullet)
+            dupa = bulletokres
+        end
+        
+    end
 
 end
 function love.quit()
@@ -133,15 +152,16 @@ function love.quit()
     love.timer.sleep(1)
 
 end
-function love.mousepressed(x, y, button)
+
+
+--[[function love.mousepressed(x, y, button) 
     if button == 1 then -- lewy przycisk myszy
         local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-        print(x,"  ",y)
         local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
         client:send(bullet:toString())
         table.insert(LocalBullets, bullet)
     end
-end
+end--]]
 local function drawObjectsArray(array)
     for _, value in pairs(array) do
         if value.hp then
@@ -154,15 +174,16 @@ local function drawObjectsArray(array)
     end
 end
 function love.draw()
-    love.graphics.setBackgroundColor(0.34, 0.75, 0.2)
+    gameMap:draw()
     cam:attach()
-        
+    
         LocalPlayer:draw()
         drawObjectsArray(Players)
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
+        
         
     cam:detach()
     
