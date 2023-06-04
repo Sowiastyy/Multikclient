@@ -2,16 +2,17 @@
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
---local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
-local client = require("lib.websocket").new("localhost", 5001)
+local camera = require("lib.camera")
+local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+--local client = require("lib.websocket").new("localhost", 5001)
 print(client.socket)
 
-
+local cam = camera()
 local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
 
-local LocalPlayer = Player:new(200, 200, 64, {1, 1, 1})
+local LocalPlayer = Player:new(400, 300, 64, {1, 1, 1})
 local Players = {}
 local Enemies = {}
 
@@ -124,9 +125,14 @@ function love.update(dt)
             end
         end
     end
+    
+
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
     updateBullets(EnemyBullets, dt)
+
+    cam:lookAt(LocalPlayer.x, LocalPlayer.y)
+    
 
 end
 function love.quit()
@@ -137,7 +143,8 @@ function love.quit()
 end
 function love.mousepressed(x, y, button)
     if button == 1 then -- lewy przycisk myszy
-        local angle = Bullet:getAngle(LocalPlayer.x, LocalPlayer.y, x, y)
+        local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+        print(x,"  ",y)
         local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
         client:send(bullet:toString())
         table.insert(LocalBullets, bullet)
@@ -152,10 +159,17 @@ local function drawObjectsArray(array)
 end
 function love.draw()
     love.graphics.setBackgroundColor(0.34, 0.75, 0.2)
-    LocalPlayer:draw()
-    drawObjectsArray(Players)
-    drawObjectsArray(LocalBullets)
-    drawObjectsArray(AllyBullets)
-    drawObjectsArray(EnemyBullets)
-    drawObjectsArray(Enemies)
+    cam:attach()
+        
+        LocalPlayer:draw()
+        drawObjectsArray(Players)
+        drawObjectsArray(LocalBullets)
+        drawObjectsArray(AllyBullets)
+        drawObjectsArray(EnemyBullets)
+        drawObjectsArray(Enemies)
+        
+    cam:detach()
+    
+    
+    
 end
