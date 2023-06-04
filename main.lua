@@ -42,6 +42,7 @@ end
 print(createEntitiesList("ENTITIES[{PLAYER|3|450|500|32|1|1|1}{ENEMY|1|300|300|200|testEnemy}]"))
 local function getEntity(s)
     if s:find("^ENEMY") then
+        print("ENEMY")
         local newEnemyData= Enemy:new(0)
         newEnemyData:fromString(s)
         Enemies[newEnemyData.id]=newEnemyData
@@ -53,7 +54,7 @@ local function getEntity(s)
         newBulletData :fromString(s)
         if newBulletData.parent=="enm" then
             table.insert(EnemyBullets, newBulletData)
-        elseif not newBulletData.parentID==LocalPlayer.id then
+        elseif not tonumber(newBulletData.parentID)==tonumber(LocalPlayer.id) then
             table.insert(AllyBullets, newBulletData)
         end
     elseif s:find("^PLAYER") then
@@ -108,11 +109,18 @@ function love.update(dt)
             table.remove(EnemyBullets, key)
         end
     end
+    
     for index, enemy in pairs(Enemies) do
-        for key, bullet in pairs(LocalBullets) do
-            if LocalPlayer.checkBulletCollision(enemy, bullet) then
-                table.remove(LocalBullets, key)
-                client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+        if enemy then
+            for key, bullet in pairs(LocalBullets) do
+                if LocalPlayer.checkBulletCollision(enemy, bullet) then
+                    table.remove(LocalBullets, key)
+                    client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+                end
+            end
+            if enemy.hp<=0 then
+                Enemies[index] = nil
+                table.remove(Enemies, index)
             end
         end
     end
@@ -137,13 +145,9 @@ function love.mousepressed(x, y, button)
 end
 local function drawObjectsArray(array)
     for _, value in pairs(array) do
-        if value.hp then
-            if value.hp<=0 then
-                goto continue
-            end
+        if value then
+            value:draw()
         end
-        value:draw()
-        ::continue::
     end
 end
 function love.draw()
