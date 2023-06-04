@@ -8,7 +8,9 @@ function Bullet:new(x, y, angle, parent, type)
     angle = angle,
     type = type or "basic",
     parent = parent or "",
-    life = stats[type or "basic"].life
+    radius = stats[type or "basic"].size,
+    life = stats[type or "basic"].life,
+    dmg =  stats[type or "basic"].damage,
     }
     setmetatable(bullet, self)
     self.__index = self
@@ -29,7 +31,7 @@ end
 
 function Bullet:draw()
     love.graphics.setColor(stats[self.type].color)
-    love.graphics.circle("fill", self.x, self.y, 3)
+    love.graphics.circle("fill", self.x, self.y, stats[self.type].size)
 end
 function Bullet:toString()
     return string.format("BULLET|%f|%f|%f|%s|%s", self.x, self.y, self.angle, self.type, self.parent)
@@ -45,6 +47,9 @@ function Bullet:fromString(str)
     self.angle = tonumber(parts[4])
     self.type = parts[5]
     self.parent = parts[6]
+    if parts[7] then
+        self.parentID = parts[7]
+    end
 end
 
 return Bullet

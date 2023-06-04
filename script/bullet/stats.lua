@@ -1,9 +1,9 @@
 local stats = {}
 stats["basic"] = {
-    speed=100,
+    speed=1000,
     damage=10,
-    life=2,
-    size=100,
+    life=1,
+    size=10,
     color = {1, 1, 1}
 }
 return stats

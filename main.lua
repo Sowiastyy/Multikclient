@@ -2,8 +2,8 @@
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
 print(client.socket)
 
 
@@ -11,7 +11,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
 
-local LocalPlayer = Player:new(200, 200, 32, {1, 1, 1})
+local LocalPlayer = Player:new(200, 200, 64, {1, 1, 1})
 local Players = {}
 local Enemies = {}
 
@@ -45,6 +45,17 @@ local function getEntity(s)
         local newEnemyData= Enemy:new(0)
         newEnemyData:fromString(s)
         Enemies[newEnemyData.id]=newEnemyData
+        if Enemies[newEnemyData.id].hp<=0 then
+            table.remove(Enemies, newEnemyData.id)
+        end
+    elseif s:find("^BULLET") then
+        local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
+        newBulletData :fromString(s)
+        if newBulletData.parent=="enm" then
+            table.insert(EnemyBullets, newBulletData)
+        elseif not newBulletData.parentID==LocalPlayer.id then
+            table.insert(AllyBullets, newBulletData)
+        end
     elseif s:find("^PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
@@ -56,17 +67,8 @@ function client:onmessage(s)
     --print(s)
     if s:find("^YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
-    elseif s:find("^BULLET") then
-        local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
-        newBulletData :fromString(s)
-        if newBulletData.parent=="enm" then
-            table.insert(AllyBullets, newBulletData)
-        else
-            table.insert(EnemyBullets, newBulletData)
-        end
     elseif s:find("^ENTITIES") then
         for _, value in pairs(createEntitiesList(s)) do
-            print(value)
             getEntity(value)
         end
     end
@@ -99,9 +101,25 @@ function love.update(dt)
     LocalPlayer:controller(function ()
         client:send(LocalPlayer:toString())
     end)
+    for key, bullet in pairs(EnemyBullets) do
+        if LocalPlayer:checkBulletCollision(bullet) then
+            print("dostalem")
+            LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
+            table.remove(EnemyBullets, key)
+        end
+    end
+    for index, enemy in pairs(Enemies) do
+        for key, bullet in pairs(LocalBullets) do
+            if LocalPlayer.checkBulletCollision(enemy, bullet) then
+                table.remove(LocalBullets, key)
+                client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+            end
+        end
+    end
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
     updateBullets(EnemyBullets, dt)
+
 end
 function love.quit()
     client:send("DEL_PLAYER|"..LocalPlayer.id)
@@ -112,17 +130,24 @@ end
 function love.mousepressed(x, y, button)
     if button == 1 then -- lewy przycisk myszy
         local angle = Bullet:getAngle(LocalPlayer.x, LocalPlayer.y, x, y)
-        local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr")
+        local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
         client:send(bullet:toString())
         table.insert(LocalBullets, bullet)
     end
 end
 local function drawObjectsArray(array)
     for _, value in pairs(array) do
+        if value.hp then
+            if value.hp<=0 then
+                goto continue
+            end
+        end
         value:draw()
+        ::continue::
     end
 end
 function love.draw()
+    love.graphics.setBackgroundColor(0.34, 0.75, 0.2)
     LocalPlayer:draw()
     drawObjectsArray(Players)
     drawObjectsArray(LocalBullets)
