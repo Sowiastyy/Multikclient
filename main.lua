@@ -55,7 +55,7 @@ local function getEntity(s)
         newBulletData :fromString(s)
         if newBulletData.parent=="enm" then
             table.insert(EnemyBullets, newBulletData)
-        elseif not tonumber(newBulletData.parentID)==tonumber(LocalPlayer.id) then
+        elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
             table.insert(AllyBullets, newBulletData)
         end
     elseif s:find("^PLAYER") then
