@@ -179,9 +179,10 @@ local function drawObjectsArray(array)
     end
 end
 function love.draw()
-    gameMap:draw()
     cam:attach()
-
+        for index, value in ipairs(gameMap.layers) do
+            gameMap:drawLayer(value)
+        end
         LocalPlayer:draw()
         drawObjectsArray(Players)
         drawObjectsArray(LocalBullets)
@@ -191,7 +192,4 @@ function love.draw()
         
         
     cam:detach()
-    
-    
-    
 end

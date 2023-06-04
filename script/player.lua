@@ -9,7 +9,7 @@ function Player:new(x, y, size, hero)
         size = size,
         hero = hero,
         hp = 100,
-        spd = 10,
+        spd = 5,
         
     }
     setmetatable(player, self)
