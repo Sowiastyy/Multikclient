@@ -4,6 +4,7 @@ local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
+local Joystick = require("script.joystick")
 local sti = require("lib/sti")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
@@ -18,7 +19,7 @@ local EnemyBullets = {}
 local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
-
+local joystick = Joystick.new(100, 400, 50, 100, 100)
 local bulletokres = 0.2
 local dupa = bulletokres
 
@@ -131,7 +132,8 @@ function love.update(dt)
             end
         end
     end
-    
+    LocalPlayer.x = LocalPlayer.x + math.cos(joystick.angle) * joystick.distance * dt
+    LocalPlayer.y = LocalPlayer.y + math.sin(joystick.angle) * joystick.distance * dt
 
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
@@ -178,6 +180,17 @@ local function drawObjectsArray(array)
         end
     end
 end
+
+function love.touchpressed(id, x, y, dx, dy, pressure)
+    joystick:touchpressed(id, x, y, dx, dy, pressure)
+end
+
+function love.touchmoved(id, x, y, dx, dy, pressure)
+    joystick:touchmoved(id, x, y, dx, dy, pressure)
+end
+function love.touchreleased(id, x, y, dx, dy, pressure)
+    Joystick:touchreleased(id, x, y, dx, dy, pressure)
+end
 function love.draw()
     cam:attach()
         for index, value in ipairs(gameMap.layers) do
@@ -192,4 +205,5 @@ function love.draw()
         
         
     cam:detach()
+    joystick:draw()
 end
