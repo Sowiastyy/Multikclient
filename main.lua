@@ -19,7 +19,7 @@ local EnemyBullets = {}
 local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
-local joystick = Joystick.new(100, 400, 50, 100, 100)
+local joystick = Joystick.new(100, 250, 50, 100, 100)
 local bulletokres = 0.2
 local dupa = bulletokres
 
@@ -132,8 +132,11 @@ function love.update(dt)
             end
         end
     end
-    LocalPlayer.x = LocalPlayer.x + math.cos(joystick.angle) * joystick.distance * dt
-    LocalPlayer.y = LocalPlayer.y + math.sin(joystick.angle) * joystick.distance * dt
+    if joystick.distance>0 then
+        LocalPlayer.x = LocalPlayer.x + math.cos(joystick.angle) * joystick.speed * dt
+        LocalPlayer.y = LocalPlayer.y + math.sin(joystick.angle) * joystick.speed * dt
+    end
+
 
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
@@ -181,16 +184,7 @@ local function drawObjectsArray(array)
     end
 end
 
-function love.touchpressed(id, x, y, dx, dy, pressure)
-    joystick:touchpressed(id, x, y, dx, dy, pressure)
-end
 
-function love.touchmoved(id, x, y, dx, dy, pressure)
-    joystick:touchmoved(id, x, y, dx, dy, pressure)
-end
-function love.touchreleased(id, x, y, dx, dy, pressure)
-    Joystick:touchreleased(id, x, y, dx, dy, pressure)
-end
 function love.draw()
     cam:attach()
         for index, value in ipairs(gameMap.layers) do
