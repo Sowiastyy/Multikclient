@@ -23,7 +23,7 @@ local EnemyBullets = {}
 local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
-local joystick = Joystick.new(100, 250, 50, 100, 100)
+local joystick = Joystick.new(100, 250, 50, 100, 5000)
 local bulletokres = 0.2
 local dupa = bulletokres
 
@@ -40,7 +40,17 @@ if gameMap.layers["Drzewa"] then
 end
 
 
+function love.touchpressed(id, x, y, dx, dy, pressure)
+    joystick:touchpressed(id, x, y, dx, dy, pressure)
+end
 
+function love.touchmoved(id, x, y, dx, dy, pressure)
+    joystick:touchmoved(id, x, y, dx, dy, pressure)
+end
+
+function love.touchreleased(id, x, y, dx, dy, pressure)
+    joystick:touchreleased(id, x, y, dx, dy, pressure)
+end
 
 local function createEntitiesList(inputString)
 local entitiesList = {}
@@ -150,8 +160,8 @@ function love.update(dt)
         end
     end
     if joystick.distance>0 then
-        LocalPlayer.x = LocalPlayer.x + math.cos(joystick.angle) * joystick.speed * dt
-        LocalPlayer.y = LocalPlayer.y + math.sin(joystick.angle) * joystick.speed * dt
+        LocalPlayer.vx =  math.cos(joystick.angle) * joystick.speed * dt
+        LocalPlayer.vy = math.sin(joystick.angle) * joystick.speed * dt
     end
 
 

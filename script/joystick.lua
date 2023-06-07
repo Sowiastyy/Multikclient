@@ -56,4 +56,6 @@ function Joystick:draw()
     love.graphics.circle("fill", inner_x, inner_y, self.inner_size)
 end
 
+
+
 return Joystick
