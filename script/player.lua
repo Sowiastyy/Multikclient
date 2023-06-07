@@ -9,7 +9,9 @@ function Player:new(x, y, size, hero)
         size = size,
         hero = hero,
         hp = 100,
-        spd = 5,
+        spd = 500,
+        vx = 0,
+        vy = 0,
         
     }
     setmetatable(player, self)
@@ -44,19 +46,24 @@ function Player:controller(stateChangedCallback)
     local stateChanged = false
     if love.keyboard.isDown("w") then
         stateChanged=true
-        self.y=self.y-self.spd
-    end
-    if love.keyboard.isDown("s") then
+        self.vy = -1 * self.spd
+   
+    elseif love.keyboard.isDown("s") then
         stateChanged=true
-        self.y=self.y+self.spd
+        self.vy = self.spd
+    
+    else
+        self.vy = 0
     end
     if love.keyboard.isDown("a") then
         stateChanged=true
-        self.x=self.x-self.spd
-    end
-    if love.keyboard.isDown("d") then
+        self.vx = self.spd * -1
+    
+    elseif love.keyboard.isDown("d") then
         stateChanged=true
-        self.x=self.x+self.spd
+        self.vx = self.spd
+    else
+        self.vx = 0
     end
     if stateChanged and stateChangedCallback then
         stateChangedCallback()

@@ -4,12 +4,16 @@ local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
+local wf = require("lib.windfield")
 local Joystick = require("script.joystick")
 local sti = require("lib/sti")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
 
 print(client.socket)
+
+local world = wf.newWorld(0, 0) 
+
 
 local cam = camera()
 local LocalBullets =  {}
@@ -23,7 +27,20 @@ local joystick = Joystick.new(100, 400, 50, 100, 100)
 local bulletokres = 0.2
 local dupa = bulletokres
 
-local gameMap = sti("maps/mapa2.lua") 
+local gameMap = sti("maps/mapa3.lua") 
+
+local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 80, 14)
+local walls = {}
+if gameMap.layers["Drzewa"] then
+    for i, obj in ipairs(gameMap.layers["Drzewa"].objects) do
+        local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+        wall:setType('static')
+        table.insert(walls,wall)
+    end
+end
+
+
+
 
 local function createEntitiesList(inputString)
 local entitiesList = {}
@@ -155,7 +172,12 @@ function love.update(dt)
         end
         
     end
+    world:update(dt)
+    PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
+    LocalPlayer.x = PlayerCollider:getX()
+    LocalPlayer.y = PlayerCollider:getY()-12
 
+    
 end
 function love.quit()
     client:send("DEL_PLAYER|"..LocalPlayer.id)
@@ -202,7 +224,7 @@ function love.draw()
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
-        
+        world:draw()
         
     cam:detach()
     joystick:draw()
