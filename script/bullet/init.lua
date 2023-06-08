@@ -1,6 +1,12 @@
 local Bullet = {}
 local stats = require("script.bullet.stats")
-
+local bulletIMG= love.graphics.newImage("img/bulletSheet.png")
+local quad = {
+    love.graphics.newQuad(0, 3, 8, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(8, 0, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(16, 0, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(24, 0, 8, 8, bulletIMG:getDimensions()),
+}
 function Bullet:new(x, y, angle, parent, type)
     local bullet = {
     x = x,
@@ -8,10 +14,13 @@ function Bullet:new(x, y, angle, parent, type)
     angle = angle,
     type = type or "basic",
     parent = parent or "",
-    radius = stats[type or "basic"].size,
+    radius = 10,
+    w = stats[type or "basic"].width,
+    h = stats[type or "basic"].height,
     life = stats[type or "basic"].life,
     dmg =  stats[type or "basic"].damage,
     }
+
     setmetatable(bullet, self)
     self.__index = self
     return bullet
@@ -28,10 +37,11 @@ function Bullet:update(dt)
     self.y = self.y + math.sin(self.angle) * stats[self.type].speed * dt
     self.life=self.life-dt
 end
-
 function Bullet:draw()
-    love.graphics.setColor(stats[self.type].color)
-    love.graphics.circle("fill", self.x, self.y, stats[self.type].size)
+    local scale = 4
+    love.graphics.scale(scale, scale)
+    love.graphics.draw(bulletIMG, quad[stats[self.type].img], self.x/scale, self.y/scale, self.angle)
+    love.graphics.scale(1/scale, 1/scale)
 end
 function Bullet:toString()
     return string.format("BULLET|%f|%f|%f|%s|%s", self.x, self.y, self.angle, self.type, self.parent)

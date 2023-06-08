@@ -27,7 +27,6 @@ function Player:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", x, y, 64, 64)
     local scale = 4
     love.graphics.scale(scale, scale)
     local img=love.graphics.newImage("img/characters/"..self.hero..".png")
@@ -47,7 +46,6 @@ function Player:controller(stateChangedCallback)
     if love.keyboard.isDown("w") then
         stateChanged=true
         self.vy = -1 * self.spd
-   
     elseif love.keyboard.isDown("s") then
         stateChanged=true
         self.vy = self.spd
@@ -69,39 +67,65 @@ function Player:controller(stateChangedCallback)
         stateChangedCallback()
     end
 end
-function Player:checkBulletCollision(bullet)
-    -- Get the bounding boxes of the player and bullet
-    local playerBox = {
-        x = self.x-(self.size/2),
-        y = self.y-(self.size/2),
-        width = self.size,
-        height = self.size
-    }
-    local bulletBox = {
-        x = bullet.x - bullet.radius,
-        y = bullet.y - bullet.radius,
-        width = bullet.radius * 2,
-        height = bullet.radius * 2
-    }
+local function rotatedRectanglesCollide(r1X, r1Y, r1W, r1H, r1A, r2X, r2Y, r2W, r2H, r2A)
+local r1HW = r1W / 2
+local r1HH = r1H / 2
+local r2HW = r2W / 2
+local r2HH = r2H / 2
 
-    -- Check if the bounding boxes intersect
-    if playerBox.x + playerBox.width > bulletBox.x and
-        playerBox.x < bulletBox.x + bulletBox.width and
-        playerBox.y + playerBox.height > bulletBox.y and
-        playerBox.y < bulletBox.y + bulletBox.height then
-    -- Check if the center point of the bullet is inside the player's bounding box
-    local bulletCenterX = bullet.x
-    local bulletCenterY = bullet.y
-    if bulletCenterX > playerBox.x and
-        bulletCenterX < playerBox.x + playerBox.width and
-        bulletCenterY > playerBox.y and
-        bulletCenterY < playerBox.y + playerBox.height then
-        -- Player has been hit!
+local r1CX = r1X + r1HW
+local r1CY = r1Y + r1HH
+local r2CX = r2X + r2HW
+local r2CY = r2Y + r2HH
+
+local cosR1A = math.cos(r1A)
+local sinR1A = math.sin(r1A)
+local cosR2A = math.cos(r2A)
+local sinR2A = math.sin(r2A)
+
+local r1RX =  cosR2A * (r1CX - r2CX) + sinR2A * (r1CY - r2CY) + r2CX - r1HW
+local r1RY = -sinR2A * (r1CX - r2CX) + cosR2A * (r1CY - r2CY) + r2CY - r1HH
+local r2RX =  cosR1A * (r2CX - r1CX) + sinR1A * (r2CY - r1CY) + r1CX - r2HW
+local r2RY = -sinR1A * (r2CX - r1CX) + cosR1A * (r2CY - r1CY) + r1CY - r2HH
+
+local cosR1AR2A = math.abs(cosR1A * cosR2A + sinR1A * sinR2A)
+local sinR1AR2A = math.abs(sinR1A * cosR2A - cosR1A * sinR2A)
+local cosR2AR1A = math.abs(cosR2A * cosR1A + sinR2A * sinR1A)
+local sinR2AR1A = math.abs(sinR2A * cosR1A - cosR2A * sinR1A)
+
+local r1BBH = r1W * sinR1AR2A + r1H * cosR1AR2A
+local r1BBW = r1W * cosR1AR2A + r1H * sinR1AR2A
+local r1BBX = r1RX + r1HW - r1BBW / 2
+local r1BBY = r1RY + r1HH - r1BBH / 2
+
+local r2BBH = r2W * sinR2AR1A + r2H * cosR2AR1A
+local r2BBW = r2W * cosR2AR1A + r2H * sinR2AR1A
+local r2BBX = r2RX + r2HW - r2BBW / 2
+local r2BBY = r2RY + r2HH - r2BBH / 2
+
+return r1X < r2BBX + r2BBW and r1X + r1W > r2BBX and r1Y < r2BBY + r2BBH and r1Y + r1H > r2BBY and
+        r2X < r1BBX + r1BBW and r2X + r2W > r1BBX and r2Y < r1BBY + r1BBH and r2Y + r2H > r1BBY
+end
+
+function Player:checkBulletCollision(bullet)
+    local r1 = {
+        x = self.x,
+        y = self.y,
+        w = self.size,
+        h = self.size,
+        angle = self.angle or 0
+    }
+    local r2 = {
+        x = bullet.x,
+        y = bullet.y,
+        w = bullet.w,
+        h = bullet.h,
+        angle = self.angle or 0
+    }
+    if rotatedRectanglesCollide(r1.x, r1.y, r1.w, r1.h, r1.angle, r2.x, r2.y, r2.w, r2.h, r2.angle) then
         return true
     end
-    end
 
-    -- Player has not been hit
     return false
 end
 

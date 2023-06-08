@@ -1,5 +1,6 @@
 ---@diagnostic disable: missing-parameter, duplicate-set-field
 love.graphics.setDefaultFilter("nearest", "nearest")
+love.window.setVSync(0)
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Enemy = require("script.enemy")
@@ -7,23 +8,21 @@ local camera = require("lib.camera")
 local wf = require("lib.windfield")
 local Joystick = require("script.joystick")
 local sti = require("lib/sti")
+require("script.helpers")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
 
-print(client.socket)
-
 local world = wf.newWorld(0, 0) 
-
 
 local cam = camera()
 local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
-
+local testRect = {x=0, y=0, w=100, h=100, size=100}
 local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
-local joystick = Joystick.new(100, 250, 50, 100, 5000)
+local joystick = Joystick.new(100, 250, 50, 100, 20000)
 local bulletokres = 0.2
 local dupa = bulletokres
 
@@ -39,7 +38,6 @@ if gameMap.layers["Drzewa"] then
     end
 end
 
-
 function love.touchpressed(id, x, y, dx, dy, pressure)
     joystick:touchpressed(id, x, y, dx, dy, pressure)
 end
@@ -52,30 +50,6 @@ function love.touchreleased(id, x, y, dx, dy, pressure)
     joystick:touchreleased(id, x, y, dx, dy, pressure)
 end
 
-local function createEntitiesList(inputString)
-local entitiesList = {}
-local currentEntity = ""
-local insideBrackets = false
-
-for i = 1, #inputString do
-local char = inputString:sub(i, i)
-
-if char == "{" then
-    insideBrackets = true
-elseif char == "}" then
-    table.insert(entitiesList, currentEntity)
-    currentEntity = ""
-    insideBrackets = false
-else
-    if insideBrackets then
-    currentEntity = currentEntity .. char
-    end
-end
-end
-
-return entitiesList
-end
-print(createEntitiesList("ENTITIES[{PLAYER|3|450|500|32|1|1|1}{ENEMY|1|300|300|200|testEnemy}]"))
 local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
@@ -99,6 +73,7 @@ local function getEntity(s)
         Players[newPlayerData.id]=newPlayerData
     end
 end
+
 function client:onmessage(s)
     --print(s)
     if s:find("^YourID=") then
@@ -123,15 +98,7 @@ end
 function client:onclose(code, reason)
     print("closecode: "..code..", reason: "..reason)
 end
-local function updateBullets(bulletTable, dt)
-    for key, value in pairs(bulletTable) do
-        if value.life>0 then
-            value:update(dt)
-        else
-            table.remove(bulletTable, key)
-        end
-    end
-end
+
 function love.update(dt)
     client:update()
     LocalPlayer:controller(function ()
@@ -144,7 +111,11 @@ function love.update(dt)
             table.remove(EnemyBullets, key)
         end
     end
-    
+    for index, bullet in ipairs(LocalBullets) do
+        if LocalPlayer.checkBulletCollision(testRect, bullet) then
+            table.remove(LocalBullets, index)
+        end
+    end
     for index, enemy in pairs(Enemies) do
         if enemy then
             for key, bullet in pairs(LocalBullets) do
@@ -189,7 +160,6 @@ function love.update(dt)
     PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-12
-
     
 end
 function love.quit()
@@ -208,18 +178,10 @@ end
         table.insert(LocalBullets, bullet)
     end
 end--]]
-local function drawObjectsArray(array)
-    for _, value in pairs(array) do
-        if value then
-            value:draw()
-        end
-    end
-end
-
 
 function love.draw()
     cam:attach()
-        for index, value in ipairs(gameMap.layers) do
+        for _, value in ipairs(gameMap.layers) do
             gameMap:drawLayer(value)
         end
         LocalPlayer:draw()
@@ -229,7 +191,8 @@ function love.draw()
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
         world:draw()
-        
+        love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
