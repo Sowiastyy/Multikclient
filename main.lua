@@ -28,13 +28,23 @@ local dupa = bulletokres
 
 local gameMap = sti("maps/mapa3.lua") 
 
-local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 80, 14)
+local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 70, 14)
+PlayerCollider:setFixedRotation(true)
 local walls = {}
 if gameMap.layers["Drzewa"] then
-    for i, obj in ipairs(gameMap.layers["Drzewa"].objects) do
-        local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
-        wall:setType('static')
-        table.insert(walls,wall)
+    for i, lay in ipairs(gameMap.layers) do
+        if lay.type == "objectgroup" then
+            for index, obj in ipairs(lay.objects) do
+                
+                print(obj.name)
+                if obj.name == "siema" then
+                    local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+                    wall:setType('static')
+                    table.insert(walls,wall) 
+                    
+                end
+            end
+        end
     end
 end
 
@@ -161,6 +171,7 @@ function love.update(dt)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-12
     
+    
 end
 function love.quit()
     client:send("DEL_PLAYER|"..LocalPlayer.id)
@@ -184,9 +195,9 @@ function love.draw()
         for _, value in ipairs(gameMap.layers) do
             gameMap:drawLayer(value)
         end
-        LocalPlayer:draw()
+        sortowanie()
         drawObjectsArray(Players)
-        drawObjectsArray(LocalBullets)
+        
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
@@ -195,4 +206,21 @@ function love.draw()
     cam:detach()
     joystick:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+end
+
+function sortowanie()
+
+    local sort = {}
+
+    for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
+        if lay.type == "objectgroup" then
+            for index, value in ipairs(lay.objects) do
+                table.insert(sort,index1, value.y)
+                table.insert(sort,index1+1, gameMap.layers[index1].objects[value])
+
+            end
+        end
+    end
+    
+    return LocalPlayer:draw() , drawObjectsArray(LocalBullets)
 end

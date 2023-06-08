@@ -9,8 +9,8 @@ return {
   height = 100,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 7,
-  nextobjectid = 13,
+  nextlayerid = 10,
+  nextobjectid = 21,
   properties = {},
   tilesets = {
     {
@@ -196,7 +196,7 @@ return {
     {
       type = "objectgroup",
       draworder = "topdown",
-      id = 5,
+      id = 7,
       name = "Drzewa",
       class = "",
       visible = true,
@@ -208,7 +208,7 @@ return {
       properties = {},
       objects = {
         {
-          id = 7,
+          id = 13,
           name = "",
           type = "",
           shape = "rectangle",
@@ -222,12 +222,98 @@ return {
           properties = {}
         },
         {
-          id = 11,
-          name = "",
+          id = 14,
+          name = "siema",
           type = "",
           shape = "rectangle",
           x = 880.182,
           y = 794.545,
+          width = 31.6364,
+          height = 4,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 8,
+      name = "Drzewa",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 17,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 402.667,
+          y = 841,
+          width = 156.333,
+          height = 156.333,
+          rotation = 0,
+          gid = 4,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 18,
+          name = "siema",
+          type = "",
+          shape = "rectangle",
+          x = 457.182,
+          y = 821.545,
+          width = 31.6364,
+          height = 4,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 9,
+      name = "Drzewa",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 19,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1165.67,
+          y = 735,
+          width = 156.333,
+          height = 156.333,
+          rotation = 0,
+          gid = 4,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 20,
+          name = "siema",
+          type = "",
+          shape = "rectangle",
+          x = 1220.18,
+          y = 715.545,
           width = 31.6364,
           height = 4,
           rotation = 0,
