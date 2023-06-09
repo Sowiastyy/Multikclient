@@ -192,16 +192,17 @@ end--]]
 
 function love.draw()
     cam:attach()
-        for _, value in ipairs(gameMap.layers) do
+        --[[for _, value in ipairs(gameMap.layers) do
             gameMap:drawLayer(value)
-        end
+        end--]]
+        gameMap:drawLayer(gameMap.layers[1])
         sortowanie()
         drawObjectsArray(Players)
-        
+        drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
-        world:draw()
+        
         love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
@@ -210,17 +211,39 @@ end
 
 function sortowanie()
 
-    local sort = {}
+    local sort = {{LocalPlayer.y+40,"gracz"}}
 
     for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
         if lay.type == "objectgroup" then
             for index, value in ipairs(lay.objects) do
-                table.insert(sort,index1, value.y)
-                table.insert(sort,index1+1, gameMap.layers[index1].objects[value])
-
+                table.insert(sort, {value.y, "drzewo", index1})
             end
         end
     end
     
-    return LocalPlayer:draw() , drawObjectsArray(LocalBullets)
+    local x = #sort
+
+
+    
+    for i = 0, x, 1 do
+        for j = 1, x-i-1, 1 do
+            
+            if sort[j][1]>sort[j+1][1] then
+                sort[j] , sort[j+1] = sort[j+1] , sort[j]     
+            end
+        end
+    end
+    -- tu sortowanie bombelkowe zrobic mam
+    for index, value in ipairs(sort) do
+        if value[2] == "gracz"then
+            LocalPlayer:draw()
+        elseif value[2] == "drzewo" then
+            gameMap:drawLayer(gameMap.layers[value[3]])
+        end
+    end
+    
+
+    
+    
+    return nil
 end

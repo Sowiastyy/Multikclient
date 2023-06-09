@@ -9,8 +9,8 @@ return {
   height = 100,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 10,
-  nextobjectid = 21,
+  nextlayerid = 13,
+  nextobjectid = 26,
   properties = {},
   tilesets = {
     {
@@ -69,6 +69,35 @@ return {
       properties = {},
       wangsets = {},
       tilecount = 1,
+      tiles = {}
+    },
+    {
+      name = "tileset",
+      firstgid = 5,
+      class = "",
+      tilewidth = 64,
+      tileheight = 64,
+      spacing = 0,
+      margin = 0,
+      columns = 9,
+      image = "tileset.png",
+      imagewidth = 576,
+      imageheight = 384,
+      objectalignment = "unspecified",
+      tilerendersize = "tile",
+      fillmode = "stretch",
+      tileoffset = {
+        x = 0,
+        y = 0
+      },
+      grid = {
+        orientation = "orthogonal",
+        width = 64,
+        height = 64
+      },
+      properties = {},
+      wangsets = {},
+      tilecount = 54,
       tiles = {}
     }
   },
@@ -196,6 +225,49 @@ return {
     {
       type = "objectgroup",
       draworder = "topdown",
+      id = 10,
+      name = "Warstwa Obiektu 4",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 21,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 900.5,
+          y = 397.5,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 49,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 22,
+          name = "siema",
+          type = "",
+          shape = "rectangle",
+          x = 924.625,
+          y = 385.625,
+          width = 15.5,
+          height = 7.625,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
       id = 7,
       name = "Drzewa",
       class = "",
@@ -220,17 +292,34 @@ return {
           gid = 4,
           visible = true,
           properties = {}
-        },
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 12,
+      name = "Kopia Drzewa",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
         {
-          id = 14,
-          name = "siema",
+          id = 23,
+          name = "",
           type = "",
           shape = "rectangle",
-          x = 880.182,
-          y = 794.545,
-          width = 31.6364,
-          height = 4,
+          x = 765.667,
+          y = 828,
+          width = 156.333,
+          height = 156.333,
           rotation = 0,
+          gid = 4,
           visible = true,
           properties = {}
         }
@@ -287,8 +376,8 @@ return {
       class = "",
       visible = true,
       opacity = 1,
-      offsetx = 0,
-      offsety = 0,
+      offsetx = -2.25,
+      offsety = -5.75,
       parallaxx = 1,
       parallaxy = 1,
       properties = {},
@@ -312,9 +401,9 @@ return {
           name = "siema",
           type = "",
           shape = "rectangle",
-          x = 1220.18,
-          y = 715.545,
-          width = 31.6364,
+          x = 1228.68,
+          y = 675.795,
+          width = 18.6364,
           height = 4,
           rotation = 0,
           visible = true,
