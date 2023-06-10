@@ -214,7 +214,7 @@ function love.draw()
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
         
-        love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
+        love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)

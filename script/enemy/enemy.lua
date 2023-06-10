@@ -10,6 +10,8 @@ function Enemy:new(id, x, y, type)
         size = stats[type or "testEnemy"].size,
         hp = stats[type or "testEnemy"].hp,
         type = type or "testEnemy",
+        w = stats[type or "testEnemy"].width,
+        h = stats[type or "testEnemy"].height,
         
 
     }

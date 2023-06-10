@@ -1,7 +1,10 @@
 local Player = {}
 local playerIMG= love.graphics.newImage("img/characters/Warrior-Blue.png")
 local quad = love.graphics.newQuad(0, 0, 32, 32, playerIMG:getDimensions())
-
+local img = {}
+img["Warrior-Blue"] = love.graphics.newImage("img/characters/Warrior-Blue.png")
+img["Archer-Green"] = love.graphics.newImage("img/characters/Archer-Green.png")
+img["Archer-Purple"] = love.graphics.newImage("img/characters/Archer-Purple.png")
 function Player:new(x, y, size, hero)
     local player = {
         x = x,
@@ -29,8 +32,7 @@ function Player:draw()
     love.graphics.setColor(1, 1, 1)
     local scale = 4
     love.graphics.scale(scale, scale)
-    local img=love.graphics.newImage("img/characters/"..self.hero..".png")
-    love.graphics.draw(img, quad, x/scale-8, y/scale-8)
+    love.graphics.draw(img[self.hero], quad, x/scale-8, y/scale-8)
     love.graphics.scale(1/scale, 1/scale)
 end
 
@@ -109,8 +111,8 @@ end
 
 function Player:checkBulletCollision(bullet)
     local r1 = {
-        x = self.x,
-        y = self.y,
+        x = self.x-(self.size/2),
+        y = self.y-(self.size/2),
         w = self.size,
         h = self.size,
         angle = self.angle or 0
