@@ -28,13 +28,23 @@ local dupa = bulletokres
 
 local gameMap = sti("maps/mapa3.lua") 
 
-local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 80, 14)
+local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 70, 14)
+PlayerCollider:setFixedRotation(true)
 local walls = {}
 if gameMap.layers["Drzewa"] then
-    for i, obj in ipairs(gameMap.layers["Drzewa"].objects) do
-        local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
-        wall:setType('static')
-        table.insert(walls,wall)
+    for i, lay in ipairs(gameMap.layers) do
+        if lay.type == "objectgroup" then
+            for index, obj in ipairs(lay.objects) do
+                
+                print(obj.name)
+                if obj.name == "siema" then
+                    local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+                    wall:setType('static')
+                    table.insert(walls,wall) 
+                    
+                end
+            end
+        end
     end
 end
 
@@ -161,6 +171,7 @@ function love.update(dt)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-12
     
+    
 end
 function love.quit()
     client:send("DEL_PLAYER|"..LocalPlayer.id)
@@ -181,18 +192,58 @@ end--]]
 
 function love.draw()
     cam:attach()
-        for _, value in ipairs(gameMap.layers) do
+        --[[for _, value in ipairs(gameMap.layers) do
             gameMap:drawLayer(value)
-        end
-        LocalPlayer:draw()
+        end--]]
+        gameMap:drawLayer(gameMap.layers[1])
+        sortowanie()
         drawObjectsArray(Players)
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         drawObjectsArray(Enemies)
-        world:draw()
+        
         love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+end
+
+function sortowanie()
+
+    local sort = {{LocalPlayer.y+40,"gracz"}}
+
+    for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
+        if lay.type == "objectgroup" then
+            for index, value in ipairs(lay.objects) do
+                table.insert(sort, {value.y, "drzewo", index1})
+            end
+        end
+    end
+    
+    local x = #sort
+
+
+    
+    for i = 0, x, 1 do
+        for j = 1, x-i-1, 1 do
+            
+            if sort[j][1]>sort[j+1][1] then
+                sort[j] , sort[j+1] = sort[j+1] , sort[j]     
+            end
+        end
+    end
+    -- tu sortowanie bombelkowe zrobic mam
+    for index, value in ipairs(sort) do
+        if value[2] == "gracz"then
+            LocalPlayer:draw()
+        elseif value[2] == "drzewo" then
+            gameMap:drawLayer(gameMap.layers[value[3]])
+        end
+    end
+    
+
+    
+    
+    return nil
 end
