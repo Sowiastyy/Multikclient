@@ -1,13 +1,14 @@
 local stats = {}
 stats["basic"] = {
-    speed=500,
+    speed=400,
     damage=10,
-    life=1,
+    life=10,
     xoffset=0,
     yoffset=3,
     width=8,
     height=2,
     img=1,
+    --updatePattern = "sideToSide"
 }
 stats["sting"] = {
     speed=500,
@@ -28,6 +29,7 @@ stats["slash"] = {
     width=8,
     height=6,
     img=2,
+    updatePattern = "slowDown"
 }
 stats["arrow"] = {
     speed=1000,

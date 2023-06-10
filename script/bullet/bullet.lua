@@ -1,5 +1,6 @@
 local Bullet = {}
 local stats = require("script.bullet.stats")
+local shotPattern = require("script.bullet.shotPattern")
 local bulletIMG= love.graphics.newImage("img/bulletSheet.png")
 local quad = {
     love.graphics.newQuad(0, 3, 8, 4, bulletIMG:getDimensions()),
@@ -11,6 +12,8 @@ function Bullet:new(x, y, angle, parent, type)
     local bullet = {
     x = x,
     y = y,
+    ox = x, --Origin X
+    oy= y, --Origin Y
     angle = angle,
     type = type or "basic",
     parent = parent or "",
@@ -19,6 +22,8 @@ function Bullet:new(x, y, angle, parent, type)
     h = stats[type or "basic"].height,
     life = stats[type or "basic"].life,
     dmg =  stats[type or "basic"].damage,
+    speed = stats[type or "basic"].speed,
+    hasClicked = false, --If bool value is needed for shotPattern
     }
 
     setmetatable(bullet, self)
@@ -33,8 +38,11 @@ function Bullet:getAngle(x, y, targetX, targetY)
 end
 
 function Bullet:update(dt)
-    self.x = self.x + math.cos(self.angle) * stats[self.type].speed * dt
-    self.y = self.y + math.sin(self.angle) * stats[self.type].speed * dt
+    self.x = self.x + math.cos(self.angle) * self.speed * dt
+    self.y = self.y + math.sin(self.angle) * self.speed * dt
+    if shotPattern[stats[self.type].updatePattern] then
+        shotPattern[stats[self.type].updatePattern](self)
+    end
     self.life=self.life-dt
 end
 function Bullet:draw()

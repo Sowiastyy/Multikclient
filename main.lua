@@ -3,6 +3,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 love.window.setVSync(0)
 local Player = require("script.player")
 local Bullet = require("script.bullet")
+local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local wf = require("lib.windfield")
@@ -159,9 +160,17 @@ function love.update(dt)
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
             local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
-            client:send(bullet:toString())
-            table.insert(LocalBullets, bullet)
+            --[[
+                local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            ]]
+            local bullets = Attack(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "slash", "shotgun3")
+            for _, bullet in ipairs(bullets) do
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            end
+
             dupa = bulletokres
         end
         
