@@ -80,14 +80,18 @@ local function getEntity(s)
             table.insert(AllyBullets, newBulletData)
         end
     elseif s:find("^ATTACK") then
-        local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
-        newBulletData :fromString(s)
-        if newBulletData.parent=="enm" then
-            table.insert(EnemyBullets, newBulletData)
-        elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
-            table.insert(AllyBullets, newBulletData)
+        local bullets = Attack(s)
+        for _, newBulletData in ipairs(bullets) do
+            local parts = {}
+            for part in newBulletData.parent:gmatch("([^|]+)") do
+                table.insert(parts, part)
+            end
+            if newBulletData.parent=="enm" then
+                table.insert(EnemyBullets, newBulletData)
+            elseif tonumber(parts[2])~=tonumber(LocalPlayer.id) then
+                table.insert(AllyBullets, newBulletData)
+            end
         end
-    
     elseif s:find("^PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
@@ -181,7 +185,7 @@ function love.update(dt)
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
             end
-
+            client:send("ATTACK|"..LocalPlayer.x.."|"..LocalPlayer.y.."|"..angle.."|plr|"..LocalPlayer.id.."|arrow|shotgun|0.6|6")
             dupa = bulletokres
         end
         
