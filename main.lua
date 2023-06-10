@@ -72,6 +72,8 @@ local function getEntity(s)
     elseif s:find("^BULLET") then
         local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
         newBulletData :fromString(s)
+        print("Type", newBulletData.type)
+        print("SpeedData", newBulletData.speed)
         if newBulletData.parent=="enm" then
             table.insert(EnemyBullets, newBulletData)
         elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then

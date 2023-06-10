@@ -60,14 +60,21 @@ function Bullet:fromString(str)
     for part in str:gmatch("([^|]+)") do
         table.insert(parts, part)
     end
+
     self.x = tonumber(parts[2])
     self.y = tonumber(parts[3])
     self.angle = tonumber(parts[4])
     self.type = parts[5]
     self.parent = parts[6]
+    self.w = stats[self.type or "basic"].width
+    self.h = stats[self.type or "basic"].height
+    self.life = stats[self.type or "basic"].life
+    self.dmg =  stats[self.type or "basic"].damage
+    self.speed = stats[self.type or "basic"].speed
     if parts[7] then
         self.parentID = parts[7]
     end
+
 end
 
 return Bullet
