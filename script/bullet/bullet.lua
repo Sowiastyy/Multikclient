@@ -5,8 +5,8 @@ local bulletIMG= love.graphics.newImage("img/bulletSheet.png")
 local quad = {
     love.graphics.newQuad(0, 3, 8, 4, bulletIMG:getDimensions()),
     love.graphics.newQuad(8, 1, 8, 6, bulletIMG:getDimensions()),
-    love.graphics.newQuad(16, 0, 8, 8, bulletIMG:getDimensions()),
-    love.graphics.newQuad(24, 0, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(16, 2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(24, 2, 7, 4, bulletIMG:getDimensions()),
 }
 function Bullet:new(x, y, angle, parent, type)
     local bullet = {

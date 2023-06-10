@@ -28,8 +28,8 @@ function shotPattern.quadratic(bullet)
     bullet.y = bullet.oy + bullet.vy * time + 0.5 * 100 * time^2
 end
 function shotPattern.sway(bullet)
-    local targetX = bullet.x + math.cos(bullet.angle) * 100
-    local targetY = bullet.y + math.sin(bullet.angle) * 100
+    local targetX = bullet.x + math.cos(bullet.angle)
+    local targetY = bullet.y + math.sin(bullet.angle)
 
     -- Calculate the current position relative to the target
     local dx = bullet.x - targetX

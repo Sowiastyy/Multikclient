@@ -60,7 +60,9 @@ end
 function love.touchreleased(id, x, y, dx, dy, pressure)
     joystick:touchreleased(id, x, y, dx, dy, pressure)
 end
+local function handleEnemyData()
 
+end
 local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
@@ -77,6 +79,15 @@ local function getEntity(s)
         elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
             table.insert(AllyBullets, newBulletData)
         end
+    elseif s:find("^ATTACK") then
+        local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
+        newBulletData :fromString(s)
+        if newBulletData.parent=="enm" then
+            table.insert(EnemyBullets, newBulletData)
+        elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
+            table.insert(AllyBullets, newBulletData)
+        end
+    
     elseif s:find("^PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
         newPlayerData:fromString(s)
@@ -164,7 +175,7 @@ function love.update(dt)
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
             ]]
-            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "slash")
+            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "arrow")
             local bullets = Attack(bullet, "shotgun", {count=4, spread=0.2})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())

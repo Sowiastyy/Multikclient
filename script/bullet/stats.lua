@@ -36,7 +36,10 @@ stats["arrow"] = {
     damage=10,
     life=1,
     size=10,
-    img=1,
+    width=8,
+    height=3,
+    img=3,
+    updatePattern = "goFaster"
 }
 stats["magic_bullet"] = {
     speed=1000,
@@ -44,5 +47,7 @@ stats["magic_bullet"] = {
     life=1,
     size=10,
     img=1,
+    width=7,
+    height=4,
 }
 return stats
