@@ -72,8 +72,6 @@ local function getEntity(s)
     elseif s:find("^BULLET") then
         local newBulletData = Bullet:new(0, 0, 32, {0, 0, 0})
         newBulletData :fromString(s)
-        print("Type", newBulletData.type)
-        print("SpeedData", newBulletData.speed)
         if newBulletData.parent=="enm" then
             table.insert(EnemyBullets, newBulletData)
         elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
@@ -119,7 +117,6 @@ function love.update(dt)
     end)
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
-            print("dostalem")
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)
         end
@@ -167,7 +164,8 @@ function love.update(dt)
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
             ]]
-            local bullets = Attack(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "slash", "shotgun3")
+            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "slash")
+            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.2})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
