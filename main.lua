@@ -3,6 +3,7 @@ love.graphics.setDefaultFilter("nearest", "nearest")
 love.window.setVSync(0)
 local Player = require("script.player")
 local Bullet = require("script.bullet")
+local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local wf = require("lib.windfield")
@@ -59,7 +60,9 @@ end
 function love.touchreleased(id, x, y, dx, dy, pressure)
     joystick:touchreleased(id, x, y, dx, dy, pressure)
 end
+local function handleEnemyData()
 
+end
 local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
@@ -75,6 +78,19 @@ local function getEntity(s)
             table.insert(EnemyBullets, newBulletData)
         elseif tonumber(newBulletData.parentID)~=tonumber(LocalPlayer.id) then
             table.insert(AllyBullets, newBulletData)
+        end
+    elseif s:find("^ATTACK") then
+        local bullets = Attack(s)
+        for _, newBulletData in ipairs(bullets) do
+            local parts = {}
+            for part in newBulletData.parent:gmatch("([^|]+)") do
+                table.insert(parts, part)
+            end
+            if newBulletData.parent=="enm" then
+                table.insert(EnemyBullets, newBulletData)
+            elseif tonumber(parts[2])~=tonumber(LocalPlayer.id) then
+                table.insert(AllyBullets, newBulletData)
+            end
         end
     elseif s:find("^PLAYER") then
         local newPlayerData = Player:new(0, 0, 32, {0, 0, 0})
@@ -116,7 +132,6 @@ function love.update(dt)
     end)
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
-            print("dostalem")
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)
         end
@@ -159,9 +174,18 @@ function love.update(dt)
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
             local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
-            client:send(bullet:toString())
-            table.insert(LocalBullets, bullet)
+            --[[
+                local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            ]]
+            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "arrow")
+            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.2})
+            for _, bullet in ipairs(bullets) do
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            end
+            client:send("ATTACK|"..LocalPlayer.x.."|"..LocalPlayer.y.."|"..angle.."|plr|"..LocalPlayer.id.."|arrow|shotgun|0.6|6")
             dupa = bulletokres
         end
         
@@ -193,7 +217,7 @@ function love.draw()
         drawObjectsArray(EnemyBullets)
         
         
-        love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
+        love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
