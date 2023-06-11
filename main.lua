@@ -260,9 +260,9 @@ function sortowanie()
         elseif value[2] == "drzewo" then
             gameMap:drawLayer(gameMap.layers[value[3]])
         elseif value[2] == "players" then
-            drawObjectsArray(Players[value[3]])
+            Players[value[3]]:draw()
         elseif value[2] == "enemy" then
-            drawObjectsArray(Enemies[value[3]])
+            Enemies[value[3]]:draw()
         end
     end
     
