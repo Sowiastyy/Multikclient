@@ -15,6 +15,7 @@ function Player:new(x, y, size, hero)
         spd = 500,
         vx = 0,
         vy = 0,
+        dexterity = 0.2,
         
     }
     setmetatable(player, self)
@@ -69,6 +70,31 @@ function Player:controller(stateChangedCallback)
         stateChangedCallback()
     end
 end
+
+local dupa = 0
+function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
+    if love.mouse.isDown(1) then
+        
+        dupa = dupa - dt
+        if dupa<0 then
+            local x, y = love.mouse.getPosition( )
+            local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..self.id, "arrow")
+            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
+            for _, bullet in ipairs(bullets) do
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            end
+           
+            dupa = self.dexterity
+        end
+    
+        
+        
+    end
+end
+
+
 local function rotatedRectanglesCollide(r1X, r1Y, r1W, r1H, r1A, r2X, r2Y, r2W, r2H, r2A)
 local r1HW = r1W / 2
 local r1HH = r1H / 2
