@@ -24,12 +24,10 @@ local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
-local bulletokres = 0.2
-local dupa = bulletokres
 
 local gameMap = sti("maps/mapa3.lua") 
 
-local PlayerCollider = world:newBSGRectangleCollider(400, 250, 40, 70, 14)
+local PlayerCollider = world:newBSGRectangleCollider(600, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 if gameMap.layers["Drzewa"] then
@@ -169,38 +167,13 @@ function love.update(dt)
 
     cam:lookAt(LocalPlayer.x, LocalPlayer.y)
     
+    LocalPlayer:shoot(Bullet, client, Attack, LocalBullets, dt)
     
-    if love.mouse.isDown(1) then
-        
-        dupa = dupa - dt
-        if dupa<0 then
-            local x, y = love.mouse.getPosition( )
-            local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            --[[
-                local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
-                client:send(bullet:toString())
-                table.insert(LocalBullets, bullet)
-            ]]
-            local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "arrow")
-            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
-            for _, bullet in ipairs(bullets) do
-                client:send(bullet:toString())
-                table.insert(LocalBullets, bullet)
-            end
-            client:send("ATTACK|"..LocalPlayer.x.."|"..LocalPlayer.y.."|"..angle.."|plr|"..LocalPlayer.id.."|arrow|shotgun|0.6|6")
-            dupa = bulletokres
-        end
-
-        
-        
-    end
     world:update(dt)
     PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
     LocalPlayer.x = PlayerCollider:getX()
-    LocalPlayer.y = PlayerCollider:getY()-12
+    LocalPlayer.y = PlayerCollider:getY()-33
     
-    print(#Enemies)
-    print(#Players)
     
 end
 function love.quit()
@@ -220,7 +193,7 @@ function love.draw()
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
-        
+        world:draw()
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
@@ -229,7 +202,7 @@ end
 
 function sortowanie()
 
-    local sort = {{LocalPlayer.y+40,"gracz"}}
+    local sort = {{LocalPlayer.y+43,"gracz"}}
 
     for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
         if lay.type == "objectgroup" then
@@ -240,11 +213,10 @@ function sortowanie()
     end
     
     for index, value in pairs(Players) do
-        table.insert(sort, {value.y + 40 , "players", index})
+        table.insert(sort, {value.y + 43 , "players", index})
     end
     
     for index, value in pairs(Enemies) do
-        print("kurwa")
         table.insert(sort, {value.y, "enemy", index})
     end
 

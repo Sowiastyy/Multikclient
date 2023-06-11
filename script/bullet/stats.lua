@@ -39,7 +39,7 @@ stats["arrow"] = {
     width=8,
     height=3,
     img=3,
-    updatePattern = "goFaster"
+    updatePattern = "slowDown"
 }
 stats["magic_bullet"] = {
     speed=1000,
