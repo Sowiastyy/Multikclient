@@ -180,16 +180,6 @@ function love.quit()
 
 end
 
-
---[[function love.mousepressed(x, y, button) 
-    if button == 1 then -- lewy przycisk myszy
-        local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-        local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id)
-        client:send(bullet:toString())
-        table.insert(LocalBullets, bullet)
-    end
-end--]]
-
 function love.draw()
     cam:attach()
         --[[for _, value in ipairs(gameMap.layers) do
@@ -197,11 +187,11 @@ function love.draw()
         end--]]
         gameMap:drawLayer(gameMap.layers[1])
         sortowanie()
-        drawObjectsArray(Players)
+        
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
-        drawObjectsArray(Enemies)
+        
         
         love.graphics.rectangle("line", testRect.x, testRect.y, testRect.w,  testRect.h)
     cam:detach()
@@ -221,10 +211,16 @@ function sortowanie()
         end
     end
     
+    for index, value in ipairs(Players) do
+        table.insert(sort, {value.y, "players", index})
+    end
+
+    for index, value in ipairs(Enemies) do
+        table.insert(sort, {value.y, "enemy", index})
+    end
+
     local x = #sort
 
-
-    
     for i = 0, x, 1 do
         for j = 1, x-i-1, 1 do
             
@@ -239,10 +235,12 @@ function sortowanie()
             LocalPlayer:draw()
         elseif value[2] == "drzewo" then
             gameMap:drawLayer(gameMap.layers[value[3]])
+        elseif value[2] == "players" then
+            drawObjectsArray(Players[value[3]])
+        elseif value[2] == "enemy" then
+            drawObjectsArray(Enemies[value[3]])
         end
     end
-    
-
     
     
     return nil
