@@ -142,11 +142,13 @@ function love.update(dt)
         end
     end
     for index, enemy in pairs(Enemies) do
+       
         if enemy then
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
                     client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+                    
                 end
             end
             if enemy.hp<=0 then
@@ -180,7 +182,7 @@ function love.update(dt)
                 table.insert(LocalBullets, bullet)
             ]]
             local bullet = Bullet:new(LocalPlayer.x, LocalPlayer.y, angle, "plr|"..LocalPlayer.id, "arrow")
-            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.2})
+            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
@@ -188,6 +190,8 @@ function love.update(dt)
             client:send("ATTACK|"..LocalPlayer.x.."|"..LocalPlayer.y.."|"..angle.."|plr|"..LocalPlayer.id.."|arrow|shotgun|0.6|6")
             dupa = bulletokres
         end
+
+        
         
     end
     world:update(dt)
@@ -195,6 +199,8 @@ function love.update(dt)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-12
     
+    print(#Enemies)
+    print(#Players)
     
 end
 function love.quit()
@@ -211,11 +217,9 @@ function love.draw()
         end--]]
         gameMap:drawLayer(gameMap.layers[1])
         sortowanie()
-        
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
-        
         
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
@@ -235,11 +239,12 @@ function sortowanie()
         end
     end
     
-    for index, value in ipairs(Players) do
-        table.insert(sort, {value.y, "players", index})
+    for index, value in pairs(Players) do
+        table.insert(sort, {value.y + 40 , "players", index})
     end
-
-    for index, value in ipairs(Enemies) do
+    
+    for index, value in pairs(Enemies) do
+        print("kurwa")
         table.insert(sort, {value.y, "enemy", index})
     end
 
@@ -255,14 +260,15 @@ function sortowanie()
     end
     -- tu sortowanie bombelkowe zrobic mam
     for index, value in ipairs(sort) do
+        
         if value[2] == "gracz"then
             LocalPlayer:draw()
         elseif value[2] == "drzewo" then
             gameMap:drawLayer(gameMap.layers[value[3]])
         elseif value[2] == "players" then
-            drawObjectsArray(Players[value[3]])
+            Players[value[3]]:draw()
         elseif value[2] == "enemy" then
-            drawObjectsArray(Enemies[value[3]])
+            Enemies[value[3]]:draw()
         end
     end
     
