@@ -24,6 +24,7 @@ local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
+local joystick2 = Joystick.new(400, 250, 50, 100, 20000)
 local bulletokres = 0.2
 local dupa = bulletokres
 
@@ -142,6 +143,7 @@ function love.update(dt)
         end
     end
     for index, enemy in pairs(Enemies) do
+
         if enemy then
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
@@ -158,6 +160,7 @@ function love.update(dt)
     if joystick.distance>0 then
         LocalPlayer.vx =  math.cos(joystick.angle) * joystick.speed * dt
         LocalPlayer.vy = math.sin(joystick.angle) * joystick.speed * dt
+        client:send(LocalPlayer:toString())
     end
 
 
@@ -206,20 +209,20 @@ end
 
 function love.draw()
     cam:attach()
-        --[[for _, value in ipairs(gameMap.layers) do
-            gameMap:drawLayer(value)
-        end--]]
+
         gameMap:drawLayer(gameMap.layers[1])
         sortowanie()
         
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
-        
+        drawObjectsArray(Enemies)
+
         
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
+    
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
 
@@ -235,11 +238,12 @@ function sortowanie()
         end
     end
     
-    for index, value in ipairs(Players) do
+
+    for index, value in pairs(Players) do
         table.insert(sort, {value.y, "players", index})
     end
-
-    for index, value in ipairs(Enemies) do
+    for index, value in pairs(Enemies) do
+        print("index")
         table.insert(sort, {value.y, "enemy", index})
     end
 
@@ -262,6 +266,7 @@ function sortowanie()
         elseif value[2] == "players" then
             Players[value[3]]:draw()
         elseif value[2] == "enemy" then
+            print("en")
             Enemies[value[3]]:draw()
         end
     end

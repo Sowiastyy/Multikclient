@@ -9,6 +9,9 @@ local attacks = {
         return bullets
     end
 }
+---comment
+---@param str string
+---@return table bullets
 local function Attack_fromString(str)
     local parts = {}
     for part in str:gmatch("([^|]+)") do
