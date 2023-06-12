@@ -16,7 +16,10 @@ function Player:new(x, y, size, hero)
         vx = 0,
         vy = 0,
         dexterity = 0.2,
-        
+        w=32,
+        h=60,
+        bulletCollisionOffsetY = 8,
+        bulletCollisionOffsetX = 16
     }
     setmetatable(player, self)
     self.__index = self
@@ -31,10 +34,19 @@ function Player:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
+
     local scale = 4
     love.graphics.scale(scale, scale)
     love.graphics.draw(img[self.hero], quad, x/scale-8, y/scale-8)
     love.graphics.scale(1/scale, 1/scale)
+    local r1 = {
+        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w or self.size,
+        h = self.h or self.size,
+        angle = self.angle or 0
+    }
+    love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
 end
 
 function Player:toString()
@@ -85,7 +97,6 @@ function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
             end
-           
             dupa = self.dexterity
         end
     
@@ -137,10 +148,10 @@ end
 
 function Player:checkBulletCollision(bullet)
     local r1 = {
-        x = self.x-(self.size/2),
-        y = self.y-(self.size/2),
-        w = self.size,
-        h = self.size,
+        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w or self.size,
+        h = self.h or self.size,
         angle = self.angle or 0
     }
     local r2 = {

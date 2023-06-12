@@ -32,8 +32,15 @@ function Enemy:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.rectangle("line", x, y, img:getWidth(), img:getHeight())
     love.graphics.draw(img, x, y)
+    local r1 = {
+        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w or self.size,
+        h = self.h or self.size,
+        angle = self.angle or 0
+    }
+    love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
 end
 
 function Enemy:fromString(str)

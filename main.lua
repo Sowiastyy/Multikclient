@@ -10,8 +10,8 @@ local wf = require("lib.windfield")
 local Joystick = require("script.joystick")
 local sti = require("lib/sti")
 require("script.helpers")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
 
 local world = wf.newWorld(0, 0) 
 
@@ -145,7 +145,7 @@ function love.update(dt)
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
-                    client:send("HIT|"..enemy.id.."|10|"..LocalPlayer.id)
+                    client:send("HIT|"..enemy.id.."|"..bullet.dmg.."|"..LocalPlayer.id)
                     
                 end
             end

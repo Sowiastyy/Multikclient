@@ -22,7 +22,7 @@ stats["sting"] = {
 }
 stats["slash"] = {
     speed=600,
-    damage=40,
+    damage=30,
     life=1,
     xoffset=0,
     yoffset=1,
@@ -32,9 +32,9 @@ stats["slash"] = {
     updatePattern = "slowDown"
 }
 stats["slashCircle"] = {
-    speed=10,
-    damage=40,
-    life=5,
+    speed=5,
+    damage=20,
+    life=15,
     xoffset=0,
     yoffset=1,
     width=8,
@@ -44,7 +44,7 @@ stats["slashCircle"] = {
 }
 stats["arrow"] = {
     speed=1000,
-    damage=10,
+    damage=4,
     life=1,
     size=10,
     width=8,
@@ -53,12 +53,13 @@ stats["arrow"] = {
     updatePattern = "slowDown"
 }
 stats["magic_bullet"] = {
-    speed=1000,
-    damage=10,
-    life=1,
+    speed=200,
+    damage=12,
+    life=5,
     size=10,
-    img=1,
+    img=4,
     width=7,
     height=4,
+    updatePattern = "returnBack"
 }
 return stats
