@@ -31,6 +31,17 @@ stats["slash"] = {
     img=2,
     updatePattern = "slowDown"
 }
+stats["slashCircle"] = {
+    speed=10,
+    damage=40,
+    life=5,
+    xoffset=0,
+    yoffset=1,
+    width=8,
+    height=6,
+    img=2,
+    updatePattern = "rotateAround"
+}
 stats["arrow"] = {
     speed=1000,
     damage=10,

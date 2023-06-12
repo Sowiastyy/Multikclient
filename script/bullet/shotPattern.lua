@@ -45,8 +45,8 @@ function shotPattern.sway(bullet)
 end
 
 function shotPattern.rotateAround(bullet)
-    bullet.angle = bullet.angle + 0.05
-    local radius = 50
+    bullet.angle = bullet.angle + (bullet.speed/1000)
+    local radius = 400
     bullet.x = bullet.ox + radius * math.cos(bullet.angle)
     bullet.y = bullet.oy + radius * math.sin(bullet.angle)
 end

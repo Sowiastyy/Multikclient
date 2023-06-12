@@ -1,7 +1,6 @@
 --! file: enemy.lua
 local stats = require("script.enemy.stats")
 Enemy = {}
-local img = stats["testEnemy"].image
 function Enemy:new(id, x, y, type)
     local enemy = {
         id = id,
@@ -25,6 +24,7 @@ function Enemy:update(dt)
 end
 
 function Enemy:draw()
+    local img = stats[self.type].image
     local x, y = self.x-(stats[self.type].width/2), self.y-(stats[self.type].height/2)
     love.graphics.rectangle("line", x+((img:getWidth()-60)/2), y+img:getHeight(), 60, 10)
     love.graphics.setColor(1, 0, 0)
