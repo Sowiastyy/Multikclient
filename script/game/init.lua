@@ -29,8 +29,6 @@ local joystick = Joystick.new(100, 250, 50, 100, 20000)
 
 local gameMap = require("script.gameMap")
 
-
-
 local PlayerCollider = world:newBSGRectangleCollider(600, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
