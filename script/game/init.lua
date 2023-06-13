@@ -17,6 +17,7 @@ local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 local world = wf.newWorld(0, 0) 
 
 local cam = camera()
+cam.scale =  cam.scale * 0.8
 local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
@@ -127,7 +128,9 @@ end
 function sortowanie()
 
     local sort = {{LocalPlayer.y+43,"gracz"}}
+    local scale = 1.2
 
+    
     for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
         if lay.type == "objectgroup" then
             for index, value in ipairs(lay.objects) do
@@ -158,7 +161,9 @@ function sortowanie()
     for index, value in ipairs(sort) do
         
         if value[2] == "gracz"then
+            
             LocalPlayer:draw()
+            
         elseif value[2] == "drzewo" then
             gameMap:drawLayer(gameMap.layers[value[3]])
         elseif value[2] == "players" then
@@ -230,8 +235,9 @@ end
 
 function Game:draw()
     cam:attach()
-
+        love.graphics.scale(4,4)
         gameMap:drawLayer(gameMap.layers[1])
+        love.graphics.scale(0.25,0.25)
         sortowanie()
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
