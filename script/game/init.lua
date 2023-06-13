@@ -9,7 +9,7 @@ local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local wf = require("lib.windfield")
 local Joystick = require("script.joystick")
-local sti = require("lib/sti")
+
 require("script.helpers")
 local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
 --local client = require("lib.websocket").new("localhost", 5001)
@@ -27,26 +27,18 @@ local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
 
 
-local gameMap = sti("maps/mapa3.lua") 
+local gameMap = require("script.gameMap")
+
+
 
 local PlayerCollider = world:newBSGRectangleCollider(600, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
-if gameMap.layers["Drzewa"] then
-    for i, lay in ipairs(gameMap.layers) do
-        if lay.type == "objectgroup" then
-            for index, obj in ipairs(lay.objects) do
-                
-                print(obj.name)
-                if obj.name == "siema" then
-                    local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
-                    wall:setType('static')
-                    table.insert(walls,wall) 
-                    
-                end
-            end
-        end
-    end
+
+for index, obj in ipairs(gameMap:getHitboxes()) do
+    local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+    wall:setType('static')
+    table.insert(walls,wall)
 end
 
 function love.touchpressed(id, x, y, dx, dy, pressure)
