@@ -11,8 +11,8 @@ local wf = require("lib.windfield")
 local Joystick = require("script.joystick")
 
 require("script.helpers")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
 
 local world = wf.newWorld(0, 0) 
 
@@ -92,10 +92,12 @@ local function getEntity(s)
 end
 
 function client:onmessage(s)
-    --print(s)
+    --print(s) 
     if s:find("^YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
     elseif s:find("^ENTITIES") then
+        Enemies = {}
+        Players = {}
         for _, value in pairs(createEntitiesList(s)) do
             getEntity(value)
         end
