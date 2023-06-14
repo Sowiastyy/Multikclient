@@ -1,9 +1,16 @@
 local Player = {}
 local img = {}
+local anim8 = require("lib.anim8")
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
-local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
+--local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
+
+local g = anim8.newGrid(32, 32, img["Warrior"]:getWidth(), img["Warrior"]:getHeight())
+local animation = anim8.newAnimation(g('3-4',1), 0.1)
+
+local offset, rotate = 40, 5
+local dupa = 0
 
 function Player:new(x, y, size, hero)
     local player = {
@@ -28,14 +35,15 @@ end
 
 function Player:draw()
     local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
+    
     love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(img[self.hero], quad, x-40, y-40, 0, 5, 5)
-
+    --love.graphics.draw(img[self.hero], quad, x-offset, y-40, 0, rotate, 5)
+    animation:draw(img[self.hero], x-offset, y-40, 0, rotate, 5)
     local r1 = {
         x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
@@ -54,6 +62,7 @@ end
 ---comment
 function Player:controller(dt)
     local stateChanged = false
+    local stateChanged2 = false
     if love.keyboard.isDown("w") then
         stateChanged=true
         self.vy = -1 * self.spd
@@ -63,25 +72,42 @@ function Player:controller(dt)
     
     else
         self.vy = 0
+        stateChanged = false
     end
     if love.keyboard.isDown("a") then
-        stateChanged=true
+        stateChanged2=true
         self.vx = self.spd * -1
-    
+        if love.mouse.isDown(1) == false then
+            rotate = 5
+            offset = 40
+        end
+        
     elseif love.keyboard.isDown("d") then
-        stateChanged=true
+        stateChanged2=true
         self.vx = self.spd
+        if love.mouse.isDown(1) == false then
+            rotate = -5
+             offset = -120
+        end
     else
         self.vx = 0
+        stateChanged2 = false
+    end
+
+    if stateChanged == true and stateChanged2 == true then
+        self.vx = self.vx /math.sqrt(2)
+        self.vy = self.vy /math.sqrt(2)
     end
 end
 function Player:update(dt)
     self:controller()
+    animation:update(dt)
 end
-local dupa = 0
+
 function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
+    
     if love.mouse.isDown(1) then
-        
+        animation:resume()
         dupa = dupa - dt
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
@@ -93,10 +119,19 @@ function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
                 table.insert(LocalBullets, bullet)
             end
             dupa = self.dexterity
+            
+
+            if 1.6>angle and angle>-1.6 then
+                rotate = -5
+                offset = -120
+            else
+                rotate = 5
+                offset = 40
+            end 
         end
-    
-        
-        
+    else
+        animation:pause()
+        animation:gotoFrame(1)
     end
 end
 

@@ -22,7 +22,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {} 
 local testRect = {x=0, y=0, w=100, h=100, size=100}
-local LocalPlayer = Player:new(400, 300, 80, "Archer")
+local LocalPlayer = Player:new(400, 300, 80, "Warrior")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
@@ -30,7 +30,7 @@ local joystick = Joystick.new(100, 250, 50, 100, 20000)
 
 local gameMap = require("script.gameMap")
 
-local PlayerCollider = world:newBSGRectangleCollider(610, 400, 35, 10,1)
+local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 
