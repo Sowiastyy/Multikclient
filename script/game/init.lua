@@ -30,7 +30,7 @@ local joystick = Joystick.new(100, 250, 50, 100, 20000)
 
 local gameMap = require("script.gameMap")
 
-local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
+local PlayerCollider = world:newBSGRectangleCollider(610, 400, 35, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 
@@ -229,7 +229,7 @@ function Game:update(dt)
     world:update(dt)
     PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
     LocalPlayer.x = PlayerCollider:getX()
-    LocalPlayer.y = PlayerCollider:getY()-33
+    LocalPlayer.y = PlayerCollider:getY()-38
 end
 
 function Game:draw()
