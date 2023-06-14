@@ -1,10 +1,10 @@
 local Player = {}
-local playerIMG= love.graphics.newImage("img/characters/Warrior-Blue.png")
-local quad = love.graphics.newQuad(0, 0, 32, 32, playerIMG:getDimensions())
 local img = {}
-img["Warrior-Blue"] = love.graphics.newImage("img/characters/Warrior-Blue.png")
-img["Archer-Green"] = love.graphics.newImage("img/characters/Archer-Green.png")
-img["Archer-Purple"] = love.graphics.newImage("img/characters/Archer-Purple.png")
+img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
+img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
+img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
+local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
+
 function Player:new(x, y, size, hero)
     local player = {
         x = x,
@@ -16,10 +16,10 @@ function Player:new(x, y, size, hero)
         vx = 0,
         vy = 0,
         dexterity = 0.2,
-        w=32,
-        h=60,
-        bulletCollisionOffsetY = 8,
-        bulletCollisionOffsetX = 16
+        w=40,
+        h=50,
+        bulletCollisionOffsetY = 30,
+        bulletCollisionOffsetX = 20
     }
     setmetatable(player, self)
     self.__index = self
@@ -28,17 +28,14 @@ end
 
 function Player:draw()
     local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
-    love.graphics.rectangle("line", x+((self.size-60)/2), y+self.size, 60, 10)
     love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
 
-    local scale = 4
-    love.graphics.scale(scale, scale)
-    love.graphics.draw(img[self.hero], quad, x/scale-8, y/scale-8)
-    love.graphics.scale(1/scale, 1/scale)
+    love.graphics.draw(img[self.hero], quad, x-40, y-40, 0, 5, 5)
+
     local r1 = {
         x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
@@ -55,8 +52,7 @@ function Player:toString()
 end
 
 ---comment
----@param stateChangedCallback function
-function Player:controller(stateChangedCallback)
+function Player:controller(dt)
     local stateChanged = false
     if love.keyboard.isDown("w") then
         stateChanged=true
@@ -78,11 +74,10 @@ function Player:controller(stateChangedCallback)
     else
         self.vx = 0
     end
-    if stateChanged and stateChangedCallback then
-        stateChangedCallback()
-    end
 end
-
+function Player:update(dt)
+    self:controller()
+end
 local dupa = 0
 function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
     if love.mouse.isDown(1) then

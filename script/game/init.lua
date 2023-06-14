@@ -20,9 +20,9 @@ local cam = camera()
 cam.scale =  cam.scale * 0.8
 local LocalBullets =  {}
 local AllyBullets = {}
-local EnemyBullets = {}
+local EnemyBullets = {} 
 local testRect = {x=0, y=0, w=100, h=100, size=100}
-local LocalPlayer = Player:new(400, 300, 64, "Archer-Purple")
+local LocalPlayer = Player:new(400, 300, 80, "Archer")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
@@ -30,7 +30,7 @@ local joystick = Joystick.new(100, 250, 50, 100, 20000)
 
 local gameMap = require("script.gameMap")
 
-local PlayerCollider = world:newBSGRectangleCollider(600, 400, 30, 10,1)
+local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 
@@ -103,9 +103,7 @@ function client:onmessage(s)
 end
 
 function client:onopen()
-    if LocalPlayer.id then
-        self:send(LocalPlayer:toString())
-    end
+
 end
 
 function client:onerror(e)
@@ -181,9 +179,10 @@ local Game = {
 }
 function Game:update(dt)
     client:update()
-    LocalPlayer:controller(function ()
+    LocalPlayer:update(dt)
+    if LocalPlayer.id then
         client:send(LocalPlayer:toString())
-    end)
+    end
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg

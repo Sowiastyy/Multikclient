@@ -26,7 +26,6 @@ end
 function Enemy:draw()
     local img = stats[self.type].image
     local x, y = self.x-(stats[self.type].width/2), self.y-(stats[self.type].height/2)
-    love.graphics.rectangle("line", x+((img:getWidth()-60)/2), y+img:getHeight(), 60, 10)
     love.graphics.setColor(1, 0, 0)
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59, 9)
     love.graphics.setColor(0, 1, 0)
