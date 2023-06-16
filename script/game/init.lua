@@ -13,8 +13,8 @@ local chat = require("script.chat")
 local Joystick = require("script.joystick")
 
 require("script.helpers")
---local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
-local client = require("lib.websocket").new("localhost", 5001)
+local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+--local client = require("lib.websocket").new("localhost", 5001)
 
 local world = wf.newWorld(0, 0) 
 
