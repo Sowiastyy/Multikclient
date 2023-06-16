@@ -1,5 +1,6 @@
 
 ---@diagnostic disable: missing-parameter, duplicate-set-field
+THIS_ID=0
 love.graphics.setDefaultFilter("nearest", "nearest")
 love.window.setVSync(0)
 local Player = require("script.player")
@@ -8,11 +9,12 @@ local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local wf = require("lib.windfield")
+local chat = require("script.chat")
 local Joystick = require("script.joystick")
 
 require("script.helpers")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+--local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
+local client = require("lib.websocket").new("localhost", 5001)
 
 local world = wf.newWorld(0, 0) 
 
@@ -22,7 +24,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {} 
 local testRect = {x=0, y=0, w=100, h=100, size=100}
-local LocalPlayer = Player:new(400, 300, 80, "Warrior")
+local LocalPlayer = Player:new(400, 300, 80, "Archer")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
@@ -50,6 +52,11 @@ end
 
 function love.touchreleased(id, x, y, dx, dy, pressure)
     joystick:touchreleased(id, x, y, dx, dy, pressure)
+end
+function love.keypressed(k)
+    if k=="return" then
+        chat:onReturnClick(client, "Macius200"..THIS_ID)
+    end
 end
 local function handleEnemyData()
 
@@ -88,13 +95,21 @@ local function getEntity(s)
         newPlayerData:fromString(s)
         if newPlayerData.id==LocalPlayer.id then return end
         Players[newPlayerData.id]=newPlayerData
+    elseif s:find("^MSG") then
+        local parts = {}
+        for part in s:gmatch("([^|]+)") do
+            table.insert(parts, part)
+        end
+        table.insert(chat.messages, parts[2])
     end
+
 end
 
 function client:onmessage(s)
     --print(s) 
     if s:find("^YourID=") then
         LocalPlayer.id = tonumber(string.sub(s, 8))
+        THIS_ID = LocalPlayer.id
     elseif s:find("^ENTITIES") then
         Enemies = {}
         Players = {}
@@ -114,13 +129,6 @@ end
 
 function client:onclose(code, reason)
     print("closecode: "..code..", reason: "..reason)
-end
-
-
-function love.quit()
-    client:send("DEL_PLAYER|"..LocalPlayer.id)
-    print("QUIT")
-    love.timer.sleep(1)
 end
 
 function sortowanie()
@@ -247,7 +255,7 @@ function Game:draw()
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
-    
+    chat:draw(300, 400)
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
 
