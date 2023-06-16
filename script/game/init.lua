@@ -1,5 +1,3 @@
-
----@diagnostic disable: missing-parameter, duplicate-set-field
 THIS_ID=0
 love.graphics.setDefaultFilter("nearest", "nearest")
 love.window.setVSync(0)
@@ -8,15 +6,13 @@ local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
-local wf = require("lib.windfield")
 local chat = require("script.chat")
 local Joystick = require("script.joystick")
 
 require("script.helpers")
-local client = require("lib.websocket").new("prosze-dziala.herokuapp.com", 80)
---local client = require("lib.websocket").new("localhost", 5001)
+local client = require("script.client")
 
-local world = wf.newWorld(0, 0) 
+local world = require("lib.windfield").newWorld(0, 0)
 
 local cam = camera()
 cam.scale =  cam.scale * 0.8
@@ -24,7 +20,7 @@ local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {} 
 local testRect = {x=0, y=0, w=100, h=100, size=100}
-local LocalPlayer = Player:new(400, 300, 80, "Archer")
+local LocalPlayer = require("script.player.LocalPlayer")
 local Players = {}
 local Enemies = {}
 local joystick = Joystick.new(100, 250, 50, 100, 20000)
@@ -53,14 +49,13 @@ end
 function love.touchreleased(id, x, y, dx, dy, pressure)
     joystick:touchreleased(id, x, y, dx, dy, pressure)
 end
+
 function love.keypressed(k)
     if k=="return" then
         chat:onReturnClick(client, "Macius200"..THIS_ID)
     end
 end
-local function handleEnemyData()
 
-end
 local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
@@ -119,80 +114,12 @@ function client:onmessage(s)
     end
 end
 
-function client:onopen()
+local Game = {}
 
-end
-
-function client:onerror(e)
-    print(e)
-end
-
-function client:onclose(code, reason)
-    print("closecode: "..code..", reason: "..reason)
-end
-
-function sortowanie()
-
-    local sort = {{LocalPlayer.y+43,"gracz"}}
-    local scale = 1.2
-
-    
-    for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
-        if lay.type == "objectgroup" then
-            for index, value in ipairs(lay.objects) do
-                table.insert(sort, {value.y, "drzewo", index1})
-            end
-        end
-    end
-
-    for index, value in pairs(Players) do
-        table.insert(sort, {value.y + 43 , "players", index})
-    end
-    
-    for index, value in pairs(Enemies) do
-        table.insert(sort, {value.y, "enemy", index})
-    end
-
-    local x = #sort
-
-    for i = 0, x, 1 do
-        for j = 1, x-i-1, 1 do
-            
-            if sort[j][1]>sort[j+1][1] then
-                sort[j] , sort[j+1] = sort[j+1] , sort[j]     
-            end
-        end
-    end
-    -- tu sortowanie bombelkowe zrobic mam
-    for index, value in ipairs(sort) do
-        
-        if value[2] == "gracz"then
-            
-            LocalPlayer:draw()
-            
-        elseif value[2] == "drzewo" then
-            gameMap:drawLayer(gameMap.layers[value[3]])
-        elseif value[2] == "players" then
-            Players[value[3]]:draw()
-        elseif value[2] == "enemy" then
-            Enemies[value[3]]:draw()
-        end
-    end
-    
-    
-    return nil
-end
-local Game = {
-    object = {
-        
-    }
-}
 function Game:update(dt)
     client:update()
-    LocalPlayer:update(dt)
-    if LocalPlayer.id then
-        client:send(LocalPlayer:toString())
-    end
+    LocalPlayer:update(dt, LocalBullets)
+
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
@@ -231,9 +158,12 @@ function Game:update(dt)
     updateBullets(EnemyBullets, dt)
 
     cam:lookAt(LocalPlayer.x, LocalPlayer.y)
-    
-    LocalPlayer:shoot(Bullet, client, Attack, LocalBullets, dt)
-    
+    if LocalPlayer.hp<0 then
+        PlayerCollider:destroy()
+        PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
+        PlayerCollider:setFixedRotation(true)
+        LocalPlayer.hp = 100
+    end
     world:update(dt)
     PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
     LocalPlayer.x = PlayerCollider:getX()
@@ -242,20 +172,16 @@ end
 
 function Game:draw()
     cam:attach()
-        love.graphics.scale(4,4)
-        gameMap:drawLayer(gameMap.layers[1])
-        love.graphics.scale(0.25,0.25)
-        sortowanie()
+        gameMap:draw(LocalPlayer, Enemies, Players)
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
-        drawObjectsArray(Enemies)
         world:draw()
 
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     joystick:draw()
-    chat:draw(300, 400)
+    chat:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
 end
 

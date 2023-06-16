@@ -1,6 +1,9 @@
 local Player = {}
 local img = {}
 local anim8 = require("lib.anim8")
+local Bullet = require("script.bullet")
+local Attack = require("script.bullet.attack")
+local client = require("script.client")
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
@@ -109,7 +112,7 @@ function Player:update(dt)
     animation:update(dt)
 end
 
-function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
+function Player:shoot(LocalBullets, dt )
     
     if love.mouse.isDown(1) then
         animation:resume()
