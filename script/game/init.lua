@@ -79,7 +79,7 @@ local function getEntity(s)
             for part in newBulletData.parent:gmatch("([^|]+)") do
                 table.insert(parts, part)
             end
-            if newBulletData.parent=="enm" then
+            if parts[1]=="enm" then
                 table.insert(EnemyBullets, newBulletData)
             elseif tonumber(parts[2])~=tonumber(LocalPlayer.id) then
                 table.insert(AllyBullets, newBulletData)
@@ -122,6 +122,7 @@ function Game:update(dt)
 
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
+            print("ALE JEB Lo")
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)
         end

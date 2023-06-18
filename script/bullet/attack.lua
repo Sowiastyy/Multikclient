@@ -20,10 +20,7 @@ local function Attack_fromString(str)
     local x = tonumber(parts[2])
     local y = tonumber(parts[3])
     local angle = tonumber(parts[4])
-    local parent = parts[5]
-    if parts[6]~="0" then
-        parent = parts[5].."|"..parts[6]
-    end
+    local parent = parts[5].."|"..parts[6]
     local bulletType = parts[7]
     local attackType = parts[8]
     local spread = tonumber(parts[9])
