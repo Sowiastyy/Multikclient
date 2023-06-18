@@ -1,18 +1,19 @@
 --! file: enemy.lua
 local stats = require("script.enemy.stats")
+
+
 Enemy = {}
 function Enemy:new(id, x, y, type)
     local enemy = {
         id = id,
         x = x or 0,
         y = y or 0,
-        size = stats[type or "testEnemy"].size,
         hp = stats[type or "testEnemy"].hp,
         type = type or "testEnemy",
         w = stats[type or "testEnemy"].width,
         h = stats[type or "testEnemy"].height,
-        
-
+        bulletCollisionOffsetY = stats[type or "testEnemy"].bulletCollisionOffsetY,
+        bulletCollisionOffsetX = stats[type or "testEnemy"].bulletCollisionOffsetX,
     }
     setmetatable(enemy, self)
     self.__index = self
@@ -20,7 +21,9 @@ function Enemy:new(id, x, y, type)
 end
 
 function Enemy:update(dt)
-
+    if stats[self.type].update then
+        stats[self.type].update(self,dt)
+    end
 end
 
 function Enemy:draw()
@@ -31,18 +34,36 @@ function Enemy:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
-    love.graphics.draw(img, x, y)
+    
+    if stats[self.type].draw then
+        stats[self.type].draw(self, x, y)
+    else
+        love.graphics.draw(img, x, y)
+    end
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
+    
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
 end
 
 function Enemy:fromString(str)
+    if self.id>0 then
+        local parts = {}
+        for part in str:gmatch("([^|]+)") do
+        table.insert(parts, part)
+        end
+
+        self.x = tonumber(parts[3])
+        self.y = tonumber(parts[4])
+        self.hp = tonumber(parts[5])
+        
+        return
+    end
     local parts = {}
     for part in str:gmatch("([^|]+)") do
     table.insert(parts, part)
@@ -52,6 +73,9 @@ function Enemy:fromString(str)
     self.y = tonumber(parts[4])
     self.hp = tonumber(parts[5])
     self.type = parts[6]
+    self.w = stats[self.type or "testEnemy"].width
+    self.h = stats[self.type or "testEnemy"].height
+    self.bulletCollisionOffsetY = stats[self.type or "testEnemy"].bulletCollisionOffsetY
+    self.bulletCollisionOffsetX = stats[self.type or "testEnemy"].bulletCollisionOffsetX
 end
-
 return Enemy

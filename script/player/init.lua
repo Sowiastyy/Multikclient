@@ -1,22 +1,25 @@
 local Player = {}
 local img = {}
 local anim8 = require("lib.anim8")
+local Bullet = require("script.bullet")
+local Attack = require("script.bullet.attack")
+local client = require("script.client")
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
---local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
+local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
 
-local g = anim8.newGrid(32, 32, img["Warrior"]:getWidth(), img["Warrior"]:getHeight())
+local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
 local animation = anim8.newAnimation(g('3-4',1), 0.1)
 
-local offset, rotate = 40, 5
+local offset = 40
 local dupa = 0
 
 function Player:new(x, y, size, hero)
     local player = {
         x = x,
         y = y,
-        size = size,
+        size = size or 80,
         hero = hero,
         hp = 100,
         spd = 500,
@@ -25,8 +28,9 @@ function Player:new(x, y, size, hero)
         dexterity = 0.2,
         w=40,
         h=50,
-        bulletCollisionOffsetY = 30,
-        bulletCollisionOffsetX = 20
+        bulletCollisionOffsetY = 10,
+        bulletCollisionOffsetX = 0,
+        rotate = 5,
     }
     setmetatable(player, self)
     self.__index = self
@@ -41,14 +45,16 @@ function Player:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
-
-    --love.graphics.draw(img[self.hero], quad, x-offset, y-40, 0, rotate, 5)
-    animation:draw(img[self.hero], x-offset, y-40, 0, rotate, 5)
+    if THIS_ID==self.id then
+        animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
+    else
+        love.graphics.draw(img[self.hero], quad, x-40, y-40, 0, 5, 5)
+    end
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
@@ -78,7 +84,7 @@ function Player:controller(dt)
         stateChanged2=true
         self.vx = self.spd * -1
         if love.mouse.isDown(1) == false then
-            rotate = 5
+            self.rotate = 5
             offset = 40
         end
         
@@ -86,8 +92,8 @@ function Player:controller(dt)
         stateChanged2=true
         self.vx = self.spd
         if love.mouse.isDown(1) == false then
-            rotate = -5
-             offset = -120
+            self.rotate = -5
+            offset = -120
         end
     else
         self.vx = 0
@@ -104,7 +110,7 @@ function Player:update(dt)
     animation:update(dt)
 end
 
-function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
+function Player:shoot(LocalBullets, dt )
     
     if love.mouse.isDown(1) then
         animation:resume()
@@ -122,10 +128,10 @@ function Player:shoot(Bullet, client, Attack, LocalBullets, dt )
             
 
             if 1.6>angle and angle>-1.6 then
-                rotate = -5
+                self.rotate = -5
                 offset = -120
             else
-                rotate = 5
+                self.rotate = 5
                 offset = 40
             end 
         end
@@ -178,10 +184,10 @@ end
 
 function Player:checkBulletCollision(bullet)
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
     local r2 = {
