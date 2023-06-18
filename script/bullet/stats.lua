@@ -79,7 +79,7 @@ stats["battleAxe"] = {
 }
 stats["nut"] = {
     speed=900,
-    damage=30,
+    damage=10,
     life=3,
     img=5,
     width=5,

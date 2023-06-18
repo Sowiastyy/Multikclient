@@ -9,7 +9,7 @@ img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
 local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
 
-local g = anim8.newGrid(32, 32, img["Warrior"]:getWidth(), img["Warrior"]:getHeight())
+local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
 local animation = anim8.newAnimation(g('3-4',1), 0.1)
 
 local offset = 40

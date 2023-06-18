@@ -122,7 +122,6 @@ function Game:update(dt)
 
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
-            print("ALE JEB Lo")
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)
         end
@@ -134,6 +133,7 @@ function Game:update(dt)
     end
     for index, enemy in pairs(Enemies) do
         if enemy then
+            enemy:update(dt)
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)

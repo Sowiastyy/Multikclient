@@ -1,4 +1,7 @@
 local stats = {}
+local anim8 = require("lib.anim8")
+local loggerSheet = love.graphics.newImage("img/characters/loggers.png")
+local quadTest = love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions())
 stats["testEnemy"] = {
     image = love.graphics.newImage("img/crang_kun.png"),
     speed = 100,
@@ -9,13 +12,22 @@ stats["testEnemy"] = {
 stats["testBoss"] = {
     image = love.graphics.newImage("img/bossTest.png"),
     speed = 50,
-    hp = 2000,
+    hp = 5000,
     width = 114,
     height = 138
 }
 
-stats["logger"] = {
-    image = love.graphics.newImage("img/characters/loggers.png"),
+stats["Logger"] = {
+    image = loggerSheet,
+    init = function (self)
+        self.animation = anim8.newAnimation(anim8.newGrid(32, 32, loggerSheet:getDimensions())('1-2',1), 0.1)
+    end,
+    update = function (self, dt)
+        self.animation:update(dt)
+    end,
+    draw = function (x, y)
+        love.graphics.draw(loggerSheet, quadTest, x, y, 0, 4, 4)
+    end,
     hp = 125,
     scale = 4,
     width = 114,
