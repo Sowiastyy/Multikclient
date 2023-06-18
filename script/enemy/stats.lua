@@ -20,13 +20,14 @@ stats["testBoss"] = {
 stats["Logger"] = {
     image = loggerSheet,
     init = function (self)
-        self.animation = anim8.newAnimation(anim8.newGrid(32, 32, loggerSheet:getDimensions())('1-2',1), 0.1)
+        local g =anim8.newGrid(32, 32, loggerSheet:getDimensions())
+        self.animation = anim8.newAnimation(g('1-2',1), 0.25)
     end,
     update = function (self, dt)
         self.animation:update(dt)
     end,
-    draw = function (x, y)
-        love.graphics.draw(loggerSheet, quadTest, x, y, 0, 4, 4)
+    draw = function (self, x, y)
+        self.animation:draw(loggerSheet, x, y, 0, 5, 5)
     end,
     hp = 125,
     scale = 4,

@@ -233,7 +233,7 @@ function Animation:update(dt)
     local f = type(self.onLoop) == 'function' and self.onLoop or self[self.onLoop]
     f(self, loops)
   end
-
+  print("JAK"..self.position)
   self.position = seekFrameIndex(self.intervals, self.timer)
 end
 
