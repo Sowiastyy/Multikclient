@@ -34,6 +34,7 @@ function Enemy:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
+    
     if stats[self.type].draw then
         stats[self.type].draw(self, x, y)
     else

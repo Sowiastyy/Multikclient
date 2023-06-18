@@ -65,23 +65,23 @@ stats["axe"] = {
     damage=30,
     life=3,
     img=5,
-    width=5,
+    width=8,
     height=4,
 }
 stats["battleAxe"] = {
     speed=175,
     damage=45,
     life=3,
-    img=5,
-    width=5,
+    img=6,
+    width=8,
     height=7,
     updatePattern="returnBack"
 }
 stats["nut"] = {
-    speed=900,
+    speed=300,
     damage=10,
     life=3,
-    img=5,
+    img=7,
     width=5,
     height=3,
 }
