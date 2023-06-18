@@ -6,13 +6,10 @@ function Enemy:new(id, x, y, type)
         id = id,
         x = x or 0,
         y = y or 0,
-        size = stats[type or "testEnemy"].size,
         hp = stats[type or "testEnemy"].hp,
         type = type or "testEnemy",
         w = stats[type or "testEnemy"].width,
         h = stats[type or "testEnemy"].height,
-        
-
     }
     setmetatable(enemy, self)
     self.__index = self
@@ -33,10 +30,10 @@ function Enemy:draw()
     love.graphics.setColor(1, 1, 1)
     love.graphics.draw(img, x, y)
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)

@@ -19,7 +19,7 @@ function Player:new(x, y, size, hero)
     local player = {
         x = x,
         y = y,
-        size = size,
+        size = size or 80,
         hero = hero,
         hp = 100,
         spd = 500,
@@ -28,8 +28,8 @@ function Player:new(x, y, size, hero)
         dexterity = 0.2,
         w=40,
         h=50,
-        bulletCollisionOffsetY = 30,
-        bulletCollisionOffsetX = 20,
+        bulletCollisionOffsetY = 10,
+        bulletCollisionOffsetX = 0,
         rotate = 5,
     }
     setmetatable(player, self)
@@ -48,15 +48,13 @@ function Player:draw()
     if THIS_ID==self.id then
         animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
     else
-        love.graphics.draw(img[self.hero], quad, x-offset, y-40, 0, 5, 5)
+        love.graphics.draw(img[self.hero], quad, x, y-40, 0, 5, 5)
     end
-
-    
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
@@ -186,10 +184,10 @@ end
 
 function Player:checkBulletCollision(bullet)
     local r1 = {
-        x = self.x-(self.size/2)+(self.bulletCollisionOffsetX or 0),
-        y = self.y-(self.size/2)+(self.bulletCollisionOffsetY or 0),
-        w = self.w or self.size,
-        h = self.h or self.size,
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
         angle = self.angle or 0
     }
     local r2 = {

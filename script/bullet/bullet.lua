@@ -50,9 +50,14 @@ function Bullet:update(dt)
 end
 function Bullet:draw()
     local scale = 4
+	love.graphics.push()
     love.graphics.scale(scale, scale)
-    love.graphics.draw(bulletIMG, quad[stats[self.type].img], self.x/scale, self.y/scale, self.angle)
-    love.graphics.scale(1/scale, 1/scale)
+	love.graphics.translate(self.x/scale + self.w/2, self.y/scale + self.h/2)
+	love.graphics.rotate(self.angle)
+	love.graphics.translate(-self.w/2, -self.h/2)
+    love.graphics.draw(bulletIMG, quad[stats[self.type].img], 0, 0)
+	love.graphics.pop()
+
 end
 function Bullet:toString()
     return string.format("BULLET|%f|%f|%f|%s|%s", self.x, self.y, self.angle, self.type, self.parent)
