@@ -48,7 +48,7 @@ function Player:draw()
     if THIS_ID==self.id then
         animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
     else
-        love.graphics.draw(img[self.hero], quad, x, y-40, 0, 5, 5)
+        love.graphics.draw(img[self.hero], quad, x-40, y-40, 0, 5, 5)
     end
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
