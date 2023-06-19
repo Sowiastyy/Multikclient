@@ -10,7 +10,7 @@ img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
 local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
 
 local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
-local animation = anim8.newAnimation(g('3-4',1), 0.1)
+local animation = anim8.newAnimation(g('1-4',1), 0.1)
 
 local offset = 40
 local dupa = 0
@@ -104,6 +104,20 @@ function Player:controller(dt)
         self.vx = self.vx /math.sqrt(2)
         self.vy = self.vy /math.sqrt(2)
     end
+
+    if (stateChanged == true or stateChanged2 == true) and love.mouse.isDown(1) == false then
+        if animation.position == 3 then
+            animation:gotoFrame(1)
+        end
+        animation:resume()
+        
+        
+        
+    elseif love.mouse.isDown(1) == false then
+        animation:gotoFrame(1)
+        
+    end
+
 end
 function Player:update(dt)
     self:controller()
@@ -113,6 +127,9 @@ end
 function Player:shoot(LocalBullets, dt )
     
     if love.mouse.isDown(1) then
+        if animation.position == 1 then
+            animation:gotoFrame(3)
+        end
         animation:resume()
         dupa = dupa - dt
         if dupa<0 then
@@ -136,8 +153,8 @@ function Player:shoot(LocalBullets, dt )
             end 
         end
     else
-        animation:pause()
-        animation:gotoFrame(1)
+       --[[ animation:pause()
+        animation:gotoFrame(1)]]--
     end
 end
 
