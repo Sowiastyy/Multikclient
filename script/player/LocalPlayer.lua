@@ -13,8 +13,8 @@ function LocalPlayer:update(dt, LocalBullets)
     end
     if cooldownspell <= 0 and self.mp >= 50 then
         if love.keyboard.isDown("space") then
-            self.mp = self.mp - 1
-            cooldownspell = 1
+            self.mp = self.mp - 50
+            cooldownspell = 3
 
 
             local x, y = love.mouse.getPosition( )
