@@ -8,7 +8,7 @@ local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local chat = require("script.chat")
 local Joystick = require("script.joystick")
-
+local gui = require("script.gui")
 require("script.helpers")
 local client = require("script.client")
 
@@ -181,9 +181,10 @@ function Game:draw()
 
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
+    gui:draw()
     joystick:draw()
     chat:draw()
-    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 10, 10)
+    love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 168, 10)
 end
 
 return Game

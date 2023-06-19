@@ -35,8 +35,13 @@ function Enemy:draw()
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
     
-    if stats[self.type].draw then
-        stats[self.type].draw(self, x, y)
+
+    if stats[self.type].drawableData then
+        if self.rotate==-1 then
+            x = x+160
+        end
+        local drawable, quad = stats[self.type].drawableData(self.frame)
+        love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5)
     else
         love.graphics.draw(img, x, y)
     end
@@ -61,7 +66,8 @@ function Enemy:fromString(str)
         self.x = tonumber(parts[3])
         self.y = tonumber(parts[4])
         self.hp = tonumber(parts[5])
-        
+        self.rotate = tonumber(parts[7])
+        self.frame = tonumber(parts[8])
         return
     end
     local parts = {}
@@ -73,6 +79,8 @@ function Enemy:fromString(str)
     self.y = tonumber(parts[4])
     self.hp = tonumber(parts[5])
     self.type = parts[6]
+    self.rotate = tonumber(parts[7])
+    self.frame = tonumber(parts[8])
     self.w = stats[self.type or "testEnemy"].width
     self.h = stats[self.type or "testEnemy"].height
     self.bulletCollisionOffsetY = stats[self.type or "testEnemy"].bulletCollisionOffsetY

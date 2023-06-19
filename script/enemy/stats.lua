@@ -2,7 +2,7 @@ local stats = {}
 local anim8 = require("lib.anim8")
 local loggerSheet = love.graphics.newImage("img/characters/loggers.png")
 local quadTest = {
-    love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions()),
+    love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions()),love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions()),
     love.graphics.newQuad(0, 32, 32, 32, loggerSheet:getDimensions()),
     love.graphics.newQuad(0, 64, 32, 32, loggerSheet:getDimensions()),
     love.graphics.newQuad(0, 96, 32, 32, loggerSheet:getDimensions()),
@@ -24,10 +24,20 @@ stats["testBoss"] = {
     width = 114,
     height = 138
 }
+LoggerFrames = {}
+local i = 0
+for y = 0, 4 do
+    for x = 0, 1 do
+        local quad = love.graphics.newQuad(x * 32, y * 32, 32, 32, loggerSheet:getWidth(), loggerSheet:getHeight())
+        table.insert(LoggerFrames, quad) -- Dodanie quada do tablicy
+        i=i+1
+        print(x, y, i)
+    end
+end
 stats["Logger"] = {
     image = loggerSheet,
-    draw = function (self, x, y)
-        love.graphics.draw(loggerSheet, quadTest[2], x-40, y, 0, 5, 5)
+    drawableData = function (frame)
+        return loggerSheet, LoggerFrames[frame+2]
     end,
     hp = 125,
     width = 80,
@@ -37,8 +47,8 @@ stats["Logger"] = {
 }
 stats["CrazyLogger"] = {
     image = loggerSheet,
-    draw = function (self, x, y)
-        love.graphics.draw(loggerSheet, quadTest[1], x-40, y, 0, 5, 5)
+    drawableData = function (frame)
+        return loggerSheet, LoggerFrames[frame]
     end,
     hp = 125,
     width = 80,
@@ -48,8 +58,8 @@ stats["CrazyLogger"] = {
 }
 stats["BattleLogger"] = {
     image = loggerSheet,
-    draw = function (self, x, y)
-        love.graphics.draw(loggerSheet, quadTest[3], x-40, y, 0, 5, 5)
+    drawableData = function (frame)
+        return loggerSheet, LoggerFrames[frame+4]
     end,
     hp = 125,
     width = 80,
@@ -59,8 +69,8 @@ stats["BattleLogger"] = {
 }
 stats["Squirwel"] = {
     image = loggerSheet,
-    draw = function (self, x, y)
-        love.graphics.draw(loggerSheet, quadTest[5], x-40, y, 0, 5, 5)
+    drawableData = function (frame)
+        return loggerSheet, LoggerFrames[frame+8]
     end,
     hp = 125,
     width = 80,
@@ -70,8 +80,8 @@ stats["Squirwel"] = {
 }
 stats["PimpLogger"] = {
     image = loggerSheet,
-    draw = function (self, x, y)
-        love.graphics.draw(loggerSheet, quadTest[4], x-40, y, 0, 5, 5)
+    drawableData = function (frame)
+        return loggerSheet, LoggerFrames[frame+6]
     end,
     hp = 450,
     width = 80,
