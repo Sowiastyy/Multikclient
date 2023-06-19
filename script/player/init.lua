@@ -18,6 +18,12 @@ local animation = anim8.newAnimation(g('1-4',1), 0.1)
 local offset = 40
 local dupa = 0
 
+local typeBullet= {}
+typeBullet["Warrior"] = "axe"
+typeBullet["Archer"] = "arrow"
+typeBullet["Wizard"] = "magic_bullet"
+
+
 function Player:new(x, y, size, hero)
     local player = {
         x = x,
@@ -145,7 +151,7 @@ function Player:shoot(LocalBullets, dt )
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
             local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..self.id, "arrow")
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..self.id, typeBullet[self.hero])
             local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
