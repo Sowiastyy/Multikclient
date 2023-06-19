@@ -22,6 +22,8 @@ function Player:new(x, y, size, hero)
         size = size or 80,
         hero = hero,
         hp = 100,
+        mp = 100,
+        maxMp = 200,
         spd = 500,
         vx = 0,
         vy = 0,
