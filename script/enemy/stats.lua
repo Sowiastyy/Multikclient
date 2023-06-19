@@ -21,6 +21,13 @@ stats["testBoss"] = {
     image = love.graphics.newImage("img/bossTest.png"),
     speed = 50,
     hp = 5000,
+    width = 256,
+    height = 256
+}
+stats["testBoss2"] = {
+    image = love.graphics.newImage("img/cyklop/leftwalk.png"),
+    speed = 50,
+    hp = 5000,
     width = 114,
     height = 138
 }
