@@ -56,8 +56,6 @@ function Player:draw()
         if self.rotate<0 then
             x = x+160
         end
-        print(self.frame)
-        print(frames[self.frame])
         love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
     end
     local r1 = {
@@ -244,8 +242,6 @@ function Player:fromString(str)
     self.hero = parts[7]
     self.rotate = tonumber(parts[8])
     self.frame =  tonumber(parts[9])
-    print("STR", str)
-    print("FRAME", self.frame)
 end
 
 
