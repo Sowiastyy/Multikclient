@@ -7,8 +7,11 @@ local client = require("script.client")
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
-local quad = love.graphics.newQuad(0, 0, 32, 32, img["Warrior"]:getDimensions())
-
+local frames = {}
+for x = 0, 3 do
+    local quad = love.graphics.newQuad(x * 32, 0, 32, 32, img["Warrior"]:getDimensions())
+    table.insert(frames, quad)
+end
 local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
 local animation = anim8.newAnimation(g('3-4',1), 0.1)
 
@@ -31,6 +34,7 @@ function Player:new(x, y, size, hero)
         bulletCollisionOffsetY = 10,
         bulletCollisionOffsetX = 0,
         rotate = 5,
+        frame =  1,
     }
     setmetatable(player, self)
     self.__index = self
@@ -45,10 +49,16 @@ function Player:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
+    
     if THIS_ID==self.id then
         animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
     else
-        love.graphics.draw(img[self.hero], quad, x-40, y-40, 0, 5, 5)
+        if self.rotate<0 then
+            x = x+160
+        end
+        print(self.frame)
+        print(frames[self.frame])
+        love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
     end
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
@@ -61,8 +71,8 @@ function Player:draw()
 end
 
 function Player:toString()
-    return string.format("PLAYER|%d|%d|%d|%f|%d|%s",
-        self.id, self.x, self.y, self.hp, self.size, self.hero)
+    return string.format("PLAYER|%d|%d|%d|%f|%d|%s|%d|%d",
+        self.id, self.x, self.y, self.hp, self.size, self.hero, self.rotate, animation.position)
 end
 
 ---comment
@@ -215,6 +225,10 @@ function Player:fromString(str)
     self.hp = tonumber(parts[5])
     self.size = tonumber(parts[6])
     self.hero = parts[7]
+    self.rotate = tonumber(parts[8])
+    self.frame =  tonumber(parts[9])
+    print("STR", str)
+    print("FRAME", self.frame)
 end
 
 
