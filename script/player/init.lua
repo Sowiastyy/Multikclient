@@ -140,9 +140,8 @@ function Player:update(dt)
     animation:update(dt)
 end
 
-function Player:shoot(LocalBullets, dt )
-    
-    if love.mouse.isDown(1) then
+function Player:shoot(LocalBullets, dt, condition, presetAngle)
+    if condition or love.mouse.isDown(1) then
         if animation.position == 1 then
             animation:gotoFrame(3)
         end
@@ -150,7 +149,7 @@ function Player:shoot(LocalBullets, dt )
         dupa = dupa - dt
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
-            local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            local angle = presetAngle or Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
             local bullet = Bullet:new(self.x, self.y, angle, "plr|"..self.id, typeBullet[self.hero])
             local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
             for _, bullet in ipairs(bullets) do

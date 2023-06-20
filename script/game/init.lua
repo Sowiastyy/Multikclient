@@ -7,7 +7,6 @@ local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
 local chat = require("script.chat")
-local Joystick = require("script.joystick")
 local gui = require("script.gui")
 require("script.helpers")
 local client = require("script.client")
@@ -21,11 +20,38 @@ local AllyBullets = {}
 local EnemyBullets = {} 
 local testRect = {x=0, y=0, w=100, h=100, size=100}
 local LocalPlayer = require("script.player.LocalPlayer")
+
 local Players = {}
 local Enemies = {}
-local joystick = Joystick.new(100, 250, 50, 100, 20000)
+local mobile = false
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    mobile = true
+end
+local MobileController
+local mobileController
+local mobileController2
+if mobile then
+    MobileController = require("script.player.mobileController")
+    mobileController = MobileController:new()
+    mobileController2 = MobileController:new("right")
+    function love.touchpressed(id, x, y)
+        mobileController:touchPressed(id, x, y)
+        mobileController2:touchPressed(id, x, y)
+    end
+
+    function love.touchmoved(id, x, y)
+        mobileController:touchMoved(id, x, y)
+        mobileController2:touchMoved(id, x, y)
+    end
+
+    function love.touchreleased(id, x, y)
+        mobileController:touchReleased(id, x, y)
+        mobileController2:touchReleased(id, x, y)
+    end
+end
 
 
+LocalPlayer.shootMobile = LocalPlayer.shoot
 local gameMap = require("script.gameMap")
 
 local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
@@ -36,18 +62,6 @@ for index, obj in ipairs(gameMap:getHitboxes()) do
     local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
     wall:setType('static')
     table.insert(walls,wall)
-end
-
-function love.touchpressed(id, x, y, dx, dy, pressure)
-    joystick:touchpressed(id, x, y, dx, dy, pressure)
-end
-
-function love.touchmoved(id, x, y, dx, dy, pressure)
-    joystick:touchmoved(id, x, y, dx, dy, pressure)
-end
-
-function love.touchreleased(id, x, y, dx, dy, pressure)
-    joystick:touchreleased(id, x, y, dx, dy, pressure)
 end
 
 function love.keypressed(k)
@@ -119,6 +133,14 @@ local Game = {}
 function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)
+    if mobile then
+        LocalPlayer:shootMobile(LocalBullets, dt, mobileController2.distance>0, mobileController2.angle )
+        if mobileController.distance>0 then
+            LocalPlayer.vx =  math.cos(mobileController.angle) * 300
+            LocalPlayer.vy = math.sin(mobileController.angle) * 300
+        end
+    
+    end
 
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
@@ -147,12 +169,6 @@ function Game:update(dt)
             end
         end
     end
-    if joystick.distance>0 then
-        LocalPlayer.vx =  math.cos(joystick.angle) * joystick.speed * dt
-        LocalPlayer.vy = math.sin(joystick.angle) * joystick.speed * dt
-        client:send(LocalPlayer:toString())
-    end
-
 
     updateBullets(LocalBullets, dt)
     updateBullets(AllyBullets, dt)
@@ -182,8 +198,11 @@ function Game:draw()
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     gui:draw()
-    joystick:draw()
     chat:draw()
+    if mobile then
+        mobileController:draw()
+        mobileController2:draw()
+    end
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 168, 10)
 end
 

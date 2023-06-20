@@ -3,14 +3,19 @@ local LocalPlayer = Player:new(0, 0, 80, "Archer")
 local client = require("script.client")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
+
 local cooldownspell = 0
 local regenerateMp = 0.2
+
 function LocalPlayer:update(dt, LocalBullets)
+
     Player.update(LocalPlayer, dt)
     LocalPlayer:shoot(LocalBullets, dt)
+
     if LocalPlayer.id then
         client:send(LocalPlayer:toString())
     end
+
     if cooldownspell <= 0 and self.mp >= 50 then
         if love.keyboard.isDown("space") then
             self.mp = self.mp - 50
