@@ -35,11 +35,12 @@ function Enemy:draw()
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
     
-
+    
     if stats[self.type].drawableData then
         if self.rotate==-1 then
             x = x+160
         end
+        print(self.frame , self.type)
         local drawable, quad = stats[self.type].drawableData(self.frame)
         love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5)
     else

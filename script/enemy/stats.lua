@@ -8,6 +8,20 @@ local quadTest = {
     love.graphics.newQuad(0, 96, 32, 32, loggerSheet:getDimensions()),
     love.graphics.newQuad(0, 128, 32, 32, loggerSheet:getDimensions()),
 }
+local cyklop = love.graphics.newImage("img/cyklop/leftwalk.png")
+
+local cyklopFrames = {}
+local j = 0
+for y = 0, 1 do
+    for x = 0, 2 do
+        local quad = love.graphics.newQuad(x * 256, y * 256, 256, 256, cyklop:getWidth(), cyklop:getHeight())
+        table.insert(cyklopFrames, quad) -- Dodanie quada do tablicy
+        j=j+1
+        print(x, y, j)
+    end
+end
+
+
 stats["testEnemy"] = {
     bulletCollisionOffsetY = 0,
     bulletCollisionOffsetX = 0,
@@ -21,11 +35,14 @@ stats["testBoss"] = {
     image = love.graphics.newImage("img/bossTest.png"),
     speed = 50,
     hp = 5000,
-    width = 256,
-    height = 256
+    width = 114,
+    height = 138
 }
 stats["testBoss2"] = {
-    image = love.graphics.newImage("img/cyklop/leftwalk.png"),
+    image = cyklop,
+    drawableData = function (frame)
+        return cyklop, cyklopFrames[frame]
+    end,
     speed = 50,
     hp = 5000,
     width = 114,
