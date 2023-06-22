@@ -150,7 +150,7 @@ function Player:shoot(LocalBullets, dt, condition, presetAngle)
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
             local angle = presetAngle or Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..self.id, typeBullet[self.hero])
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero])
             local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())

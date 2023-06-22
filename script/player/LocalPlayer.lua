@@ -1,18 +1,19 @@
 local Player = require("script.player")
-local LocalPlayer = Player:new(0, 0, 80, "Archer")
+print("CLASS", CLASS)
+local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local client = require("script.client")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
 
 local cooldownspell = 0
 local regenerateMp = 0.2
-
 function LocalPlayer:update(dt, LocalBullets)
 
     Player.update(LocalPlayer, dt)
     LocalPlayer:shoot(LocalBullets, dt)
 
     if LocalPlayer.id then
+        LocalPlayer.hero=CLASS
         client:send(LocalPlayer:toString())
     end
 
