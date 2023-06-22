@@ -85,4 +85,25 @@ stats["nut"] = {
     width=5,
     height=3,
 }
+
+stats["rocks"] = {
+    speed=5,
+    damage=20,
+    life=10,
+    xoffset=0,
+    yoffset=1,
+    width=8,
+    height=6,
+    img=2,
+    updatePattern = "bigRotateAround"
+}
+
+stats["hammers"] = {
+    speed=150,
+    damage=30,
+    life=6,
+    img=5,
+    width=8,
+    height=4,
+}
 return stats

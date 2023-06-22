@@ -12,8 +12,10 @@ function Enemy:new(id, x, y, type)
         type = type or "testEnemy",
         w = stats[type or "testEnemy"].width,
         h = stats[type or "testEnemy"].height,
-        bulletCollisionOffsetY = stats[type or "testEnemy"].bulletCollisionOffsetY,
-        bulletCollisionOffsetX = stats[type or "testEnemy"].bulletCollisionOffsetX,
+        bulletCollisionOffsetY = stats[type or "testEnemy"].bulletCollisionOffsetY or 0,
+        bulletCollisionOffsetX = stats[type or "testEnemy"].bulletCollisionOffsetX or 0,
+        ox = stats[type or "testEnemy"].offsetX,
+        oy = stats[type or "testEnemy"].offsetY,
     }
     setmetatable(enemy, self)
     self.__index = self
@@ -35,17 +37,18 @@ function Enemy:draw()
     love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
     
-    
+    print (self.ox)
     if stats[self.type].drawableData then
         if self.rotate==-1 then
             x = x+160
         end
-        print(self.frame , self.type)
+        
         local drawable, quad = stats[self.type].drawableData(self.frame)
-        love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5)
+        love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
     else
         love.graphics.draw(img, x, y)
     end
+    
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
@@ -86,5 +89,7 @@ function Enemy:fromString(str)
     self.h = stats[self.type or "testEnemy"].height
     self.bulletCollisionOffsetY = stats[self.type or "testEnemy"].bulletCollisionOffsetY
     self.bulletCollisionOffsetX = stats[self.type or "testEnemy"].bulletCollisionOffsetX
+    self.ox = stats[self.type or "testEnemy"].offsetX
+    self.oy = stats[self.type or "testEnemy"].offsetY
 end
 return Enemy

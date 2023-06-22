@@ -51,6 +51,13 @@ function shotPattern.rotateAround(bullet)
     bullet.y = bullet.oy + radius * math.sin(bullet.angle)
 end
 
+function shotPattern.bigRotateAround(bullet)
+    bullet.angle = bullet.angle + (bullet.speed/1000)
+    local radius = 800
+    bullet.x = bullet.ox + radius * math.cos(bullet.angle)
+    bullet.y = bullet.oy + radius * math.sin(bullet.angle)
+end
+
 function shotPattern.spiral(bullet)
     if bullet.spiralTime then
         bullet.spiralTime = bullet.spiralTime + 1
