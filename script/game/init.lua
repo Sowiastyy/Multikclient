@@ -1,4 +1,5 @@
 THIS_ID=0
+local Game = {}
 love.graphics.setDefaultFilter("nearest", "nearest")
 love.window.setVSync(0)
 local Player = require("script.player")
@@ -6,11 +7,10 @@ local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
 local Enemy = require("script.enemy")
 local camera = require("lib.camera")
-local chat = require("script.chat")
+Game.chat = require("script.chat")
 local gui = require("script.gui")
 require("script.helpers")
 local client = require("script.client")
-
 local world = require("lib.windfield").newWorld(0, 0)
 
 local cam = camera()
@@ -64,12 +64,6 @@ for index, obj in ipairs(gameMap:getHitboxes()) do
     table.insert(walls,wall)
 end
 
-function love.keypressed(k)
-    if k=="return" then
-        chat:onReturnClick(client, "Macius200"..THIS_ID)
-    end
-end
-
 local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
@@ -109,7 +103,7 @@ local function getEntity(s)
         for part in s:gmatch("([^|]+)") do
             table.insert(parts, part)
         end
-        table.insert(chat.messages, parts[2])
+        table.insert(Game.chat.messages, parts[2])
     end
 
 end
@@ -128,7 +122,7 @@ function client:onmessage(s)
     end
 end
 
-local Game = {}
+
 
 function Game:update(dt)
     client:update()
@@ -198,7 +192,7 @@ function Game:draw()
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     gui:draw()
-    chat:draw()
+    Game.chat:draw()
     if mobile then
         mobileController:draw()
         mobileController2:draw()

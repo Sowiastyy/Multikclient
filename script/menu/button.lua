@@ -19,6 +19,7 @@ function Button:isClicked()
 end
 
 function Button:update(dt)
+    
     if love.mouse.isDown(1) then
         if self:isClicked() then
             self.callback()
@@ -27,7 +28,9 @@ function Button:update(dt)
 end
 
 function Button:draw()
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height)
-    love.graphics.print(self.label, self.x + 10, self.y + 10)
+    local y = self.y + (self.height - love.graphics.getFont():getHeight()) / 2
+    love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 5, 5)
+    love.graphics.printf(self.label, self.x, y, self.width, "center")
+
 end
 return Button

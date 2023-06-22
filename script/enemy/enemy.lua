@@ -42,7 +42,6 @@ function Enemy:draw()
         if self.rotate==-1 then
             x = x+160
         end
-        
         local drawable, quad = stats[self.type].drawableData(self.frame)
         love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
     else
