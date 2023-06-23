@@ -5,7 +5,7 @@ local garen = love.graphics.newImage("img/cyklop/garen.png")
 local cyklopFrames = {}
 local j = 0
 
-    for x = 0, 21 do
+    for x = 0, cyklop:getWidth()/256-1 do
         local quad = love.graphics.newQuad(x * 256 , 0, 256, 256, cyklop:getWidth(), cyklop:getHeight())
         table.insert(cyklopFrames, quad) -- Dodanie quada do tablicy
         j=j+1

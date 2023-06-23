@@ -105,5 +105,16 @@ stats["hammers"] = {
     img=5,
     width=8,
     height=4,
+    
+    
+}
+stats["magic_bullet_boss"] = {
+    speed=500,
+    damage=12,
+    life=8,
+    img=4,
+    width=7,
+    height=4,
+    updatePattern = "returnBack"
 }
 return stats
