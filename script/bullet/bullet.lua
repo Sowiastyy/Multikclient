@@ -2,6 +2,8 @@ local Bullet = {}
 local stats = require("script.bullet.stats")
 local shotPattern = require("script.bullet.shotPattern")
 local bulletIMG= love.graphics.newImage("img/bulletSheet.png")
+local bulletBatch = love.graphics.newSpriteBatch(bulletIMG, 1000) -- 1000 to maksymalna liczba bulletów
+
 local quad = {
     love.graphics.newQuad(0, 3, 8, 4, bulletIMG:getDimensions()),
     love.graphics.newQuad(8, 1, 8, 6, bulletIMG:getDimensions()),
@@ -48,17 +50,16 @@ function Bullet:update(dt)
     end
     self.life=self.life-dt
 end
-function Bullet:draw()
-    local scale = 4
-	love.graphics.push()
-    love.graphics.scale(scale, scale)
-	love.graphics.translate(self.x/scale + self.w/2, self.y/scale + self.h/2)
-	love.graphics.rotate(self.angle)
-	love.graphics.translate(-self.w/2, -self.h/2)
-    love.graphics.draw(bulletIMG, quad[stats[self.type].img], 0, 0)
-	love.graphics.pop()
 
+local scale = 4
+function Bullet:draw()
+    bulletBatch:add(quad[stats[self.type].img], self.x, self.y, self.angle, scale, scale)
 end
+function Bullet:drawBatch()
+    love.graphics.draw(bulletBatch)
+    bulletBatch:clear()
+end
+
 function Bullet:toString()
     return string.format("BULLET|%f|%f|%f|%s|%s", self.x, self.y, self.angle, self.type, self.parent)
 end

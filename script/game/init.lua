@@ -180,15 +180,14 @@ function Game:update(dt)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-38
 end
-
 function Game:draw()
     cam:attach()
         gameMap:draw(LocalPlayer, Enemies, Players)
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
+        Bullet:drawBatch()
         world:draw()
-
         love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
     cam:detach()
     gui:draw()

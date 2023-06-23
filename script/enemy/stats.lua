@@ -1,13 +1,5 @@
 local stats = {}
-local anim8 = require("lib.anim8")
 local loggerSheet = love.graphics.newImage("img/characters/loggers.png")
-local quadTest = {
-    love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions()),love.graphics.newQuad(0, 0, 32, 32, loggerSheet:getDimensions()),
-    love.graphics.newQuad(0, 32, 32, 32, loggerSheet:getDimensions()),
-    love.graphics.newQuad(0, 64, 32, 32, loggerSheet:getDimensions()),
-    love.graphics.newQuad(0, 96, 32, 32, loggerSheet:getDimensions()),
-    love.graphics.newQuad(0, 128, 32, 32, loggerSheet:getDimensions()),
-}
 local cyklop = love.graphics.newImage("img/cyklop/both.png")
 local garen = love.graphics.newImage("img/cyklop/garen.png")
 local cyklopFrames = {}

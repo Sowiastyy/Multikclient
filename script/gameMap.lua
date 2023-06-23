@@ -20,9 +20,7 @@ function gameMap:getHitboxes()
 end
 
 local function sortowanie(LocalPlayer, Enemies, Players)
-
-    local sort = {{LocalPlayer.y+43,"gracz"}}
-
+    local sort = {{LocalPlayer.y,"gracz"}}
     for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
         if lay.type == "objectgroup" then
             for index, value in ipairs(lay.objects) do
@@ -31,21 +29,13 @@ local function sortowanie(LocalPlayer, Enemies, Players)
         end
     end
     for index, value in pairs(Players) do
-        table.insert(sort, {value.y + 43 , "players", index})
+        table.insert(sort, {value.y , "players", index})
     end
     for index, value in pairs(Enemies) do
         table.insert(sort, {value.y, "enemy", index})
     end
 
-    local x = #sort
-    for i = 0, x, 1 do
-        for j = 1, x-i-1, 1 do
-            if sort[j][1]>sort[j+1][1] then
-                sort[j] , sort[j+1] = sort[j+1] , sort[j]     
-            end
-        end
-    end
-    -- tu sortowanie bombelkowe zrobic mam
+    table.sort(sort, function(a, b) return a[1] < b[1] end)
     for index, value in ipairs(sort) do
         if value[2] == "gracz"then
             LocalPlayer:draw()

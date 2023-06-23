@@ -23,21 +23,15 @@ function Enemy:new(id, x, y, type)
 end
 
 function Enemy:update(dt)
-    if stats[self.type].update then
-        stats[self.type].update(self,dt)
-    end
 end
 
 function Enemy:draw()
-    local img = stats[self.type].image
     local x, y = self.x-(stats[self.type].width/2), self.y-(stats[self.type].height/2)
     love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59, 9)
+    love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59, 9)
     love.graphics.setColor(0, 1, 0)
-    love.graphics.rectangle("fill", x+((img:getWidth()-60)/2)+1, y+img:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
+    love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
     love.graphics.setColor(1, 1, 1)
-    
-    print (self.ox)
     if stats[self.type].drawableData then
         if self.rotate==-1 then
             x = x+160
@@ -45,9 +39,9 @@ function Enemy:draw()
         local drawable, quad = stats[self.type].drawableData(self.frame)
         love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
     else
-        love.graphics.draw(img, x, y)
+        love.graphics.draw(stats[self.type].image, x, y)
     end
-    
+    --[[
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
@@ -57,6 +51,7 @@ function Enemy:draw()
     }
     
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+    ]]
 end
 
 function Enemy:fromString(str)
