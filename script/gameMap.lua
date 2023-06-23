@@ -1,6 +1,6 @@
 local sti = require("lib/sti")
 
-local gameMap = sti("maps/mapa3.lua") 
+local gameMap = sti("maps/mapa4.lua") 
 ---hitboxes
 ---@return table hitboxes
 function gameMap:getHitboxes()
@@ -24,7 +24,7 @@ local function sortowanie(LocalPlayer, Enemies, Players)
     for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
         if lay.type == "objectgroup" then
             for index, value in ipairs(lay.objects) do
-                table.insert(sort, {value.y, "drzewo", index1})
+                table.insert(sort, {value.y*4, "drzewo", index1})
             end
         end
     end
@@ -40,7 +40,10 @@ local function sortowanie(LocalPlayer, Enemies, Players)
         if value[2] == "gracz"then
             LocalPlayer:draw()
         elseif value[2] == "drzewo" then
+            love.graphics.scale(4,4)
             gameMap:drawLayer(gameMap.layers[value[3]])
+            love.graphics.scale(0.25,0.25)
+            
         elseif value[2] == "players" then
             Players[value[3]]:draw()
         elseif value[2] == "enemy" then

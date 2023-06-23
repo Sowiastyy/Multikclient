@@ -59,7 +59,7 @@ PlayerCollider:setFixedRotation(true)
 local walls = {}
 
 for index, obj in ipairs(gameMap:getHitboxes()) do
-    local wall = world:newRectangleCollider(obj.x, obj.y, obj.width, obj.height)
+    local wall = world:newRectangleCollider(obj.x*4, obj.y*4, obj.width*4, obj.height*4)
     wall:setType('static')
     table.insert(walls,wall)
 end
