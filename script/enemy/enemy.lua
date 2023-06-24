@@ -34,7 +34,12 @@ function Enemy:draw()
     love.graphics.setColor(1, 1, 1)
     if stats[self.type].drawableData then
         if self.rotate==-1 then
-            x = x+self.w
+            if self.type=="logTwins" then
+                x = x+self.w
+            else
+                x=x+160
+            end
+            
         end
         local drawable, quad = stats[self.type].drawableData(self.frame)
         love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
