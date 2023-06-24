@@ -46,6 +46,26 @@ stats["testBoss2"] = {
     offsetX = 110,
     offsetY = 81
 }
+local twinLogs =  love.graphics.newImage("img/logTwins.png")
+local twinLogsFrames = {}
+for x = 0, twinLogs:getWidth()/256-1 do
+    local quad = love.graphics.newQuad(x * 172 , 0, 172, 55, twinLogs:getWidth(), twinLogs:getHeight())
+    table.insert(twinLogsFrames, quad) -- Dodanie quada do tablicy
+end
+stats["logTwins"] = {
+    image = twinLogs,
+    drawableData = function (frame)
+        return twinLogs, twinLogsFrames[frame]
+    end,
+    speed = 50,
+    hp = 8000,
+    width =860,
+    height = 220,
+    bulletCollisionOffsetY = -20,
+    bulletCollisionOffsetX = 0,
+    offsetX = 0,
+    offsetY = 0
+}
 LoggerFrames = {}
 local i = 0
 for y = 0, 4 do
