@@ -50,6 +50,7 @@ function MobileController:touchReleased(id, x, y)
         self.distance = 0 -- Reset the distance to 0 when the touch is released
     end
 end
+
 local squareSize = 20
 function MobileController:draw()
     if self.touchId then
