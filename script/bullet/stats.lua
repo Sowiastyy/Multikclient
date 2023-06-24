@@ -1,7 +1,7 @@
 local stats = {}
 stats["warrior"] = {
     speed=400,
-    damage=10,
+    damage=30,
     life=0.7,
     xoffset=0,
     yoffset=3,
@@ -24,7 +24,7 @@ stats["warrior_spell"] = {
 
 stats["wizard"] = {
     speed=400,
-    damage=8,
+    damage=12,
     life=1.2,
     img=4,
     width=7,
@@ -33,7 +33,7 @@ stats["wizard"] = {
 }
 stats["wizard_spell"] = {
     speed=400,
-    damage=10,
+    damage=20,
     life=1,
     img=4,
     width=7,
@@ -42,7 +42,7 @@ stats["wizard_spell"] = {
 }
 
 stats["archer_spell"] = {
-    speed=40,
+    speed=400,
     damage=500,
     life=5,
     img=3,
