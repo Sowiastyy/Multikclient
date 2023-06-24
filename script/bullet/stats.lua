@@ -1,4 +1,57 @@
 local stats = {}
+stats["warrior"] = {
+    speed=400,
+    damage=10,
+    life=0.7,
+    xoffset=0,
+    yoffset=3,
+    width=8,
+    height=2,
+    img=1,
+    --updatePattern = "sideToSide"
+}
+stats["warrior_spell"] = {
+    speed=500,
+    damage=100,
+    life=1,
+    xoffset=0,
+    yoffset=3,
+    width=8,
+    height=2,
+    img=2,
+    --updatePattern = "sideToSide"
+}
+
+stats["wizard"] = {
+    speed=400,
+    damage=8,
+    life=1.2,
+    img=4,
+    width=7,
+    height=4,
+    --updatePattern = "returnBack"
+}
+stats["wizard_spell"] = {
+    speed=400,
+    damage=10,
+    life=1,
+    img=4,
+    width=7,
+    height=4,
+    --updatePattern = "returnBack"
+}
+
+stats["archer_spell"] = {
+    speed=40,
+    damage=500,
+    life=5,
+    img=3,
+    width=8,
+    height=3,
+    --updatePattern = "returnBack"
+}
+
+
 stats["basic"] = {
     speed=400,
     damage=10,

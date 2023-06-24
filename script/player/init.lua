@@ -19,9 +19,9 @@ local offset = 40
 local dupa = 0
 
 local typeBullet= {}
-typeBullet["Warrior"] = "axe"
-typeBullet["Archer"] = "arrow"
-typeBullet["Wizard"] = "magic_bullet"
+typeBullet["Warrior"] = {"warrior", 1}
+typeBullet["Archer"] = {"arrow", 4}
+typeBullet["Wizard"] = {"wizard", 2}
 
 
 function Player:new(x, y, size, hero)
@@ -150,8 +150,8 @@ function Player:shoot(LocalBullets, dt, condition, presetAngle)
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
             local angle = presetAngle or Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero])
-            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero][1])
+            local bullets = Attack(bullet, "shotgun", {count=typeBullet[self.hero][2], spread=0.1})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
