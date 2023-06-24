@@ -14,7 +14,6 @@ local quad = {
     love.graphics.newQuad(48, 0, 5, 3, bulletIMG:getDimensions()),
 }
 function Bullet:new(x, y, angle, parent, type)
-    print("type", type)
     local bullet = {
     x = x,
     y = y,

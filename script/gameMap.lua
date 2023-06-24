@@ -18,14 +18,12 @@ function gameMap:getHitboxes()
         for i, lay in ipairs(gameMap.layers) do
             if lay.type == "objectgroup" then
                 for index, obj in ipairs(lay.objects) do
+                    if obj.gid and lay.name=="Drzewa" then --gid oznacza ze ma image z grida (GRID ID)
+                        print(obj.gid)
+                        table.insert(objects, obj)
+                    end
                     if obj.name == "siema" then
                         table.insert(hitboxes, obj)
-                    end
-                end
-                if lay.name=="drzewo" then
-                    if obj.gid then --gid oznacza ze ma image z grida (GRID ID)
-                        print(lay.name)
-                        table.insert(objects, obj)
                     end
                 end
             end
