@@ -35,6 +35,7 @@ function gameMap:getHitboxes()
         for index, obj in ipairs(gameMap.layers["sciany"].objects) do
             obj.y = obj.y - 16
             table.insert(hitboxes, obj)
+            print(obj.x, obj.y)
         end
             
         
