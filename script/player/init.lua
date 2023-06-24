@@ -139,9 +139,12 @@ function Player:update(dt)
     self:controller()
     animation:update(dt)
 end
-
+local mobile = false
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    mobile = true
+end
 function Player:shoot(LocalBullets, dt, condition, presetAngle)
-    if condition or love.mouse.isDown(1) then
+    if condition or (love.mouse.isDown(1) and not mobile)then
         if animation.position == 1 then
             animation:gotoFrame(3)
         end
@@ -149,7 +152,10 @@ function Player:shoot(LocalBullets, dt, condition, presetAngle)
         dupa = dupa - dt
         if dupa<0 then
             local x, y = love.mouse.getPosition( )
-            local angle = presetAngle or Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            local angle =  Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            if mobile then
+                angle = presetAngle
+            end
             local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero])
             local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
             for _, bullet in ipairs(bullets) do
