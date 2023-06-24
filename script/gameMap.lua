@@ -19,7 +19,6 @@ function gameMap:getHitboxes()
             if lay.type == "objectgroup" then
                 for index, obj in ipairs(lay.objects) do
                     if obj.gid and lay.name=="Drzewa" then --gid oznacza ze ma image z grida (GRID ID)
-                        print(obj.gid)
                         table.insert(objects, obj)
                     end
                     if obj.name == "siema" then
@@ -47,7 +46,6 @@ local function sortowanie(LocalPlayer, Enemies, Players)
         table.insert(sort, {value.y , "players", index})
     end
     for index, value in pairs(objects) do
-        print("INDEX", index)
         table.insert(sort, {value.y*4-48, "drzewo", index})
     end
 
@@ -61,7 +59,6 @@ local function sortowanie(LocalPlayer, Enemies, Players)
             LocalPlayer:draw()
         elseif value[2] == "drzewo" then
             love.graphics.scale(4,4)
-            print("VALUE3", value[3], value[2], value[1])
             love.graphics.draw(
                 objectsSheet,
                 objectsQuad[objects[value[3]].gid],
