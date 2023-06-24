@@ -156,8 +156,8 @@ function Player:shoot(LocalBullets, dt, condition, presetAngle)
             if mobile then
                 angle = presetAngle
             end
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero])
-            local bullets = Attack(bullet, "shotgun", {count=4, spread=0.1})
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero][1])
+            local bullets = Attack(bullet, "shotgun", {count=typeBullet[self.hero][2], spread=0.1})
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)
