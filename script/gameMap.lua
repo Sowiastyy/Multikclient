@@ -33,13 +33,7 @@ end
 
 local function sortowanie(LocalPlayer, Enemies, Players)
     local sort = {{LocalPlayer.y,"gracz"}}
-    for index1, lay in ipairs(gameMap.layers) do -- gdzie type to objectgroup
-        if lay.type == "objectgroup" then
-            for index, value in ipairs(lay.objects) do
-                --table.insert(sort, {value.y*4, "drzewo", index1})
-            end
-        end
-    end
+    
     for index, value in pairs(Players) do
         table.insert(sort, {value.y , "players", index})
     end
