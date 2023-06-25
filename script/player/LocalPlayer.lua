@@ -7,6 +7,8 @@ local Attack = require("script.bullet.attack")
 
 local cooldownspell = 0
 local regenerateMp = 0.2
+local regenerateHp = 0.2
+
 
 local typeBullet= {}
 typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1}
@@ -16,8 +18,7 @@ typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925}
 function LocalPlayer:update(dt, LocalBullets)
 
     Player.update(LocalPlayer, dt)
-    LocalPlayer:shoot(LocalBullets, dt)
-    print(self.x, self.y)
+    LocalPlayer:shoot(LocalBullets, dt) 
     if LocalPlayer.id then
         LocalPlayer.hero=CLASS
         client:send(LocalPlayer:toString())
@@ -51,6 +52,27 @@ function LocalPlayer:update(dt, LocalBullets)
     else
         regenerateMp = regenerateMp - dt
     end
+    if regenerateHp <= 0 and self.maxHp>=self.hp then
+        self.hp = self.hp +1
+        self.xp = self.xp +1
+        regenerateHp = 1
+        
+    else
+        regenerateHp = regenerateMp - dt
+    end
+    if self.xp >= self.maxXp then
+        self.xp = self.xp - self.maxXp
+        self.maxXp = self.maxXp*2
+
+        self.maxHp = self.maxHp + 10
+        self.maxMp = self.maxMp + 10
+        
+
+        self.dexterity = self.dexterity - 0.001
+        self.spd = self.spd + 10
+        print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
+    end
+    
     
 end
 

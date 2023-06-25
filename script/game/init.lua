@@ -23,6 +23,7 @@ local LocalPlayer = require("script.player.LocalPlayer")
 
 local Players = {}
 local Enemies = {}
+local Enemies2 = {}
 local mobile = false
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     mobile = true

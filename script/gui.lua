@@ -2,11 +2,11 @@ local LocalPlayer = require("script.player.LocalPlayer")
 -- gui.lua
 local gui = {}
 local hp = 100 -- wartość HP gracza
-local maxHp = 100 -- maksymalna wartość HP gracza
+local maxHp = LocalPlayer.maxHp -- maksymalna wartość HP gracza
 local mana = LocalPlayer.mp -- wartość mana gracza
 local maxMana = LocalPlayer.maxMp -- maksymalna wartość mana gracza
-local xp = 75 -- wartość XP gracza
-local maxXp = 100 -- maksymalna wartość XP gracza
+local xp = LocalPlayer.xp -- wartość XP gracza
+local maxXp = LocalPlayer.maxXp -- maksymalna wartość XP gracza
 local hpUI = love.graphics.newImage("img/characters/hpUi.png")
 local class = love.graphics.newImage("img/characters/Archer.png")
 local quad = love.graphics.newQuad(0, 0, 32, 32, class:getDimensions())
@@ -19,14 +19,14 @@ end
 
 function gui:draw()
     love.graphics.draw(hpUI)
-    drawBar(42, 7, LocalPlayer.hp, maxHp, {199, 38, 38}, 4)
-    drawBar(42, 11, LocalPlayer.hp, maxHp, {134, 40, 40}, 3)
+    drawBar(42, 7, LocalPlayer.hp, LocalPlayer.maxHp, {199, 38, 38}, 4)
+    drawBar(42, 11, LocalPlayer.hp, LocalPlayer.maxHp, {134, 40, 40}, 3)
 
-    drawBar(42, 16, LocalPlayer.mp, maxMana, {53, 113, 232},4 )
-    drawBar(42, 20, LocalPlayer.mp, maxMana, {36, 82, 173},3 )
+    drawBar(42, 16, LocalPlayer.mp, LocalPlayer.maxMp, {53, 113, 232},4 )
+    drawBar(42, 20, LocalPlayer.mp, LocalPlayer.maxMp, {36, 82, 173},3 )
 
-    drawBar(42, 25, xp, maxXp, {30, 216, 69}, 4)
-    drawBar(42, 29, xp, maxXp, {31, 147, 55}, 3)
+    drawBar(42, 25, LocalPlayer.xp, LocalPlayer.maxXp, {30, 216, 69}, 4)
+    drawBar(42, 29, LocalPlayer.xp, LocalPlayer.maxXp, {31, 147, 55}, 3)
     -- Resetuj kolor
     love.graphics.setColor(1, 1, 1) -- biały kolor
     love.graphics.draw(class, quad, -11, -11, 0, 2, 2)
