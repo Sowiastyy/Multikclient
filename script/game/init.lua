@@ -154,7 +154,7 @@ function Game:update(dt)
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
-                    client:send("HIT|"..enemy.id.."|"..bullet.dmg.."|"..LocalPlayer.id)
+                    client:send("HIT|"..enemy.id.."|"..bullet.dmg * Player.dmgMulti.."|"..LocalPlayer.id)
                     
                 end
             end
