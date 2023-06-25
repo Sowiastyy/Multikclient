@@ -54,11 +54,12 @@ function LocalPlayer:update(dt, LocalBullets)
     end
     if regenerateHp <= 0 and self.maxHp>=self.hp then
         self.hp = self.hp +1
+        print(self.hp)
         self.xp = self.xp +1
-        regenerateHp = 1
+        regenerateHp = 0.2
         
     else
-        regenerateHp = regenerateMp - dt
+        regenerateHp = regenerateHp - dt
     end
     if self.xp >= self.maxXp then
         self.xp = self.xp - self.maxXp
@@ -66,10 +67,12 @@ function LocalPlayer:update(dt, LocalBullets)
 
         self.maxHp = self.maxHp + 10
         self.maxMp = self.maxMp + 10
-        
 
+        self.regenatate = self.regenatate - 0.001
+        self.dmgMulti = self.dmgMulti + 0.1
         self.dexterity = self.dexterity - 0.001
         self.spd = self.spd + 10
+        
         print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
     end
     

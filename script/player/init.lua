@@ -47,6 +47,7 @@ function Player:new(x, y, size, hero)
         bulletCollisionOffsetX = 0,
         rotate = 5,
         frame =  1,
+        dmgMulti = 1
     }
     setmetatable(player, self)
     self.__index = self
