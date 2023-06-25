@@ -4,7 +4,7 @@ local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local client = require("script.client")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
-
+local enemy = require("script.enemy.stats")
 local cooldownspell = 0
 local regenerateMp = 0.2
 local regenerateHp = 0.2
@@ -54,8 +54,6 @@ function LocalPlayer:update(dt, LocalBullets)
     end
     if regenerateHp <= 0 and self.maxHp>=self.hp then
         self.hp = self.hp +1
-        print(self.hp)
-        self.xp = self.xp +1
         regenerateHp = 0.2
         
     else
@@ -72,11 +70,19 @@ function LocalPlayer:update(dt, LocalBullets)
         self.dmgMulti = self.dmgMulti + 0.1
         self.dexterity = self.dexterity - 0.001
         self.spd = self.spd + 10
-        
+
         print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
     end
     
     
+end
+
+function LocalPlayer:xpAdd(x, y, type)
+    x = tonumber(x)
+    y = tonumber(y)
+    if self.x - 1500 < x and self.x + 1500 > x and self.y - 1500 < y and self.y + 1500 > y then
+        self.xp = self.xp + enemy[type].xp
+    end
 end
 
 return LocalPlayer

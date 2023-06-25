@@ -23,14 +23,16 @@ stats["testEnemy"] = {
     width = 133,
     height = 133,
     offsetX = 0,
-    offsetY = 0
+    offsetY = 0,
+    xp = 20
 }
 stats["testBoss"] = {
     image = love.graphics.newImage("img/bossTest.png"),
     speed = 50,
     hp = 5000,
     width = 114,
-    height = 138
+    height = 138,
+    xp = 600
 }
 stats["testBoss2"] = {
     image = cyklop,
@@ -44,7 +46,8 @@ stats["testBoss2"] = {
     bulletCollisionOffsetY = 128,
     bulletCollisionOffsetX = -100,
     offsetX = 110,
-    offsetY = 81
+    offsetY = 81,
+    xp = 3000
 }
 local twinLogs =  love.graphics.newImage("img/logTwins.png")
 local twinLogsFrames = {}
@@ -64,7 +67,8 @@ stats["logTwins"] = {
     bulletCollisionOffsetY = -20,
     bulletCollisionOffsetX = 0,
     offsetX = 0,
-    offsetY = 0
+    offsetY = 0,
+    xp = 1200
 }
 LoggerFrames = {}
 local i = 0
@@ -86,6 +90,7 @@ stats["Logger"] = {
     height = 85,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
+    xp = 10
 }
 stats["CrazyLogger"] = {
     image = loggerSheet,
@@ -97,6 +102,7 @@ stats["CrazyLogger"] = {
     height = 85,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
+    xp = 20
 }
 stats["BattleLogger"] = {
     image = loggerSheet,
@@ -108,6 +114,7 @@ stats["BattleLogger"] = {
     height = 85,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
+    xp = 50
 }
 stats["Squirwel"] = {
     image = loggerSheet,
@@ -119,6 +126,7 @@ stats["Squirwel"] = {
     height = 85,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
+    xp = 10
 }
 stats["PimpLogger"] = {
     image = loggerSheet,
@@ -130,5 +138,6 @@ stats["PimpLogger"] = {
     height = 85,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
+    xp = 200
 }
 return stats

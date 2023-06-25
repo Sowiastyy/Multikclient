@@ -153,7 +153,7 @@ stats["rocks"] = {
 
 stats["hammers"] = {
     speed=150,
-    damage=30,
+    damage=15,
     life=6,
     img=5,
     width=8,
