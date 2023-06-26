@@ -13,20 +13,27 @@ function Button:new(x, y, width, height, label, callback)
     return button
 end
 
-function Button:isClicked()
+function Button:isClicked(xT, yT)
     local x, y = love.mouse.getPosition()
+    if yT then
+        x, y = xT, yT
+    end
+
     return x > self.x and x < self.x + self.width and y > self.y and y < self.y + self.height
 end
 
-function Button:update(dt)
-    
+function Button:update(dt)    
     if love.mouse.isDown(1) then
         if self:isClicked() then
             self.callback()
         end
     end
 end
-
+function Button:handleTouchPressed(x, y)
+    if self:isClicked(x, y) then
+        self.callback()
+    end
+end
 function Button:draw()
     local y = self.y + (self.height - love.graphics.getFont():getHeight()) / 2
     love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 5, 5)

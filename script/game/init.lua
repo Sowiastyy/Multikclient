@@ -27,6 +27,7 @@ local mobile = false
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     mobile = true
 end
+
 local MobileController
 local mobileController
 local mobileController2
@@ -34,7 +35,7 @@ if mobile then
     MobileController = require("script.player.mobileController")
     mobileController = MobileController:new()
     mobileController2 = MobileController:new("right")
-    function love.touchpressed(id, x, y)
+    function Game.touchPressed(id, x, y)
         mobileController:touchPressed(id, x, y)
         mobileController2:touchPressed(id, x, y)
     end
@@ -122,8 +123,6 @@ function client:onmessage(s)
     end
 end
 
-
-
 function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)
@@ -154,12 +153,7 @@ function Game:update(dt)
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
                     client:send("HIT|"..enemy.id.."|"..bullet.dmg.."|"..LocalPlayer.id)
-                    
                 end
-            end
-            if enemy.hp<=0 then
-                Enemies[index] = nil
-                table.remove(Enemies, index)
             end
         end
     end

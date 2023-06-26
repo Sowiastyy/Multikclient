@@ -46,6 +46,7 @@ function Enemy:draw()
     else
         love.graphics.draw(stats[self.type].image, x, y)
     end
+    --[[
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
@@ -55,6 +56,8 @@ function Enemy:draw()
     }
     
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+    ]]
+
 end
 
 function Enemy:fromString(str)

@@ -17,7 +17,6 @@ function LocalPlayer:update(dt, LocalBullets)
 
     Player.update(LocalPlayer, dt)
     LocalPlayer:shoot(LocalBullets, dt)
-    print(self.x, self.y)
     if LocalPlayer.id then
         LocalPlayer.hero=CLASS
         client:send(LocalPlayer:toString())

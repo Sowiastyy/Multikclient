@@ -8,12 +8,34 @@ img[3] = love.graphics.newImage("img/characters/Wizard.png")
 Menu.selected = 2
 local quad = love.graphics.newQuad(0, 0, 32, 32, img[1]:getDimensions())
 
-love.graphics.setFont(love.graphics.newFont(48))
+local fontSize = 48
+local mobile = false
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    mobile = true
+end
+love.graphics.setFont(love.graphics.newFont(fontSize))
+
 Menu.buttons = {
     Button:new(20, 20, 200, 96, "Quit", function() Menu:quit() end), -- Przycisk "Quit" w lewym górnym rogu
     Button:new(love.graphics.getWidth()/2 - 100, love.graphics.getHeight()/2 + 100, 200, 96, "Play", function() Menu:play() end), -- Przycisk "Play" na środku
     TextInput:new(love.graphics.getWidth()/2 - 256, love.graphics.getHeight()/2 - 50, 512, 96, 16, "Nickname") -- Pole tekstowe na środku, wyżej niż przycisk "Play"
 }
+local squareSize = 128
+local spacing = 10
+local startY = 100
+local offset=0
+if mobile then
+    fontSize=36
+    offset=32
+    Menu.buttons = {
+        Button:new(10, 10, 150, 48, "Quit", function() Menu:quit() end), -- Przycisk "Quit" w lewym górnym rogu
+        Button:new(love.graphics.getWidth()/2 - 100, love.graphics.getHeight()/2 + 100, 150, 48, "Play", function() Menu:play() end), -- Przycisk "Play" na środku
+        TextInput:new(love.graphics.getWidth()/2 - 150, love.graphics.getHeight()/2 - 50, 300, 54, 16, "Nickname") -- Pole tekstowe na środku, wyżej niż przycisk "Play"
+    }
+    squareSize = 64
+    spacing = 5
+    startY = 80
+end
 function Menu:play()
     -- Logic for starting the game
 end
@@ -21,9 +43,19 @@ end
 function Menu:quit()
     love.event.quit()
 end
-local squareSize = 128
-local spacing = 10
-local startY = 100
+
+function Menu:touchpressed(id, x, y)
+    for key, value in pairs(img) do
+        local startX = love.graphics.getWidth() - 200
+
+        local imgX = startX
+        local imgY = startY + (key - 1) * (squareSize + spacing)
+        local mouseX, mouseY = x, y
+        if mouseX >= imgX and mouseX <= imgX + squareSize and mouseY >= imgY and mouseY <= imgY + squareSize then
+            Menu.selected = key -- Ustaw wybraną klasę postaci na podstawie klikniętego obrazka
+        end
+    end
+end
 function Menu:update(dt)
         -- Sprawdź, czy kliknięto na obrazek klasy postaci
         for key, value in pairs(img) do
@@ -59,7 +91,7 @@ function Menu:draw()
         local x = love.graphics.getWidth() - 200
         local y = startY + (i) * (squareSize + spacing)
         love.graphics.draw(value, quad, x, y, 0, 4, 4)
-        love.graphics.rectangle("line", x, y, squareSize, squareSize)
+        love.graphics.rectangle("line", x+offset, y+offset, squareSize, squareSize)
         i=i+1
     end
     local selectedClass = img[Menu.selected]
