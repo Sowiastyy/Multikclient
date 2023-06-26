@@ -31,8 +31,12 @@ function Player:new(x, y, size, hero)
         size = size or 80,
         hero = hero,
         hp = 100,
+        maxHp = 100,
         mp = 100,
         maxMp = 200,
+        regenatate = 0.2,
+        xp = 0,
+        maxXp = 100,
         spd = 500,
         vx = 0,
         vy = 0,
@@ -43,6 +47,7 @@ function Player:new(x, y, size, hero)
         bulletCollisionOffsetX = 0,
         rotate = 5,
         frame =  1,
+        dmgMulti = 1
     }
     setmetatable(player, self)
     self.__index = self

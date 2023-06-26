@@ -23,6 +23,7 @@ local LocalPlayer = require("script.player.LocalPlayer")
 
 local Players = {}
 local Enemies = {}
+local Enemies2 = {}
 local mobile = false
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     mobile = true
@@ -105,6 +106,14 @@ local function getEntity(s)
             table.insert(parts, part)
         end
         table.insert(Game.chat.messages, parts[2])
+    
+    elseif s:find("^XP") then
+        local parts = {}
+        for part in s:gmatch("([^|]+)") do
+            table.insert(parts, part)
+        end
+        LocalPlayer:xpAdd(parts[2], parts[3], parts[4])
+        
     end
 
 end
@@ -152,7 +161,7 @@ function Game:update(dt)
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
-                    client:send("HIT|"..enemy.id.."|"..bullet.dmg.."|"..LocalPlayer.id)
+                    client:send("HIT|"..enemy.id.."|"..bullet.dmg * LocalPlayer.dmgMulti.."|"..LocalPlayer.id)
                 end
             end
         end
