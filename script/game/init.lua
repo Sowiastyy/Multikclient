@@ -12,6 +12,10 @@ local gui = require("script.gui")
 require("script.helpers")
 local client = require("script.client")
 local world = require("lib.windfield").newWorld(0, 0)
+-- main.lua
+local inventory = require('script.inv')
+
+
 
 local cam = camera()
 cam.scale =  cam.scale * 0.8
@@ -188,6 +192,7 @@ function Game:draw()
         mobileController:draw()
         mobileController2:draw()
     end
+    inventory:draw()
     love.graphics.print("Current FPS: "..tostring(love.timer.getFPS( )), 168, 10)
 end
 
