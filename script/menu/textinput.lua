@@ -12,6 +12,7 @@ function TextInput:new(x, y, width, height, maxLength, placeholder, textAlign)
         color = {1, 1, 1}, -- default color is white
         placeholder = placeholder or " ",
         textAlign = textAlign or "center",
+        drawBorder = true,
         placeholderColor = {1, 1, 1, 0.5}, -- default color with alpha value of 0.5
     }
     setmetatable(input, self)
@@ -61,7 +62,9 @@ end
 function TextInput:draw()
     local y = self.y + (self.height - love.graphics.getFont():getHeight()) / 2
     love.graphics.setColor(self.color) -- Set color to the stored color
-    love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 5, 5)
+    if self.drawBorder then
+        love.graphics.rectangle("line", self.x, self.y, self.width, self.height, 5, 5)
+    end
     if self.active then
         self.color = {0, 1, 0} -- Set color to green for active input
     else

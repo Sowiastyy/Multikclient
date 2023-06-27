@@ -11,6 +11,7 @@ local x = 10 -- Left margin
 local y = love.graphics.getHeight() - 40 -- Bottom margin
 
 chat.input = TextInput:new(x, y, 800, 24, 160, "Message", "left")
+chat.input.drawBorder=false
 
 function chat:draw()
 
