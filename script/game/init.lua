@@ -17,13 +17,11 @@ local cam = camera()
 cam.scale =  cam.scale * 0.8
 local LocalBullets =  {}
 local AllyBullets = {}
-local EnemyBullets = {} 
-local testRect = {x=0, y=0, w=100, h=100, size=100}
+local EnemyBullets = {}
 local LocalPlayer = require("script.player.LocalPlayer")
 
 local Players = {}
 local Enemies = {}
-local Enemies2 = {}
 local mobile = false
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     mobile = true
@@ -113,9 +111,7 @@ local function getEntity(s)
             table.insert(parts, part)
         end
         LocalPlayer:xpAdd(parts[2], parts[3], parts[4])
-        
     end
-
 end
 
 function client:onmessage(s)
@@ -143,16 +139,10 @@ function Game:update(dt)
         end
     
     end
-
     for key, bullet in pairs(EnemyBullets) do
         if LocalPlayer:checkBulletCollision(bullet) then
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)
-        end
-    end
-    for index, bullet in ipairs(LocalBullets) do
-        if LocalPlayer.checkBulletCollision(testRect, bullet) then
-            table.remove(LocalBullets, index)
         end
     end
     for index, enemy in pairs(Enemies) do
@@ -190,8 +180,7 @@ function Game:draw()
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         Bullet:drawBatch()
-        world:draw()
-        love.graphics.rectangle("line", testRect.x-(testRect.w/2), testRect.y-(testRect.h/2), testRect.w,  testRect.h)
+        --world:draw()
     cam:detach()
     gui:draw()
     Game.chat:draw()

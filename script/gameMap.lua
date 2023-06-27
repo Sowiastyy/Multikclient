@@ -1,13 +1,51 @@
 local sti = require("lib/sti")
 
 local gameMap = sti("maps/mapa4.lua")
-
+local rawTiles = require("maps/mapa4").layers[1].data
 local objectsSheet = love.graphics.newImage("maps/treeCooler.png")
 local objectsQuad = {}
 
 for x = 0, objectsSheet:getWidth()/32 do
     local quad = love.graphics.newQuad(x * 32 , 0, 32, 32, objectsSheet:getWidth(), objectsSheet:getHeight())
     table.insert(objectsQuad, quad) -- Dodanie quada do tablicy
+end
+
+local tileset = love.graphics.newImage("img/characters/newTile.png")
+local tilesetQuad = {{}, {}}
+local j = 0
+for y = 0, (tileset:getHeight()-16)/16 do
+    for x = 0, (tileset:getWidth()-16)/16 do
+        local quad = love.graphics.newQuad(x * 16 , y*16, 16, 16, tileset:getWidth(), tileset:getHeight())
+        j=j+1
+        table.insert(tilesetQuad, quad) -- Dodanie quada do tablicy
+    end
+end
+
+local tileMap = love.graphics.newSpriteBatch(tileset, 1000)
+
+local widthRender = 40
+local heightRender =  22
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    widthRender = 20
+    heightRender =  10
+end
+
+local function drawNearestTiles(playerX, playerY)
+    playerY=math.floor((playerY/64)-(heightRender/2))
+    playerX=math.floor((playerX/64)-(widthRender/2))
+    for y = playerY, playerY+heightRender do
+        for x = playerX, playerX+widthRender do
+            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
+            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
+            if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
+                tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
+            else
+                tileMap:add(tilesetQuad[11], x*16, y*16)
+            end
+        end
+    end
+    love.graphics.draw(tileMap)
+    tileMap:clear()
 end
 local objects = {}
 ---hitboxes
@@ -79,7 +117,8 @@ end
 
 function gameMap:draw(LocalPlayer, Enemies, Players)
     love.graphics.scale(4,4)
-    gameMap:drawLayer(gameMap.layers[1])
+    --gameMap:drawLayer(gameMap.layers[1])
+    drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
     love.graphics.scale(0.25,0.25)
     sortowanie(LocalPlayer, Enemies, Players)
 end
