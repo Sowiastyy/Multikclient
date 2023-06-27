@@ -21,6 +21,16 @@ for y = 0, (tileset:getHeight()-16)/16 do
     end
 end
 
+local speedUp = {}
+for index, value in pairs(gameMap.tilesets) do
+    if value.name == "newTile" then
+        for index, value2 in pairs(value.wangsets[1].wangtiles) do
+            table.insert(speedUp, value2.tileid)
+        end
+    end
+end
+
+
 local tileMap = love.graphics.newSpriteBatch(tileset, 1000)
 
 local widthRender = 40
@@ -37,6 +47,14 @@ local function drawNearestTiles(playerX, playerY)
         for x = playerX, playerX+widthRender do
             --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
             --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
+            if playerX + (widthRender/2) == x and playerY +(heightRender/2)  == y then
+                for key, value in pairs(speedUp) do
+                    if rawTiles[1+(y*gameMap.layers[1].width+x)] == value and rawTiles[1+(y*gameMap.layers[1].width+x)] ~= 11 then
+                        print("speedUp")
+                    end
+                end
+                
+            end
             if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
                 tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
             else
