@@ -37,6 +37,7 @@ function Player:new(x, y, size, hero)
         regenatate = 0.2,
         xp = 0,
         maxXp = 100,
+        lvl = 1,
         spd = 500,
         vx = 0,
         vy = 0,

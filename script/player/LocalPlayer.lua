@@ -61,7 +61,8 @@ function LocalPlayer:update(dt, LocalBullets)
     end
     if self.xp >= self.maxXp then
         self.xp = self.xp - self.maxXp
-        self.maxXp = self.maxXp*2
+        self.lvl = self.lvl + 1
+        self.maxXp = (self.lvl + 10)^2
 
         self.maxHp = self.maxHp + 10
         self.maxMp = self.maxMp + 10
