@@ -19,6 +19,7 @@ function Item.new(type, quadID, stats)
   setmetatable(newItem, Item)
   
   newItem.type = type
+  newItem.size = 64
   newItem.quadID = quadID
   newItem.stats = stats or {}
   

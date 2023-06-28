@@ -32,11 +32,14 @@ function love.keypressed(key)
         Screens.Game.chat.input:handleKeyPressed(key)
     end
 end
-
+function love.mousereleased(x, y, button)
+    Screens.Game.mousereleased(x, y, button)
+end
 function love.mousepressed(x, y, button)
     if currentScreen=="Menu" then
         Screens.Menu.buttons[3]:handleMousePressed(x, y, button)
     else
+        Screens.Game.mousepressed(x, y, button)
         Screens.Game.chat.input:handleMousePressed(x, y, button)
     end
 end
