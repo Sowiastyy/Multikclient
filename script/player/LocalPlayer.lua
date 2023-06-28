@@ -4,8 +4,8 @@ local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
 local client = require("script.client")
 local sti = require("lib/sti")
-local rawTiles = require("maps/mapa4").layers[1].data
-local gameMap = sti("maps/mapa4.lua")
+local rawTiles = require("maps/mapa5").layers[1].data
+local gameMap = sti("maps/mapa5.lua")
 print("CLASS", CLASS)
 local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local enemy = require("script.enemy.stats")
@@ -24,9 +24,14 @@ for x = 0, 3 do
     table.insert(frames, quad)
 end
 local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
-local animation = anim8.newAnimation(g('1-4',1), 0.1)
+local anim1 = anim8.newAnimation(g('1-4',1), 0.2)
 
-local offset = 40
+local g = anim8.newGrid(32, 21, img["Warrior"]:getDimensions())
+local anim2 = anim8.newAnimation(g('1-4',1), 0.2)
+
+local animation = anim1
+local offsetX = 40
+local offsetY = 40
 local dupa = 0
 
 
@@ -133,12 +138,13 @@ function LocalPlayer:draw()
     love.graphics.setColor(1, 1, 1)
     
     if THIS_ID==self.id then
-        animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
+        animation:draw(img[self.hero], x-offsetX, y-offsetY, 0, self.rotate, 5)
     else
         if self.rotate<0 then
             x = x+160
         end
         love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
+        
     end
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
@@ -175,7 +181,7 @@ function LocalPlayer:controller()
         self.vx = self.spd * -1
         if love.mouse.isDown(1) == false then
             self.rotate = 5
-            offset = 40
+            offsetX = 40
         end
         
     elseif love.keyboard.isDown("d") then
@@ -183,7 +189,7 @@ function LocalPlayer:controller()
         self.vx = self.spd
         if love.mouse.isDown(1) == false then
             self.rotate = -5
-            offset = -120
+            offsetX = -120
         end
     else
         self.vx = 0
@@ -238,10 +244,10 @@ function LocalPlayer:shoot(LocalBullets, dt, condition, presetAngle)
 
             if 1.6>angle and angle>-1.6 then
                 self.rotate = -5
-                offset = -120
+                offsetX = -120
             else
                 self.rotate = 5
-                offset = 40
+                offsetX = 40
             end 
         end
     else
@@ -251,22 +257,28 @@ function LocalPlayer:shoot(LocalBullets, dt, condition, presetAngle)
 end
 
 local speedUp = {12,13,14,15,16,20,21,22,23,24,29,30} -- kafelki piachu 
-
+local slowDown = {3}
 function LocalPlayer:speedChange()
     local x = math.floor(self.x/64)
-    local y = math.floor(self.y/64)
+    local y = math.floor(self.y/64)+1
     
     for key, value in pairs(speedUp) do
         if rawTiles[1+(y*gameMap.layers[1].width+x)] == value  then
            self.spd = 700
-           
            break;
+        elseif rawTiles[1+(y*gameMap.layers[1].width+x)] == slowDown[key] then
+            self.spd = 300
+            animation = anim2
+            offsetY = 28
+            break;
         else
+            offsetY = 40
+            animation = anim1
             self.spd = 500
         end
-       
-        
     end
+
+    
     
 end
 return LocalPlayer

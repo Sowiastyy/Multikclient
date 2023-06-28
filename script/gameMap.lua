@@ -1,7 +1,7 @@
 local sti = require("lib/sti")
 
-local gameMap = sti("maps/mapa4.lua")
-local rawTiles = require("maps/mapa4").layers[1].data
+local gameMap = sti("maps/mapa5.lua")
+local rawTiles = require("maps/mapa5").layers[1].data
 local objectsSheet = love.graphics.newImage("maps/treeCooler.png")
 local objectsQuad = {}
 
