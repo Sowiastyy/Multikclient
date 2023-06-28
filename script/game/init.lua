@@ -131,7 +131,12 @@ function client:onmessage(s)
         end
     end
 end
-
+function Game.mousepressed(x, y, button)
+    inventory:mousepressed(x, y, button)
+end
+function Game.mousereleased(x, y, button)
+    inventory:mousereleased(x, y, button)
+end
 function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)

@@ -1,75 +1,93 @@
--- inventory.lua
-local Item = require('script.inv.item')
+local slotTable = require('script.inv.slotTable') -- Assuming slotTable.lua is in the same directory
+local Item = require("script.inv.item")
+local inventory = {}
+-- The two slotTables
+inventory.slotTables = {}
+local screenWidth = love.graphics.getWidth()
+local screenHeight = love.graphics.getHeight()
+-- Calculate positions for `equipmentSlots` and `storageSlots`
+-- screenWidth/4 ensures that the equipmentSlots are placed to the left of the center screen
+-- screenWidth*3/4 ensures that the storageSlots are placed to the right center screen.
+local equipmentSlotsPositionX = screenWidth / 4
+local storageSlotsPositionX =( screenWidth / 4)+400
 
-local inventory = {
-  slots = {},
-  weapon = nil,
-  armor = nil,
-  boots = nil,
-  hat = nil,
-  maxSlots = 8,
-  slotSize = 80,
-  slotMargin = 15,
-  equipmentTypes = {"weapon", "armor", "boots", "hat"}
-}
+-- We'll keep your initial row & columns for `slotTable.new`
+inventory.slotTables.equipmentSlots = slotTable.new(equipmentSlotsPositionX, screenHeight-100, 64, 0, 1, 4) -- Example values
+inventory.slotTables.storageSlots = slotTable.new(storageSlotsPositionX, screenHeight-140, 64, 0, 2, 4) -- Example values
 
-local function drawSlot(i, itemType, item)
-  local iconLeft = love.graphics.getWidth() / 2 + inventory.slotMargin / 2 
-                    + (inventory.slotSize + inventory.slotMargin) * (i - 1)
-  local iconTop = love.graphics.getHeight() - inventory.slotSize - inventory.slotMargin
-  love.graphics.rectangle('line', iconLeft, iconTop, inventory.slotSize, inventory.slotSize)
-  if item then
-    item:draw(iconLeft, iconTop, inventory.slotSize, inventory.slotSize)
+for i = 1, inventory.slotTables.equipmentSlots.columns do
+  local item = Item.new("Item for equipmentSlot:" .. i, i, 64)
+  inventory.slotTables.equipmentSlots:setItem(item, i)
+end
+inventory.slotTables.equipmentSlots.slots[1].type = "weapon"
+local item = Item.new("weapon", 11, {gowno="XD"})
+inventory.slotTables.storageSlots:setItem(item, 2)
+function inventory:getSlotAt(x, y)
+  for key, slotTable in pairs(self.slotTables) do
+    local item, id = slotTable:getItemAt(x, y)
+    if item then
+      return item, id, key
+    end
   end
 end
 
-function inventory:addItem(item)
-  if self[item.type] then
-    self[item.type] = item
-  elseif #self.slots < self.maxSlots then
-    table.insert(self.slots, item)
-  else
-    print("Inventory is full!")
+function inventory:mousepressed(x, y, button)
+  if button == 1 then
+    self.draggedItem, self.draggedID, self.draggedKey = self:getSlotAt(x, y)
+    if self.draggedItem then
+      if not self.draggedItem.quadID then
+        self.draggedItem, self.draggedID, self.draggedKey = nil, nil, nil
+      else
+        self.slotTables[self.draggedKey].items[self.draggedID].draw =nil
+      end
+    end
   end
 end
 
-function inventory:removeItem(index, type)
-  if self[type] then
-    self[type] = nil
-  else
-    table.remove(self.slots, index)
+function inventory:mousereleased(x, y, button)
+  if button == 1 then -- Assuming '1' is the left mouse button
+    if self.draggedKey and self.draggedID then
+      local droppedItem, droppedID, droppedKey = self:getSlotAt(x, y)
+      if droppedID then
+        local success = true
+        local typeDropped = self.slotTables[droppedKey].slots[droppedID].type
+        if typeDropped then
+          success=false
+          if self.draggedItem.type then
+            if self.draggedItem.type==typeDropped then
+              success=true
+            end
+          end
+        end
+        if success then
+          self.slotTables[droppedKey].items[droppedID] = self.draggedItem
+          self.slotTables[self.draggedKey].items[self.draggedID] = droppedItem
+        else
+          self.slotTables[droppedKey].items[droppedID] = droppedItem
+          self.slotTables[self.draggedKey].items[self.draggedID] = self.draggedItem
+        end
+        self.draggedItem = nil
+      end
+    end
+  end
+end
+
+function inventory:draw()
+  for _, slotTable in pairs(self.slotTables) do
+    slotTable:draw()
+  end
+
+  -- Draw the dragged item separately at mouse position
+  if self.draggedItem then
+    local x, y = love.mouse.getPosition()
+    self.draggedItem:draw(x, y)
   end
 end
 
 function inventory:update(dt)
-  --... your entire update function was here ...
-end
-
-function inventory:draw()
-  for i, type in ipairs(self.equipmentTypes) do
-    drawSlot(i, type, self[type])
+  for _, slotTable in pairs(self.slotTables) do
+    slotTable:update(dt)
   end
-
-  for i = 1, self.maxSlots do
-    drawSlot(i + #self.equipmentTypes, nil, self.slots[i])
-  end
-end
-
--- Add items
-local sword = Item.new("weapon", 1)
-local shield = Item.new("armor", 2)
-local boots = Item.new("boots", 3)
-local hat = Item.new("hat", 4)
-
-inventory:addItem(sword)
-inventory:addItem(shield)
-inventory:addItem(boots)
-inventory:addItem(hat)
-
--- To fill up the inventory with more items, here's an example
-for i = 1, 8 do
-    local item = Item.new("Item" .. i, i)
-    inventory:addItem(item)
 end
 
 return inventory
