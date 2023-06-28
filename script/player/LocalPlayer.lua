@@ -1,31 +1,58 @@
 local Player = require("script.player")
-print("CLASS", CLASS)
-local LocalPlayer = Player:new(0, 0, 80, CLASS)
-local client = require("script.client")
+local anim8 = require("lib.anim8")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
+local client = require("script.client")
+local sti = require("lib/sti")
+local rawTiles = require("maps/mapa4").layers[1].data
+local gameMap = sti("maps/mapa4.lua")
+print("CLASS", CLASS)
+local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local enemy = require("script.enemy.stats")
+local img = {}
+img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
+img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
+img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
+
 local cooldownspell = 0
 local regenerateMp = 0.2
 local regenerateHp = 0.2
 
+local frames = {}
+for x = 0, 3 do
+    local quad = love.graphics.newQuad(x * 32, 0, 32, 32, img["Warrior"]:getDimensions())
+    table.insert(frames, quad)
+end
+local g = anim8.newGrid(32, 32, img["Warrior"]:getDimensions())
+local animation = anim8.newAnimation(g('1-4',1), 0.1)
+
+local offset = 40
+local dupa = 0
+
 
 local typeBullet= {}
-typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1}
-typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0}
-typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925}
+typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1, "warrior", 1}
+typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
+typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925, "wizard", 2}
 
 function LocalPlayer:update(dt, LocalBullets)
 
-    Player.update(LocalPlayer, dt)
+    
     LocalPlayer:shoot(LocalBullets, dt)
     if LocalPlayer.id then
         LocalPlayer.hero=CLASS
         client:send(LocalPlayer:toString())
     end
+    
+    
     LocalPlayer:regenerating(dt)
     LocalPlayer:lvlUp()
     LocalPlayer:useSpell(LocalBullets, dt)
+    self:controller()
+    LocalPlayer:speedChange()
+
+    animation:update(dt)
+    self:draw()
     
     
 end
@@ -95,4 +122,151 @@ function LocalPlayer:useSpell(LocalBullets, dt)
     end
 end
 
+
+function LocalPlayer:draw()
+    local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
+    
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
+    love.graphics.setColor(1, 1, 1)
+    
+    if THIS_ID==self.id then
+        animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
+    else
+        if self.rotate<0 then
+            x = x+160
+        end
+        love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
+    end
+    local r1 = {
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
+        angle = self.angle or 0
+    }
+    love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+end
+
+function LocalPlayer:toString()
+    return string.format("PLAYER|%d|%d|%d|%f|%d|%s|%d|%d",
+        self.id, self.x, self.y, self.hp, self.size, self.hero, self.rotate, animation.position)
+end
+
+---comment
+function LocalPlayer:controller()
+    local stateChanged = false
+    local stateChanged2 = false
+    if love.keyboard.isDown("w") then
+        stateChanged=true
+        self.vy = -1 * self.spd
+    elseif love.keyboard.isDown("s") then
+        stateChanged=true
+        self.vy = self.spd
+    
+    else
+        self.vy = 0
+        stateChanged = false
+    end
+    if love.keyboard.isDown("a") then
+        stateChanged2=true
+        self.vx = self.spd * -1
+        if love.mouse.isDown(1) == false then
+            self.rotate = 5
+            offset = 40
+        end
+        
+    elseif love.keyboard.isDown("d") then
+        stateChanged2=true
+        self.vx = self.spd
+        if love.mouse.isDown(1) == false then
+            self.rotate = -5
+            offset = -120
+        end
+    else
+        self.vx = 0
+        stateChanged2 = false
+    end
+
+    if stateChanged == true and stateChanged2 == true then
+        self.vx = self.vx /math.sqrt(2)
+        self.vy = self.vy /math.sqrt(2)
+    end
+
+    if (stateChanged == true or stateChanged2 == true) and love.mouse.isDown(1) == false then
+        if animation.position == 3 then
+            animation:gotoFrame(1)
+        end
+    animation:resume()
+    
+        
+        
+    elseif love.mouse.isDown(1) == false then
+        animation:gotoFrame(1)
+        
+    end
+
+end
+
+local mobile = false
+if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
+    mobile = true
+end
+function LocalPlayer:shoot(LocalBullets, dt, condition, presetAngle)
+    if condition or (love.mouse.isDown(1) and not mobile)then
+        if animation.position == 1 then
+            animation:gotoFrame(3)
+        end
+        animation:resume()
+        dupa = dupa - dt
+        if dupa<0 then
+            local x, y = love.mouse.getPosition( )
+            local angle =  Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
+            if mobile then
+                angle = presetAngle
+            end
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero][5])
+            local bullets = Attack(bullet, "shotgun", {count=typeBullet[self.hero][6], spread=0.1})
+            for _, bullet in ipairs(bullets) do
+                client:send(bullet:toString())
+                table.insert(LocalBullets, bullet)
+            end
+            dupa = self.dexterity
+            
+
+            if 1.6>angle and angle>-1.6 then
+                self.rotate = -5
+                offset = -120
+            else
+                self.rotate = 5
+                offset = 40
+            end 
+        end
+    else
+       --[[ animation:pause()
+        animation:gotoFrame(1)]]--
+    end
+end
+
+local speedUp = {12,13,14,15,16,20,21,22,23,24,29,30} -- kafelki piachu 
+
+function LocalPlayer:speedChange()
+    local x = math.floor(self.x/64)
+    local y = math.floor(self.y/64)
+    
+    for key, value in pairs(speedUp) do
+        if rawTiles[1+(y*gameMap.layers[1].width+x)] == value  then
+           self.spd = 700
+           
+           break;
+        else
+            self.spd = 500
+        end
+       
+        
+    end
+    
+end
 return LocalPlayer
