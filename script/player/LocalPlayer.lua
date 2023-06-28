@@ -153,7 +153,7 @@ function LocalPlayer:draw()
         h = self.h,
         angle = self.angle or 0
     }
-    love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+    --love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
 end
 
 function LocalPlayer:toString()
