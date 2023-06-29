@@ -19,6 +19,7 @@ function Player:new(x, y, size, hero)
         hero = hero,
         hp = 100,
         maxHp = 100,
+        def = 0,
         mp = 100,
         maxMp = 200,
         regenatate = 0.2,

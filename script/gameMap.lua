@@ -43,7 +43,7 @@ local function drawNearestTiles(playerX, playerY)
             if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
                 tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
             else
-                tileMap:add(tilesetQuad[11], x*16, y*16)
+                tileMap:add(tilesetQuad[3], x*16, y*16)
             end
         end
     end
