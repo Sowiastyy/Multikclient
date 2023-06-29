@@ -31,7 +31,6 @@ function TextInput:handleTextInput(text)
 end
 
 function TextInput:handleKeyPressed(key)
-    print("key", key)
     if key == "backspace" and self.active then
         self.text = string.sub(self.text, 1, -2)
     end

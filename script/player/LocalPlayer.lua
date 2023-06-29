@@ -41,7 +41,7 @@ typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925, "wizard", 2}
 
 function LocalPlayer:update(dt, LocalBullets)
     if self.weapon then
-        print(self.weapon.bulletType)
+
     end
     
     LocalPlayer:shoot(LocalBullets, dt)

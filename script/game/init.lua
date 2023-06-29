@@ -1,6 +1,8 @@
+love.graphics.setDefaultFilter("nearest", "nearest")
+local lootContainer = require "script.inv.lootContainer"
 THIS_ID=0
 local Game = {}
-love.graphics.setDefaultFilter("nearest", "nearest")
+
 
 local Player = require("script.player")
 local Bullet = require("script.bullet")
@@ -14,9 +16,6 @@ local client = require("script.client")
 local world = require("lib.windfield").newWorld(0, 0)
 -- main.lua
 local inventory = require('script.inv')
-
-
-
 local cam = camera()
 cam.scale =  cam.scale * 0.8
 local LocalBullets =  {}
@@ -115,6 +114,8 @@ local function getEntity(s)
             table.insert(parts, part)
         end
         LocalPlayer:xpAdd(parts[2], parts[3], parts[4])
+    elseif s:find("^LOOT") then
+        lootContainer.fromString(s)
     end
 end
 
@@ -141,6 +142,7 @@ function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)
     inventory:setPlayerEquipment(LocalPlayer)
+    inventory:setLoot(lootContainer:getContainerbyPlayer(LocalPlayer))
     if mobile then
         LocalPlayer:shootMobile(LocalBullets, dt, mobileController2.distance>0, mobileController2.angle )
         if mobileController.distance>0 then
@@ -192,7 +194,7 @@ end
 function Game:draw()
     cam:attach()
         gameMap:drawUnderthewater(LocalPlayer)
-        gameMap:draw(LocalPlayer, Enemies, Players)
+        gameMap:draw(LocalPlayer, Enemies, Players, lootContainer:getContainers())
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)

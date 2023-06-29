@@ -27,7 +27,6 @@ function slotTable.new(x, y, slotSize, slotMargin, rows, columns)
         k=k+1
         table.insert(self.slots, {})
         table.insert(self.items, {})
-        print("K", k)
     end
   end
   return self

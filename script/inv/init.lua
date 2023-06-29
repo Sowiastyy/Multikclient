@@ -39,7 +39,13 @@ function inventory:getSlotAt(x, y)
     end
   end
 end
-
+function inventory:setLoot(lootTable)
+  if lootTable then
+    inventory.slotTables.lootTable = lootTable
+  else
+    inventory.slotTables.lootTable = nil
+  end
+end
 function inventory:mousepressed(x, y, button)
   if button == 1 then
     self.draggedItem, self.draggedID, self.draggedKey = self:getSlotAt(x, y)

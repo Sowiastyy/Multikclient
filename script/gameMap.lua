@@ -94,12 +94,18 @@ local function distanceTo(x1, y1, x2, y2)
     local dy = math.abs(y2 - y1)
     return math.sqrt(dx*dx + dy*dy)<objectRenderDistance
 end
-local function sortowanie(LocalPlayer, Enemies, Players)
+local function sortowanie(LocalPlayer, Enemies, Players, LootContainers)
     local sort = {{LocalPlayer.y,"gracz"}}
 
     for index, value in pairs(Players) do
         if distanceTo(value.x, value.y, LocalPlayer.x, LocalPlayer.x) then
             table.insert(sort, {value.y , "players", index})
+        end
+
+    end
+    for index, value in pairs(LootContainers) do
+        if distanceTo(value.x, value.y, LocalPlayer.x, LocalPlayer.x) then
+            table.insert(sort, {value.y+20 , "loot", index})
         end
 
     end
@@ -131,6 +137,8 @@ local function sortowanie(LocalPlayer, Enemies, Players)
             
         elseif value[2] == "players" then
             Players[value[3]]:draw()
+        elseif value[2] == "loot" then
+            LootContainers[value[3]]:draw()
         elseif value[2] == "enemy" then
             Enemies[value[3]]:draw()
         end
@@ -138,12 +146,12 @@ local function sortowanie(LocalPlayer, Enemies, Players)
     return nil
 end
 
-function gameMap:draw(LocalPlayer, Enemies, Players)
+function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
     drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
     love.graphics.scale(0.25,0.25)
-    sortowanie(LocalPlayer, Enemies, Players)
+    sortowanie(LocalPlayer, Enemies, Players, LootContainers)
 end
 function gameMap:drawUnderthewater(LocalPlayer)
     love.graphics.push() 
