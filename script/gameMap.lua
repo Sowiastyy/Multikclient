@@ -28,9 +28,11 @@ local tileMap = love.graphics.newSpriteBatch(tileset, 1000)
 
 local widthRender = 40
 local heightRender =  22
+local objectRenderDistance = 1900
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     widthRender = 20
     heightRender =  10
+    objectRenderDistance = 1000
 end
 
 local function drawNearestTiles(playerX, playerY)
@@ -87,18 +89,30 @@ function gameMap:getHitboxes(playerX, playerY)
     return hitboxes
 end
 
+local function distanceTo(x1, y1, x2, y2)
+    local dx = math.abs(x2 - x1)
+    local dy = math.abs(y2 - y1)
+    return math.sqrt(dx*dx + dy*dy)<objectRenderDistance
+end
 local function sortowanie(LocalPlayer, Enemies, Players)
     local sort = {{LocalPlayer.y,"gracz"}}
 
     for index, value in pairs(Players) do
-        table.insert(sort, {value.y , "players", index})
+        if distanceTo(value.x, value.y, LocalPlayer.x, LocalPlayer.x) then
+            table.insert(sort, {value.y , "players", index})
+        end
+
     end
     for index, value in pairs(objects) do
-        table.insert(sort, {value.y*4-48, "drzewo", index})
+        if distanceTo(value.x*4, value.y*4, LocalPlayer.x, LocalPlayer.x) then
+            table.insert(sort, {value.y*4-48, "drzewo", index})
+        end
     end
 
     for index, value in pairs(Enemies) do
-        table.insert(sort, {value.y, "enemy", index})
+        if distanceTo(value.x, value.y, LocalPlayer.x, LocalPlayer.x) then
+            table.insert(sort, {value.y, "enemy", index})
+        end
     end
 
     table.sort(sort, function(a, b) return a[1] < b[1] end)
@@ -131,6 +145,11 @@ function gameMap:draw(LocalPlayer, Enemies, Players)
     love.graphics.scale(0.25,0.25)
     sortowanie(LocalPlayer, Enemies, Players)
 end
-
+function gameMap:drawUnderthewater(LocalPlayer)
+    love.graphics.push() 
+    love.graphics.scale(1, -1) -- This flips the Y-axis
+    LocalPlayer:draw(nil, -LocalPlayer.y-100)
+    love.graphics.pop()
+end
 
 return gameMap
