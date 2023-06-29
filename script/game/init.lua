@@ -193,7 +193,7 @@ function Game:update(dt)
 end
 function Game:draw()
     cam:attach()
-        gameMap:drawUnderthewater(LocalPlayer)
+        gameMap:drawUnderthewater(LocalPlayer, Players)
         gameMap:draw(LocalPlayer, Enemies, Players, lootContainer:getContainers())
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)

@@ -107,14 +107,22 @@ function Player:checkBulletCollision(bullet)
 
     return false
 end
-function Player:draw()
-    local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
-    
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
-    love.graphics.setColor(1, 1, 1)
+function Player:draw(x, y)
+    local drawBar = true
+    if y and not x then
+        drawBar = false
+    end
+    x = x or self.x
+    y = y or self.y
+    x, y = x-(self.size/2), y-(self.size/2)+10
+    if drawBar then
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
+        love.graphics.setColor(0, 1, 0)
+        love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
+        love.graphics.setColor(1, 1, 1)
+    end
+
     if self.rotate<0 then
         x = x+160
     end

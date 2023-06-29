@@ -45,7 +45,7 @@ local function drawNearestTiles(playerX, playerY)
             if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
                 tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
             else
-                tileMap:add(tilesetQuad[3], x*16, y*16)
+                tileMap:add(tilesetQuad[17], x*16, y*16)
             end
         end
     end
@@ -153,10 +153,13 @@ function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
     love.graphics.scale(0.25,0.25)
     sortowanie(LocalPlayer, Enemies, Players, LootContainers)
 end
-function gameMap:drawUnderthewater(LocalPlayer)
+function gameMap:drawUnderthewater( LocalPlayer, Players)
     love.graphics.push() 
     love.graphics.scale(1, -1) -- This flips the Y-axis
     LocalPlayer:draw(nil, -LocalPlayer.y-100)
+    for key, value in pairs(Players) do
+        value:draw(nil, -value.y-100)
+    end
     love.graphics.pop()
 end
 

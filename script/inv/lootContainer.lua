@@ -63,7 +63,6 @@ function LootContainer:toString()
     for _, item in pairs(self.stringTable) do
         str = str .. "|"..item
     end
-    print(str)
     return str
 end
 function LootContainer:getContainers()
