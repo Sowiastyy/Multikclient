@@ -17,7 +17,6 @@ img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
 local cooldownspell = 0
 local regenerateMp = 0.2
 local regenerateHp = 0.2
-
 local frames = {}
 for x = 0, 3 do
     local quad = love.graphics.newQuad(x * 32, 0, 32, 32, img["Warrior"]:getDimensions())
@@ -36,7 +35,9 @@ typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
 typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925, "wizard", 2}
 
 function LocalPlayer:update(dt, LocalBullets)
-
+    if self.weapon then
+        print(self.weapon.bulletType)
+    end
     
     LocalPlayer:shoot(LocalBullets, dt)
     if LocalPlayer.id then
@@ -131,15 +132,9 @@ function LocalPlayer:draw()
     love.graphics.setColor(0, 1, 0)
     love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
     love.graphics.setColor(1, 1, 1)
-    
-    if THIS_ID==self.id then
-        animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
-    else
-        if self.rotate<0 then
-            x = x+160
-        end
-        love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
-    end
+
+    animation:draw(img[self.hero], x-offset, y-40, 0, self.rotate, 5)
+
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),

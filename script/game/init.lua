@@ -1,7 +1,7 @@
 THIS_ID=0
 local Game = {}
 love.graphics.setDefaultFilter("nearest", "nearest")
-love.window.setVSync(0)
+
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
@@ -140,6 +140,7 @@ end
 function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)
+    inventory:setPlayerEquipment(LocalPlayer)
     if mobile then
         LocalPlayer:shootMobile(LocalBullets, dt, mobileController2.distance>0, mobileController2.angle )
         if mobileController.distance>0 then
@@ -149,6 +150,12 @@ function Game:update(dt)
     
     end
     for key, bullet in pairs(EnemyBullets) do
+        
+        for index, ally in pairs(Players) do
+            if ally:checkBulletCollision(bullet) then
+                table.remove(EnemyBullets, key)
+            end
+        end
         if LocalPlayer:checkBulletCollision(bullet) then
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
             table.remove(EnemyBullets, key)

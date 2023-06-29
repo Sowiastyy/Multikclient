@@ -2,7 +2,15 @@ local Player = {}
 
 
 
-
+local img = {}
+img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
+img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
+img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
+local frames = {}
+for x = 0, 3 do
+    local quad = love.graphics.newQuad(x * 32, 0, 32, 32, img["Warrior"]:getDimensions())
+    table.insert(frames, quad)
+end
 function Player:new(x, y, size, hero)
     local player = {
         x = x,
@@ -98,7 +106,28 @@ function Player:checkBulletCollision(bullet)
 
     return false
 end
-
+function Player:draw()
+    local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
+    
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
+    love.graphics.setColor(1, 1, 1)
+    if self.rotate<0 then
+        x = x+160
+    end
+    love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
+    
+    local r1 = {
+        x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
+        y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
+        w = self.w,
+        h = self.h,
+        angle = self.angle or 0
+    }
+    love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+end
 function Player:fromString(str)
     local parts = {}
     for part in str:gmatch("([^|]+)") do

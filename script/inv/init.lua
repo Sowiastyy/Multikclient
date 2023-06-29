@@ -1,27 +1,36 @@
 local slotTable = require('script.inv.slotTable') -- Assuming slotTable.lua is in the same directory
 local Item = require("script.inv.item")
+local Items = require("script.inv.items")
 local inventory = {}
 -- The two slotTables
 inventory.slotTables = {}
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
--- Calculate positions for `equipmentSlots` and `storageSlots`
--- screenWidth/4 ensures that the equipmentSlots are placed to the left of the center screen
--- screenWidth*3/4 ensures that the storageSlots are placed to the right center screen.
 local equipmentSlotsPositionX = screenWidth / 4
 local storageSlotsPositionX =( screenWidth / 4)+400
 
 -- We'll keep your initial row & columns for `slotTable.new`
-inventory.slotTables.equipmentSlots = slotTable.new(equipmentSlotsPositionX, screenHeight-100, 64, 0, 1, 4) -- Example values
+inventory.slotTables.equipmentSlots = slotTable.new(equipmentSlotsPositionX, screenHeight-100, 64, 0, 1, 2) -- Example values
 inventory.slotTables.storageSlots = slotTable.new(storageSlotsPositionX, screenHeight-140, 64, 0, 2, 4) -- Example values
 
-for i = 1, inventory.slotTables.equipmentSlots.columns do
-  local item = Item.new("Item for equipmentSlot:" .. i, i, 64)
-  inventory.slotTables.equipmentSlots:setItem(item, i)
+--Making reference so it's more readable
+local equipment = inventory.slotTables.equipmentSlots
+local storage = inventory.slotTables.storageSlots
+
+--Setting the types of the slots
+equipment.slots[1].type = "weapon"
+equipment.slots[2].type = "armor"
+
+--Adding the items to inventory
+storage:setItem(Items.bowt1, 2)
+equipment:setItem(Items.bowt1, 1)
+
+--Setting fields in Player for stats
+function inventory:setPlayerEquipment(Player)
+  Player.weapon =  equipment.items[1].stats
+  Player.armor =  equipment.items[2].stats
 end
-inventory.slotTables.equipmentSlots.slots[1].type = "weapon"
-local item = Item.new("weapon", 11, {gowno="XD"})
-inventory.slotTables.storageSlots:setItem(item, 2)
+
 function inventory:getSlotAt(x, y)
   for key, slotTable in pairs(self.slotTables) do
     local item, id = slotTable:getItemAt(x, y)

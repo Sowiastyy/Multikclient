@@ -52,6 +52,10 @@ function slotTable:draw()
   end
 end
 
+function slotTable:getItemByID(id)
+    return self.items[id]
+end
+
 function slotTable:update(dt)
   -- Update items if necessary
    for i, item in pairs(self.items) do
