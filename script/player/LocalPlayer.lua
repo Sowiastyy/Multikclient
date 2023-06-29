@@ -129,14 +129,16 @@ function LocalPlayer:useSpell(LocalBullets, dt)
 end
 
 
-function LocalPlayer:draw()
-    local x, y = self.x-(self.size/2), self.y-(self.size/2)+10
+function LocalPlayer:draw(x, y)
+    local drawBar = true
+    if y and not x then
+        drawBar = false
+    end
+    x = x or self.x
+    y = y or self.y
+    x, y = x-(self.size/2), y-(self.size/2)+10
     
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
-    love.graphics.setColor(1, 1, 1)
+
     animation:draw(img[self.hero], x-offsetX, y-offsetY, 0, self.rotate, 5)
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
@@ -146,6 +148,14 @@ function LocalPlayer:draw()
         angle = self.angle or 0
     }
     --love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
+    if not drawBar then
+        return
+    end
+    love.graphics.setColor(1, 0, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59, 9)
+    love.graphics.setColor(0, 1, 0)
+    love.graphics.rectangle("fill", x+((self.size-60)/2)+1, y+self.size+1, 59*(self.hp/100), 9)
+    love.graphics.setColor(1, 1, 1)
 end
 
 function LocalPlayer:toString()
