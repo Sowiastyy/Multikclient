@@ -1,7 +1,7 @@
 local sti = require("lib/sti")
 
-local gameMap = sti("maps/mapa4.lua")
-local rawTiles = require("maps/mapa4").layers[1].data
+local gameMap = sti("maps/mapa5.lua")
+local rawTiles = require("maps/mapa5").layers[1].data
 local objectsSheet = love.graphics.newImage("maps/treeCooler.png")
 local objectsQuad = {}
 
@@ -40,7 +40,6 @@ local function drawNearestTiles(playerX, playerY)
         for x = playerX, playerX+widthRender do
             --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
             --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
-            
             if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
                 tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
             else
@@ -54,7 +53,7 @@ end
 local objects = {}
 ---hitboxes
 ---@return table hitboxes
-function gameMap:getHitboxes()
+function gameMap:getHitboxes(playerX, playerY)
     local hitboxes = {}
     if gameMap.layers["Drzewa"] then
         for i, lay in ipairs(gameMap.layers) do
@@ -70,14 +69,20 @@ function gameMap:getHitboxes()
             end
         end
     end
-    if gameMap.layers["sciany"] then
-        for index, obj in ipairs(gameMap.layers["sciany"].objects) do
-            obj.y = obj.y - 16
-            table.insert(hitboxes, obj)
-            print(obj.x, obj.y)
-        end
+    for y = 0, 499 do
+        for x = 0, 499 do
+            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
+            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
+            if rawTiles[1+(y*gameMap.layers[1].width+x)] == 5 then
+                table.insert(hitboxes, {
+                    x=x*16-1,
+                    y=y*16,
+                    width = 16-1,
+                    height = 16 
+            })
+            end
             
-        
+        end
     end
     return hitboxes
 end

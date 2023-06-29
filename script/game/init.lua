@@ -62,7 +62,7 @@ local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 
-for index, obj in ipairs(gameMap:getHitboxes()) do
+for index, obj in ipairs(gameMap:getHitboxes(LocalPlayer.x, LocalPlayer.y)) do
     local wall = world:newRectangleCollider(obj.x*4, obj.y*4, obj.width*4, obj.height*4)
     wall:setType('static')
     table.insert(walls,wall)
