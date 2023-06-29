@@ -6,6 +6,7 @@ local client = require("script.client")
 local sti = require("lib/sti")
 local rawTiles = require("maps/mapa5").layers[1].data
 local gameMap = sti("maps/mapa5.lua")
+local inventory = require('script.inv')
 print("CLASS", CLASS)
 local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local enemy = require("script.enemy.stats")
@@ -40,8 +41,9 @@ typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
 typeBullet["Wizard"] = {"wizard_spell", 16 , "click" , 0.3925, "wizard", 2}
 
 function LocalPlayer:update(dt, LocalBullets)
+    inventory:setPlayerEquipment(LocalPlayer)
     if self.weapon then
-
+        --print(self.weapon.bulletType)
     end
     
     LocalPlayer:shoot(LocalBullets, dt)
@@ -69,6 +71,7 @@ function LocalPlayer:xpAdd(x, y, type)
     if self.x - 1500 < x and self.x + 1500 > x and self.y - 1500 < y and self.y + 1500 > y then
         self.xp = self.xp + enemy[type].xp
     end
+    
 end
 
 function LocalPlayer:regenerating(dt)
@@ -100,6 +103,8 @@ function LocalPlayer:lvlUp()
         self.dmgMulti = self.dmgMulti + 0.1
         self.dexterity = self.dexterity - 0.001
         self.spd = self.spd + 10
+
+        self.def = self.def + 3
 
         print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
     end
@@ -235,8 +240,14 @@ function LocalPlayer:shoot(LocalBullets, dt, condition, presetAngle)
             if mobile then
                 angle = presetAngle
             end
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, typeBullet[self.hero][5])
-            local bullets = Attack(bullet, "shotgun", {count=typeBullet[self.hero][6], spread=0.1})
+
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, "nut" )
+            local bullets = Attack(bullet, "shotgun", {count=1 , spread=0.1})
+            if self.weapon then
+                local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, self.weapon.bulletType )
+                bullets = Attack(bullet, "shotgun", {count=self.weapon.count , spread=0.1})
+            end
+            
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
                 table.insert(LocalBullets, bullet)

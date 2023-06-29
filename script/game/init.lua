@@ -159,7 +159,7 @@ function Game:update(dt)
             end
         end
         if LocalPlayer:checkBulletCollision(bullet) then
-            LocalPlayer.hp = LocalPlayer.hp - bullet.dmg
+            LocalPlayer.hp = LocalPlayer.hp - bullet.dmg * (100/(100+LocalPlayer.def))
             table.remove(EnemyBullets, key)
         end
     end
@@ -169,7 +169,7 @@ function Game:update(dt)
             for key, bullet in pairs(LocalBullets) do
                 if LocalPlayer.checkBulletCollision(enemy, bullet) then
                     table.remove(LocalBullets, key)
-                    client:send("HIT|"..enemy.id.."|"..bullet.dmg * LocalPlayer.dmgMulti.."|"..LocalPlayer.id)
+                    client:send("HIT|"..enemy.id.."|"..LocalPlayer.weapon.dmg * LocalPlayer.dmgMulti.."|"..LocalPlayer.id)
                 end
             end
         end
