@@ -127,9 +127,11 @@ function client:onmessage(s)
     elseif s:find("^ENTITIES") then
         Enemies = {}
         Players = {}
+        lootContainer:resetLoot()
         for _, value in pairs(createEntitiesList(s)) do
             getEntity(value)
         end
+        EnemyBullets = {}
     end
 end
 function Game.mousepressed(x, y, button)

@@ -42,7 +42,9 @@ function LootContainer.new(id, x, y, quadID, slotTable)
     LootContainers[id]=instance
     return instance
 end
-
+function LootContainer:resetLoot()
+    LootContainers = {}
+end
 -- Define the draw method
 function LootContainer:draw()
     love.graphics.rectangle('line', self.x+self.xOffset, self.y+self.yOffset, self.width, self.height)
