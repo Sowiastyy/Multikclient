@@ -136,7 +136,7 @@ function Game.mousepressed(x, y, button)
     inventory:mousepressed(x, y, button)
 end
 function Game.mousereleased(x, y, button)
-    inventory:mousereleased(x, y, button)
+    inventory:mousereleased(x, y, button, lootContainer.sendData)
 end
 function Game:update(dt)
     client:update()

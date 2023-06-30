@@ -12,7 +12,7 @@ for x = 0, (spritesheet:getWidth()/size)-1 do
     local quad = love.graphics.newQuad(x * size , 0, size, size, spritesheet:getWidth(), spritesheet:getHeight())
     table.insert(quads, quad) -- Dodanie quada do tablicy
 end
-
+local got = false
 -- Constructor for the LootContainer
 function LootContainer.new(id, x, y, quadID, slotTable)
     local instance = {}
@@ -30,7 +30,7 @@ function LootContainer.new(id, x, y, quadID, slotTable)
     instance.xOffset = 0
     instance.yOffset = 0
 
-    instance.slotTable = SlotTable.new(50, 200, 64, 0, 2, 4) -- Example values
+    instance.slotTable = SlotTable.new(50, 200, 64, 0, 2, 4) -- Example values\f
     if slotTable then
         instance.stringTable= slotTable
         for key, value in pairs(slotTable) do
@@ -52,17 +52,24 @@ end
 function LootContainer:getContainerbyPlayer(Player)
     for key, value in pairs(LootContainers) do
         if Player:checkBulletCollision(value) then
-            client:send(value:toString())
-            return value.slotTable
+            return value
         end
     end
 end
-
+function LootContainer.sendData(key)
+    print(LootContainers[key]:toString())
+    client:send(LootContainers[key]:toString())
+end
 function LootContainer:toString()
     local str = "LOOT|"..self.id.."|"..self.x.."|"..self.y.."|"..self.quadID
-    for _, item in pairs(self.stringTable) do
-        str = str .. "|"..item
+    for key, value in pairs(self.slotTable.items) do
+        if value.stats then
+            str = str .. "|"..value.stats.name
+        else
+            str = str .. "|nil"
+        end
     end
+    print(str)
     return str
 end
 function LootContainer:getContainers()

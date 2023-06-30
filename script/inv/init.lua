@@ -23,6 +23,7 @@ equipment.slots[2].type = "armor"
 
 --Adding the items to inventory
 storage:setItem(Items.bowt1, 2)
+storage:setItem(Items.bowt2, 1)
 equipment:setItem(Items.bowt1, 1)
 
 --Setting fields in Player for stats
@@ -41,7 +42,8 @@ function inventory:getSlotAt(x, y)
 end
 function inventory:setLoot(lootTable)
   if lootTable then
-    inventory.slotTables.lootTable = lootTable
+    inventory.slotTables.lootTable = lootTable.slotTable
+    inventory.lootKey = lootTable.id
   else
     inventory.slotTables.lootTable = nil
   end
@@ -59,7 +61,7 @@ function inventory:mousepressed(x, y, button)
   end
 end
 
-function inventory:mousereleased(x, y, button)
+function inventory:mousereleased(x, y, button, sendLootData)
   if button == 1 then -- Assuming '1' is the left mouse button
     if self.draggedKey and self.draggedID then
       local droppedItem, droppedID, droppedKey = self:getSlotAt(x, y)
@@ -77,6 +79,9 @@ function inventory:mousereleased(x, y, button)
         if success then
           self.slotTables[droppedKey].items[droppedID] = self.draggedItem
           self.slotTables[self.draggedKey].items[self.draggedID] = droppedItem
+          if self.draggedKey or droppedKey then
+            sendLootData(self.lootKey)
+          end
         else
           self.slotTables[droppedKey].items[droppedID] = droppedItem
           self.slotTables[self.draggedKey].items[self.draggedID] = self.draggedItem
