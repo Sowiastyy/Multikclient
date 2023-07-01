@@ -10,6 +10,7 @@ local inventory = require('script.inv')
 print("CLASS", CLASS)
 local LocalPlayer = Player:new(0, 0, 80, CLASS)
 local enemy = require("script.enemy.stats")
+local manInSwamp = require("script.player.manInSwamp")
 local img = {}
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
@@ -291,7 +292,7 @@ function LocalPlayer:speedChange()
         end
     end
 
-    
+    animation, offsetY = manInSwamp:setOffsetAndFrame(self.x,self.y,anim1,anim2)
     
 end
 return LocalPlayer

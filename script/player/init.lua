@@ -1,15 +1,19 @@
+local manInSwamp = require("script.player.manInSwamp")
 local Player = {}
-
-
-
 local img = {}
 img["Warrior"] = love.graphics.newImage("img/characters/Warrior.png")
 img["Archer"] = love.graphics.newImage("img/characters/Archer.png")
 img["Wizard"] = love.graphics.newImage("img/characters/Wizard.png")
 local frames = {}
+local frames2 = {}
 for x = 0, 3 do
     local quad = love.graphics.newQuad(x * 32, 0, 32, 32, img["Warrior"]:getDimensions())
     table.insert(frames, quad)
+end
+for x = 0, 3 do
+    local quad = love.graphics.newQuad(x * 32, 0, 31, 21, img["Warrior"]:getDimensions())
+    table.insert(frames2, quad)
+
 end
 function Player:new(x, y, size, hero)
     local player = {
@@ -126,7 +130,8 @@ function Player:draw(x, y)
     if self.rotate<0 then
         x = x+160
     end
-    love.graphics.draw(img[self.hero], frames[self.frame], x-40, y-40, 0, self.rotate, 5)
+    local animation, offsetY = manInSwamp:setOffsetAndFrame(self.x,self.y,frames,frames2)
+    love.graphics.draw(img[self.hero], animation[self.frame], x-40, y-offsetY, 0, self.rotate, 5)
     
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
