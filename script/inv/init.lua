@@ -24,6 +24,7 @@ equipment.slots[2].type = "armor"
 
 --Adding the items to inventory
 storage:setItem(Items.bowt1, 2)
+storage:setItem(Items.leathert1, 3)
 storage:setItem(Items.bowt2, 1)
 equipment:setItem(Items.bowt1, 1)
 

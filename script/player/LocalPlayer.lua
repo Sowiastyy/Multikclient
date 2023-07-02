@@ -35,6 +35,8 @@ local offsetX = 40
 local offsetY = 40
 local dupa = 0
 
+local old_armor =  ""
+local def_based = 0
 
 local typeBullet= {}
 typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1, "warrior", 1}
@@ -59,7 +61,7 @@ function LocalPlayer:update(dt, LocalBullets)
     LocalPlayer:useSpell(LocalBullets, dt)
     self:controller()
     LocalPlayer:speedChange()
-
+    LocalPlayer:armorChanged()
     animation:update(dt)
     self:draw()
     
@@ -105,8 +107,8 @@ function LocalPlayer:lvlUp()
         self.dexterity = self.dexterity - 0.001
         self.spd = self.spd + 10
 
-        self.def = self.def + 3
-
+        self.def_based = self.def_based + 3
+        self.def = self.def_based
         print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
     end
 end
@@ -294,5 +296,16 @@ function LocalPlayer:speedChange()
 
     animation, offsetY = manInSwamp:setOffsetAndFrame(self.x,self.y,anim1,anim2)
     
+end
+
+
+function LocalPlayer:armorChanged()
+    if self.armor then
+        if old_armor ~= self.armor.name then
+            self.def = def_based + self.armor.def
+        end
+        old_armor = self.armor.name
+    end
+   
 end
 return LocalPlayer
