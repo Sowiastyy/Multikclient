@@ -107,7 +107,7 @@ function LocalPlayer:lvlUp()
         self.dexterity = self.dexterity - 0.001
         self.spd = self.spd + 10
 
-        self.def_based = self.def_based + 3
+        def_based = def_based + 3
         self.def = self.def_based
         print(self.dexterity, self.spd, self.maxMp, self.maxHp, self.regenatate)
     end
