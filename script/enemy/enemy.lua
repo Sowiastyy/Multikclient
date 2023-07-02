@@ -25,13 +25,21 @@ end
 function Enemy:update(dt)
 end
 
-function Enemy:draw()
-    local x, y = self.x-(stats[self.type].width/2), self.y-(stats[self.type].height/2)
-    love.graphics.setColor(1, 0, 0)
-    love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59, 9)
-    love.graphics.setColor(0, 1, 0)
-    love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
-    love.graphics.setColor(1, 1, 1)
+function Enemy:draw(x, y)
+    local drawBar = true
+    if y and not x then
+        drawBar = false
+    end
+    x = x or self.x
+    y = y or self.y
+    x, y = x-(self.w/2), y-(self.h/2)+10
+    if drawBar then
+        love.graphics.setColor(1, 0, 0)
+        love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59, 9)
+        love.graphics.setColor(0, 1, 0)
+        love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
+        love.graphics.setColor(1, 1, 1)
+    end
     if stats[self.type].drawableData then
         if self.rotate==-1 then
             if self.type=="logTwins" then

@@ -1,6 +1,7 @@
 local slotTable = require('script.inv.slotTable') -- Assuming slotTable.lua is in the same directory
 local Item = require("script.inv.item")
 local Items = require("script.inv.items")
+local client = require("script.client")
 local inventory = {}
 -- The two slotTables
 inventory.slotTables = {}
@@ -30,6 +31,8 @@ equipment:setItem(Items.bowt1, 1)
 function inventory:setPlayerEquipment(Player)
   Player.weapon =  equipment.items[1].stats
   Player.armor =  equipment.items[2].stats
+  inventory.spawnX = Player.x
+  inventory.spawnY = Player.y
 end
 
 function inventory:getSlotAt(x, y)
@@ -48,6 +51,11 @@ function inventory:setLoot(lootTable)
     inventory.slotTables.lootTable = nil
   end
 end
+function inventory:getLoot()
+  if inventory.slotTables.lootTable and inventory.lootKey then
+    return inventory.lootKey, inventory.slotTables.lootTable
+  end
+end
 function inventory:mousepressed(x, y, button)
   if button == 1 then
     self.draggedItem, self.draggedID, self.draggedKey = self:getSlotAt(x, y)
@@ -63,9 +71,11 @@ end
 
 function inventory:mousereleased(x, y, button, sendLootData)
   if button == 1 then -- Assuming '1' is the left mouse button
+    print("ZACZYNAMY")
     if self.draggedKey and self.draggedID then
       local droppedItem, droppedID, droppedKey = self:getSlotAt(x, y)
-      if droppedID then
+      if droppedID and droppedKey then
+        print("Znaleziono droppeda")
         local success = true
         local typeDropped = self.slotTables[droppedKey].slots[droppedID].type
         if typeDropped then
@@ -83,10 +93,18 @@ function inventory:mousereleased(x, y, button, sendLootData)
             sendLootData(self.lootKey)
           end
         else
+          print("SWITCH")
           self.slotTables[droppedKey].items[droppedID] = droppedItem
           self.slotTables[self.draggedKey].items[self.draggedID] = self.draggedItem
         end
         self.draggedItem = nil
+      else
+        print("Nie znaleziono droppeda")
+        --client:send(string.format("LOOT_CREATE|%d|%d|%s",
+        --self.spawnX, self.spawnY, self.draggedItem.stats.name))
+        --self.slotTables[self.draggedKey].items[self.draggedID] =nil
+        --self.draggedItem = nil
+        print(self.draggedID, self.draggedKey)
       end
     end
   end
