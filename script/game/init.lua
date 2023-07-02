@@ -145,6 +145,8 @@ function Game:update(dt)
     LocalPlayer:update(dt, LocalBullets)
     inventory:setPlayerEquipment(LocalPlayer)
     inventory:setLoot(lootContainer:getContainerbyPlayer(LocalPlayer))
+    lootContainer:setData(inventory:getLoot())
+    lootContainer.deleteSingleContainers(dt)
     if mobile then
         LocalPlayer:shootMobile(LocalBullets, dt, mobileController2.distance>0, mobileController2.angle )
         if mobileController.distance>0 then
@@ -195,7 +197,7 @@ function Game:update(dt)
 end
 function Game:draw()
     cam:attach()
-        gameMap:drawUnderthewater(LocalPlayer, Players)
+        gameMap:drawUnderthewater()
         gameMap:draw(LocalPlayer, Enemies, Players, lootContainer:getContainers())
         drawObjectsArray(LocalBullets)
         drawObjectsArray(AllyBullets)
