@@ -42,19 +42,14 @@ function Enemy:draw(x, y)
     end
     if stats[self.type].drawableData then
         if self.rotate==-1 then
-            if self.type=="logTwins" then
-                x = x+self.w
-            else
-                x=x+160
-            end
-            
+            x=x+160
         end
         local drawable, quad = stats[self.type].drawableData(self.frame)
         love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
     else
         love.graphics.draw(stats[self.type].image, x, y)
     end
-    --[[
+--[[
     local r1 = {
         x = self.x-(self.w/2)+(self.bulletCollisionOffsetX or 0),
         y = self.y-(self.h/2)+(self.bulletCollisionOffsetY or 0),
@@ -64,8 +59,8 @@ function Enemy:draw(x, y)
     }
     
     love.graphics.rectangle("line", r1.x, r1.y, r1.w, r1.h)
-    ]]
 
+]]
 end
 
 function Enemy:fromString(str)

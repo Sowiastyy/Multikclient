@@ -132,6 +132,7 @@ local function sortowanie(...)
 end
 
 function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
+    gameMap.playerX, gameMap.playerY=LocalPlayer.x, LocalPlayer.y
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
     drawNearestTiles(LocalPlayer.x, LocalPlayer.y)

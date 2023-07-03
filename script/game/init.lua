@@ -133,7 +133,7 @@ function client:onmessage(s)
         for _, value in pairs(createEntitiesList(s)) do
             getEntity(value)
         end
-        EnemyBullets = {}
+        --EnemyBullets = {}
     end
 end
 
