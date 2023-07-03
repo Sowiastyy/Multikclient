@@ -1,6 +1,6 @@
 --! file: enemy.lua
 local stats = require("script.enemy.stats")
-
+local manInSwamp = require("script.player.manInSwamp")
 
 Enemy = {}
 function Enemy:new(id, x, y, type)
@@ -50,7 +50,9 @@ function Enemy:draw(x, y)
             
         end
         local drawable, quad = stats[self.type].drawableData(self.frame)
-        love.graphics.draw(drawable, quad, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
+        local quad2 = quad
+        
+        love.graphics.draw(drawable, quad2, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
     else
         love.graphics.draw(stats[self.type].image, x, y)
     end

@@ -14,7 +14,7 @@ function manInSwamp:setOffsetAndFrame(x,y,anim1,anim2)
                 return anim2, 28      
             end
         end
-        print(rawTiles[1+(y*gameMap.layers[1].width+x)])
+        
         return anim1, 40  
     end
     return anim2, 28

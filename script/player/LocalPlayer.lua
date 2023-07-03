@@ -38,6 +38,8 @@ local dupa = 0
 local old_armor =  ""
 local def_based = 0
 
+local spd_based = 500
+
 local typeBullet= {}
 typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1, "warrior", 1}
 typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
@@ -105,7 +107,8 @@ function LocalPlayer:lvlUp()
         self.regenatate = self.regenatate - 0.001
         self.dmgMulti = self.dmgMulti + 0.1
         self.dexterity = self.dexterity - 0.001
-        self.spd = self.spd + 10
+        spd_based = spd_based + 10
+        self.spd = spd_based
 
         def_based = def_based + 3
         self.def = self.def_based
@@ -280,17 +283,19 @@ function LocalPlayer:speedChange()
     
     for key, value in pairs(speedUp) do
         if rawTiles[1+(y*gameMap.layers[1].width+x)] == value  then
-           self.spd = 700
+           self.spd = spd_based * 1.4
+           
            break;
         elseif rawTiles[1+(y*gameMap.layers[1].width+x)] == slowDown[key] then
-            self.spd = 300
+            self.spd = spd_based * 0.6
             animation = anim2
             offsetY = 28
+            
             break;
         else
             offsetY = 40
             animation = anim1
-            self.spd = 500
+            self.spd = spd_based
         end
     end
 
