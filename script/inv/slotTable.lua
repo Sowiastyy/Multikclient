@@ -38,7 +38,11 @@ function slotTable:draw()
     for j = 1, self.columns do
       local x = self.x + (j - 1) * (self.slotSize + self.slotMargin)
       local y = self.y + (i - 1) * (self.slotSize + self.slotMargin)
+      love.graphics.setColor(0.3, 0.3, 0.3)
+      love.graphics.rectangle('fill', x, y, self.slotSize, self.slotSize)
+      love.graphics.setColor(0, 0, 0)
       love.graphics.rectangle('line', x, y, self.slotSize, self.slotSize)
+      love.graphics.setColor(1, 1, 1)
       local item = self.items[(i - 1) * self.columns + j]
       if item then
         if item.draw then

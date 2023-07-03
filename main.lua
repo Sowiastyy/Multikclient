@@ -9,13 +9,15 @@ love.window.setVSync( 0 )
 local currentScreen = "Menu"
 Screens.Game = require("script.game")
 Screens.Menu = require("script.menu")
-
+local screenWidth = love.graphics.getWidth()
+local screenHeight = love.graphics.getHeight()
 Screens.Menu.play = function ()
     currentScreen="Game"
     NICKNAME=Screens.Menu.buttons[3].text
     CLASS = classes[Screens.Menu.selected]
     love.graphics.setBackgroundColor(0.29, 0.55, 0.62)
     Screens.Game = require("script.game")
+    Screens.Game:onResolutionChange()
     love.graphics.setFont(love.graphics.newFont(20))
 end
 
@@ -60,6 +62,15 @@ function love.touchpressed(id, x, y)
 end
 
 function love.update(dt)
+    local newscreenWidth = love.graphics.getWidth()
+    local newscreenHeight = love.graphics.getHeight()
+    if newscreenHeight~=screenHeight or newscreenWidth~=screenWidth then
+        if Screens[currentScreen].onResolutionChange then
+            Screens[currentScreen]:onResolutionChange()
+            screenHeight=newscreenHeight
+            screenWidth=newscreenWidth
+        end
+    end
     Screens[currentScreen]:update(dt)
 end
 

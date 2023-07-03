@@ -3,7 +3,6 @@ local lootContainer = require "script.inv.lootContainer"
 THIS_ID=0
 local Game = {}
 
-
 local Player = require("script.player")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
@@ -16,11 +15,14 @@ local client = require("script.client")
 local world = require("lib.windfield").newWorld(0, 0)
 -- main.lua
 local inventory = require('script.inv')
+
 local cam = camera()
 cam.scale =  cam.scale * 0.8
+
 local LocalBullets =  {}
 local AllyBullets = {}
 local EnemyBullets = {}
+
 local LocalPlayer = require("script.player.LocalPlayer")
 
 local Players = {}
@@ -134,12 +136,20 @@ function client:onmessage(s)
         EnemyBullets = {}
     end
 end
+
 function Game.mousepressed(x, y, button)
     inventory:mousepressed(x, y, button)
 end
+
 function Game.mousereleased(x, y, button)
     inventory:mousereleased(x, y, button, lootContainer.sendData)
 end
+
+function Game:onResolutionChange()
+    inventory:onResolutionChange()
+    Game.chat:onResolutionChange()
+end
+
 function Game:update(dt)
     client:update()
     LocalPlayer:update(dt, LocalBullets)

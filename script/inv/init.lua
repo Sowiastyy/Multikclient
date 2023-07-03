@@ -3,16 +3,17 @@ local Item = require("script.inv.item")
 local Items = require("script.inv.items")
 local client = require("script.client")
 local inventory = {}
+inventory.class="Archer"
 -- The two slotTables
 inventory.slotTables = {}
 local screenWidth = love.graphics.getWidth()
 local screenHeight = love.graphics.getHeight()
-local equipmentSlotsPositionX = screenWidth / 4
-local storageSlotsPositionX =( screenWidth / 4)+400
+local storageSlotsPositionX = screenWidth -(4*64)
+local equipmentSlotsPositionX = storageSlotsPositionX-196
 
 -- We'll keep your initial row & columns for `slotTable.new`
-inventory.slotTables.equipmentSlots = slotTable.new(equipmentSlotsPositionX, screenHeight-100, 64, 0, 1, 2) -- Example values
-inventory.slotTables.storageSlots = slotTable.new(storageSlotsPositionX, screenHeight-140, 64, 0, 2, 4) -- Example values
+inventory.slotTables.equipmentSlots = slotTable.new(equipmentSlotsPositionX, screenHeight-96, 64, 0, 1, 2) -- Example values
+inventory.slotTables.storageSlots = slotTable.new(storageSlotsPositionX, screenHeight-128, 64, 0, 2, 4) -- Example values
 
 --Making reference so it's more readable
 local equipment = inventory.slotTables.equipmentSlots
@@ -27,15 +28,25 @@ storage:setItem(Items.bowt1, 2)
 storage:setItem(Items.leathert1, 3)
 storage:setItem(Items.bowt2, 1)
 equipment:setItem(Items.bowt1, 1)
-
 --Setting fields in Player for stats
 function inventory:setPlayerEquipment(Player)
   Player.weapon =  equipment.items[1].stats
   Player.armor =  equipment.items[2].stats
   inventory.spawnX = Player.x
   inventory.spawnY = Player.y
+  inventory.class=Player.hero
 end
 
+function inventory:onResolutionChange()
+  screenWidth = love.graphics.getWidth()
+  screenHeight = love.graphics.getHeight()
+  storageSlotsPositionX = screenWidth -(4*64)
+  equipmentSlotsPositionX = storageSlotsPositionX-196
+
+  storage.x, storage.y = storageSlotsPositionX, screenHeight-128
+  equipment.x, equipment.y = equipmentSlotsPositionX, screenHeight-96
+
+end
 function inventory:getSlotAt(x, y)
   for key, slotTable in pairs(self.slotTables) do
     local item, id = slotTable:getItemAt(x, y)
@@ -50,6 +61,9 @@ function inventory:setLoot(lootTable)
     inventory.lootKey = lootTable.id
   else
     inventory.slotTables.lootTable = nil
+    if inventory.draggedKey=="lootTable" then
+      inventory.draggedItem = nil
+    end
   end
 end
 function inventory:getLoot()
@@ -73,7 +87,7 @@ end
 function inventory:mousereleased(x, y, button, sendLootData)
   if button == 1 then -- Assuming '1' is the left mouse button
     print("ZACZYNAMY")
-    if self.draggedKey and self.draggedID then
+    if self.draggedKey and self.draggedID and self.draggedItem then
       local droppedItem, droppedID, droppedKey = self:getSlotAt(x, y)
       if droppedID and droppedKey then
         print("Znaleziono droppeda")
@@ -87,7 +101,16 @@ function inventory:mousereleased(x, y, button, sendLootData)
             end
           end
         end
+
+        if droppedKey=="equipmentSlots" and self.draggedItem.stats then
+          success=false
+          if self.draggedItem.stats.class==self.class then
+            success=true
+          end
+        end
+        
         if success then
+
           self.slotTables[droppedKey].items[droppedID] = self.draggedItem
           self.slotTables[self.draggedKey].items[self.draggedID] = droppedItem
           if self.draggedKey or droppedKey then
@@ -119,7 +142,7 @@ function inventory:draw()
   -- Draw the dragged item separately at mouse position
   if self.draggedItem then
     local x, y = love.mouse.getPosition()
-    self.draggedItem:draw(x, y)
+    self.draggedItem:draw(x-32, y-32)
   end
 end
 
