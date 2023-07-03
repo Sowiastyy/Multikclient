@@ -117,7 +117,7 @@ local function sortowanie(...)
     local args = {...}
     for _, tab in pairs(args) do
         for _, value in pairs(tab) do
-            if distanceTo(value.x, value.y, gameMap.playerX, gameMap.playerY) then
+            if distanceTo(value.x, value.y, gameMap.playerXnormal, gameMap.playerYnormal) then
                 table.insert(gameMap.sort, value)
             end
         end
@@ -132,7 +132,7 @@ local function sortowanie(...)
 end
 
 function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
-    gameMap.playerX, gameMap.playerY=LocalPlayer.x, LocalPlayer.y
+    gameMap.playerXnormal, gameMap.playerYnormal=LocalPlayer.x, LocalPlayer.y
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
     drawNearestTiles(LocalPlayer.x, LocalPlayer.y)

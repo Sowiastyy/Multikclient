@@ -3,13 +3,10 @@ local Item = {}
 Item.__index = Item  -- Needed for OOP in Lua
 local spritesheet = love.graphics.newImage("img/itemSheet.png")
 local quads = {}
-local j = 0
 local size = 8
 for y = 0, spritesheet:getHeight()/size do
     for x = 0, (spritesheet:getWidth()/size)-1 do
         local quad = love.graphics.newQuad(x * size , y*size, size, size, spritesheet:getWidth(), spritesheet:getHeight())
-        j=j+1
-        print(j)
         table.insert(quads, quad) -- Dodanie quada do tablicy
     end
 end
