@@ -23,7 +23,12 @@ function chat:draw()
     --love.graphics.print("MSG: "..chat.msg, x, y + 20)
 end
 
-
+function chat:onResolutionChange()
+    print("halo")
+    x = 10 -- Left margin
+    y = love.graphics.getHeight() - 40 -- Bottom margin
+    chat.input.x, chat.input.y = x, y
+end
 function chat.input.returnCallback()
     if chat.input.active then
         client:send("MSG|"..NICKNAME..": "..chat.input.text)

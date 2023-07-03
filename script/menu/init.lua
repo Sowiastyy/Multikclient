@@ -18,8 +18,12 @@ love.graphics.setFont(love.graphics.newFont(fontSize))
 Menu.buttons = {
     Button:new(20, 20, 200, 96, "Quit", function() Menu:quit() end), -- Przycisk "Quit" w lewym górnym rogu
     Button:new(love.graphics.getWidth()/2 - 100, love.graphics.getHeight()/2 + 100, 200, 96, "Play", function() Menu:play() end), -- Przycisk "Play" na środku
-    TextInput:new(love.graphics.getWidth()/2 - 256, love.graphics.getHeight()/2 - 50, 512, 96, 16, "Nickname") -- Pole tekstowe na środku, wyżej niż przycisk "Play"
+    TextInput:new(love.graphics.getWidth()/2 - 224, love.graphics.getHeight()/2 - 50, 448, 96, 16, "Nickname") -- Pole tekstowe na środku, wyżej niż przycisk "Play"
 }
+function Menu:onResolutionChange()
+    Menu.buttons[2].x,Menu.buttons[2].y = love.graphics.getWidth()/2 - 100, love.graphics.getHeight()/2 + 100
+    Menu.buttons[3].x,Menu.buttons[3].y = love.graphics.getWidth()/2 - 224, love.graphics.getHeight()/2 - 50
+end
 local squareSize = 128
 local spacing = 10
 local startY = 100
@@ -46,7 +50,7 @@ end
 
 function Menu:touchpressed(id, x, y)
     for key, value in pairs(img) do
-        local startX = love.graphics.getWidth() - 200
+        local startX = love.graphics.getWidth() - 100
 
         local imgX = startX
         local imgY = startY + (key - 1) * (squareSize + spacing)
@@ -59,7 +63,7 @@ end
 function Menu:update(dt)
         -- Sprawdź, czy kliknięto na obrazek klasy postaci
         for key, value in pairs(img) do
-            local startX = love.graphics.getWidth() - 200
+            local startX = love.graphics.getWidth() - 100
     
             local imgX = startX
             local imgY = startY + (key - 1) * (squareSize + spacing)
@@ -82,13 +86,13 @@ function Menu:draw()
     end
     
     -- Wyświetl napis "Class" po prawej stronie
-    love.graphics.print("Class", love.graphics.getWidth() - 200, 20)
+    love.graphics.print("Class", love.graphics.getWidth() - 150, 20)
 
     -- Narysuj 3 kwadraty jeden pod drugim
 
     local i = 0
     for key, value in pairs(img) do
-        local x = love.graphics.getWidth() - 200
+        local x = love.graphics.getWidth() - 150
         local y = startY + (i) * (squareSize + spacing)
         love.graphics.draw(value, quad, x, y, 0, 4, 4)
         love.graphics.rectangle("line", x+offset, y+offset, squareSize, squareSize)

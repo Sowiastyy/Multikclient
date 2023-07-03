@@ -51,9 +51,16 @@ stats["testBoss2"] = {
 }
 local twinLogs =  love.graphics.newImage("img/logTwins.png")
 local twinLogsFrames = {}
-for x = 0, twinLogs:getWidth()/256-1 do
+for x = 0, twinLogs:getWidth()/172 do
     local quad = love.graphics.newQuad(x * 172 , 0, 172, 55, twinLogs:getWidth(), twinLogs:getHeight())
     table.insert(twinLogsFrames, quad) -- Dodanie quada do tablicy
+end
+local twinLog = love.graphics.newImage("img/LogTwin.png")
+local twinLogFrames = {}
+
+for x = 0, twinLogs:getWidth()/96 do
+    local quad = love.graphics.newQuad(x * 96 , 0, 96, 96, twinLog:getWidth(), twinLog:getHeight())
+    table.insert(twinLogFrames, quad) -- Dodanie quada do tablicy
 end
 stats["logTwins"] = {
     image = twinLogs,
@@ -62,13 +69,28 @@ stats["logTwins"] = {
     end,
     speed = 50,
     hp = 8000,
-    width =860,
-    height = 220,
-    bulletCollisionOffsetY = -20,
-    bulletCollisionOffsetX = 0,
-    offsetX = 0,
+    width =172*5,
+    height = 55*5,
+    bulletCollisionOffsetY = 20,
+    bulletCollisionOffsetX = -360,
+    offsetX = 72,
     offsetY = 0,
-    xp = 1200
+    xp = 100
+}
+stats["logTwin"] = {
+    image = twinLog,
+    drawableData = function (frame)
+        return twinLog, twinLogFrames[frame]
+    end,
+    speed = 60,
+    hp = 6000,
+    width =60*5,
+    height = 53*5,
+    bulletCollisionOffsetY = 0,
+    bulletCollisionOffsetX = -100,
+    offsetX = 36,
+    offsetY = 28,
+    xp = 1000
 }
 LoggerFrames = {}
 local i = 0
