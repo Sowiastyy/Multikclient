@@ -30,7 +30,7 @@ local tileMap = love.graphics.newSpriteBatch(tilesets[2], 1000)
 
 local widthRender = 40
 local heightRender =  22
-local objectRenderDistance = 1900
+local objectRenderDistance = 1800
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     widthRender = 20
     heightRender =  10
@@ -42,8 +42,6 @@ local function drawNearestTiles(playerX, playerY)
     gameMap.playerX=math.floor((playerX/64)-(widthRender/2))
     for y = gameMap.playerY, gameMap.playerY+heightRender do
         for x = gameMap.playerX, gameMap.playerX+widthRender do
-            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
-            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
             if tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]] then
                 tileMap:add(tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]], x*16, y*16)
             else
@@ -53,9 +51,6 @@ local function drawNearestTiles(playerX, playerY)
     end
     love.graphics.draw(tileMap)
     tileMap:clear()
-end
-local function getTilesetByGid(gid)
-    
 end
 local objects = {}
 ---hitboxes
@@ -79,7 +74,7 @@ function gameMap:getHitboxes(playerX, playerY)
                             x,
                             y-128,
                             0,
-                            5, 5
+                            4, 4
                         )
                     end
 
