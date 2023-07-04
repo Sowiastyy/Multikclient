@@ -20,6 +20,7 @@ for key, tileset in pairs(rawMap.tilesets) do
             tileset.tilewidth, tileset.tileheight,
             tileset.imagewidth, tileset.imageheight
         )
+        
             table.insert(tilesetsGids, tilesets[key])
             table.insert(tilesetsQuad, quad)
         end

@@ -3,9 +3,7 @@ local anim8 = require("lib.anim8")
 local Bullet = require("script.bullet")
 local Attack = require("script.bullet.attack")
 local client = require("script.client")
-local sti = require("lib/sti")
 local rawTiles = require("maps/mapa5").layers[1].data
-local gameMap = sti("maps/mapa5.lua")
 local inventory = require('script.inv')
 print("CLASS", CLASS)
 local LocalPlayer = Player:new(0, 0, 80, CLASS)
@@ -282,11 +280,11 @@ function LocalPlayer:speedChange()
     local y = math.floor(self.y/64)+1
     
     for key, value in pairs(speedUp) do
-        if rawTiles[1+(y*gameMap.layers[1].width+x)] == value  then
+        if rawTiles[1+(y*500+x)] == value  then
            self.spd = spd_based * 1.4
            
            break;
-        elseif rawTiles[1+(y*gameMap.layers[1].width+x)] == slowDown[key] then
+        elseif rawTiles[1+(y*500+x)] == slowDown[key] then
             self.spd = spd_based * 0.6
             animation = anim2
             offsetY = 28
