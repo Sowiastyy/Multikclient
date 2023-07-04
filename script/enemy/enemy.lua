@@ -40,6 +40,8 @@ function Enemy:draw(x, y)
         end
         local drawable, quad = stats[self.type].drawableData(self.frame)
         local quad2 = quad
+
+        --quad2:setViewport()
         
         love.graphics.draw(drawable, quad2, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
         local ox, oy = self.ox or 0, self.oy or 0

@@ -60,7 +60,7 @@ function gameMap:getHitboxes(playerX, playerY)
     for i, lay in ipairs(rawMap.layers) do
         if lay.type == "objectgroup" then
             for index, obj in ipairs(lay.objects) do
-                if obj.gid and (lay.name=="Drzewa" or lay.name=="Meble") then --gid oznacza ze ma image z grida (GRID ID)
+                if obj.gid and (lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3") then --gid oznacza ze ma image z grida (GRID ID)
                     obj.x=obj.x*4
                     obj.drawY = obj.y*4
                     obj.y=obj.drawY-48 -- we do this to fool sort method
@@ -77,6 +77,7 @@ function gameMap:getHitboxes(playerX, playerY)
                             4, 4
                         )
                     end
+                    
 
                     table.insert(objects, obj)
                 end
