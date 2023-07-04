@@ -173,6 +173,7 @@ function Game:update(dt)
             end
         end
         if LocalPlayer:checkBulletCollision(bullet) then
+            print("DEF HERE22", LocalPlayer.def)
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg * (100/(100+LocalPlayer.def))
             table.remove(EnemyBullets, key)
         end
