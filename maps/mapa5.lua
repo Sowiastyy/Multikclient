@@ -118,7 +118,7 @@ return {
       columns = 8,
       image = "../img/characters/newTile.png",
       imagewidth = 128,
-      imageheight = 64,
+      imageheight = 80,
       objectalignment = "unspecified",
       tilerendersize = "tile",
       fillmode = "stretch",
@@ -225,12 +225,12 @@ return {
           }
         }
       },
-      tilecount = 32,
+      tilecount = 40,
       tiles = {}
     },
     {
       name = "meble",
-      firstgid = 35,
+      firstgid = 43,
       class = "",
       tilewidth = 64,
       tileheight = 64,
@@ -259,7 +259,7 @@ return {
     },
     {
       name = "tavern",
-      firstgid = 52,
+      firstgid = 60,
       class = "",
       tilewidth = 256,
       tileheight = 256,
@@ -1462,7 +1462,7 @@ return {
           width = 256,
           height = 256,
           rotation = 0,
-          gid = 52,
+          gid = 60,
           visible = true,
           properties = {}
         }
@@ -1492,7 +1492,7 @@ return {
           width = 256,
           height = 256,
           rotation = 0,
-          gid = 53,
+          gid = 61,
           visible = true,
           properties = {}
         }
@@ -1504,7 +1504,7 @@ return {
       id = 11,
       name = "Tawerna3",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -1522,7 +1522,7 @@ return {
           width = 256,
           height = 256,
           rotation = 0,
-          gid = 54,
+          gid = 62,
           visible = true,
           properties = {}
         }
@@ -1552,7 +1552,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 35,
+          gid = 43,
           visible = true,
           properties = {}
         },
@@ -1566,7 +1566,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 36,
+          gid = 44,
           visible = true,
           properties = {}
         },
@@ -1580,7 +1580,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 37,
+          gid = 45,
           visible = true,
           properties = {}
         },
@@ -1594,7 +1594,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 38,
+          gid = 46,
           visible = true,
           properties = {}
         },
@@ -1608,7 +1608,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 39,
+          gid = 47,
           visible = true,
           properties = {}
         },
@@ -1622,7 +1622,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 40,
+          gid = 48,
           visible = true,
           properties = {}
         },
@@ -1636,7 +1636,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 41,
+          gid = 49,
           visible = true,
           properties = {}
         },
@@ -1650,7 +1650,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 42,
+          gid = 50,
           visible = true,
           properties = {}
         },
@@ -1664,7 +1664,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 43,
+          gid = 51,
           visible = true,
           properties = {}
         },
@@ -1678,7 +1678,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 44,
+          gid = 52,
           visible = true,
           properties = {}
         },
@@ -1692,7 +1692,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 45,
+          gid = 53,
           visible = true,
           properties = {}
         },
@@ -1706,7 +1706,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 46,
+          gid = 54,
           visible = true,
           properties = {}
         },
@@ -1720,7 +1720,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 47,
+          gid = 55,
           visible = true,
           properties = {}
         },
@@ -1734,7 +1734,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 48,
+          gid = 56,
           visible = true,
           properties = {}
         },
@@ -1748,7 +1748,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 49,
+          gid = 57,
           visible = true,
           properties = {}
         },
@@ -1762,7 +1762,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 50,
+          gid = 58,
           visible = true,
           properties = {}
         },
@@ -1776,7 +1776,7 @@ return {
           width = 64,
           height = 64,
           rotation = 0,
-          gid = 51,
+          gid = 59,
           visible = true,
           properties = {}
         },
@@ -1790,7 +1790,7 @@ return {
           width = 256,
           height = 256,
           rotation = 0,
-          gid = 52,
+          gid = 60,
           visible = true,
           properties = {}
         }

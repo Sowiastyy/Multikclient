@@ -78,6 +78,18 @@ function gameMap:getHitboxes(playerX, playerY)
                         )
                     end
                     
+                    for key, value in pairs(rawMap.tilesets) do
+                        if value.tiles[1] then
+                            if  value.tiles[1].objectGroup.draworder == "index" then
+                                obj.x = value.x * 4 + obj.x
+                                obj.y = value.y * 4 + obj.y
+                                obj.height = value.height
+                                obj.width = value.width
+                                print("Kochanie Duisa")
+                            end
+                        end
+                        
+                    end
 
                     table.insert(objects, obj)
                 end
