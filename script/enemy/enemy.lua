@@ -33,13 +33,7 @@ function Enemy:draw(x, y)
     x = x or self.x
     y = y or self.y
     x, y = x-(self.w/2), y-(self.h/2)+10
-    if drawBar then
-        love.graphics.setColor(1, 0, 0)
-        love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59, 9)
-        love.graphics.setColor(0, 1, 0)
-        love.graphics.rectangle("fill", x+((stats[self.type].image:getWidth()-60)/2)+1, y+stats[self.type].image:getHeight()+1, 59*(self.hp/stats[self.type].hp), 9)
-        love.graphics.setColor(1, 1, 1)
-    end
+
     if stats[self.type].drawableData then
         if self.rotate==-1 then
             x=x+160
@@ -48,6 +42,14 @@ function Enemy:draw(x, y)
         local quad2 = quad
         
         love.graphics.draw(drawable, quad2, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
+        local ox, oy = self.ox or 0, self.oy or 0
+        if drawBar then
+            love.graphics.setColor(1, 0, 0)
+            love.graphics.rectangle("fill", x-40+ox, y+oy, 59, 9)
+            love.graphics.setColor(0, 1, 0)
+            love.graphics.rectangle("fill", x-40+ox, y+oy, 59, 9)
+            love.graphics.setColor(1, 1, 1)
+        end
     else
         love.graphics.draw(stats[self.type].image, x, y)
     end

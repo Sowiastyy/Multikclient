@@ -1,30 +1,32 @@
-local sti = require("lib/sti")
+local gameMap = {}
+local rawMap = require("maps/mapa5")
+local rawTiles = rawMap.layers[1].data
 
-local gameMap = sti("maps/mapa5.lua")
-local rawTiles = require("maps/mapa5").layers[1].data
-local objectsSheet = love.graphics.newImage("maps/treeCooler.png")
-local objectsQuad = {}
-
-for x = 0, objectsSheet:getWidth()/32 do
-    local quad = love.graphics.newQuad(x * 32 , 0, 32, 32, objectsSheet:getWidth(), objectsSheet:getHeight())
-    table.insert(objectsQuad, quad) -- Dodanie quada do tablicy
-end
-
-local tileset = love.graphics.newImage("img/characters/newTile.png")
-local tilesetQuad = {{}, {}}
-local j = 0
-for y = 0, (tileset:getHeight()-16)/16 do
-    for x = 0, (tileset:getWidth()-16)/16 do
-        local quad = love.graphics.newQuad(x * 16 , y*16, 16, 16, tileset:getWidth(), tileset:getHeight())
-        j=j+1
-        table.insert(tilesetQuad, quad) -- Dodanie quada do tablicy
+local tilesets = {}
+local tilesetsQuad = {}
+local tilesetsGids = {}
+for key, tileset in pairs(rawMap.tilesets) do
+    if love.filesystem.getInfo(tileset.image) then
+        table.insert(tilesets, love.graphics.newImage(tileset.image))
+    elseif love.filesystem.getInfo("maps/"..tileset.image) then
+        table.insert(tilesets, love.graphics.newImage("maps/"..tileset.image))
+    elseif love.filesystem.getInfo(tileset.image:sub(4)) then
+        table.insert(tilesets, love.graphics.newImage(tileset.image:sub(4)))
+    end
+    for y = 0, (tileset.imageheight/tileset.tileheight)-1 do
+        for x = 0, (tileset.imagewidth/tileset.tilewidth)-1 do
+            local quad = love.graphics.newQuad(
+            x * tileset.tilewidth, y * tileset.tileheight,
+            tileset.tilewidth, tileset.tileheight,
+            tileset.imagewidth, tileset.imageheight
+        )
+            table.insert(tilesetsGids, tilesets[key])
+            table.insert(tilesetsQuad, quad)
+        end
     end
 end
-
-
-
-
-local tileMap = love.graphics.newSpriteBatch(tileset, 1000)
+--!tutaj id idzie do podmianki z zmiana mapy
+local tileMap = love.graphics.newSpriteBatch(tilesets[2], 1000)
 
 local widthRender = 40
 local heightRender =  22
@@ -42,48 +44,49 @@ local function drawNearestTiles(playerX, playerY)
         for x = gameMap.playerX, gameMap.playerX+widthRender do
             --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
             --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
-            if tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]] then
-                tileMap:add(tilesetQuad[rawTiles[1+(y*gameMap.layers[1].width+x)]], x*16, y*16)
+            if tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]] then
+                tileMap:add(tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]], x*16, y*16)
             else
-                tileMap:add(tilesetQuad[17], x*16, y*16)
+                tileMap:add(tilesetsQuad[17], x*16, y*16)
             end
         end
     end
     love.graphics.draw(tileMap)
     tileMap:clear()
 end
+local function getTilesetByGid(gid)
+    
+end
 local objects = {}
 ---hitboxes
 ---@return table hitboxes
 function gameMap:getHitboxes(playerX, playerY)
     local hitboxes = {}
-    if gameMap.layers["Drzewa"] then
-        for i, lay in ipairs(gameMap.layers) do
-            if lay.type == "objectgroup" then
-                for index, obj in ipairs(lay.objects) do
-                    if obj.gid and lay.name=="Drzewa" then --gid oznacza ze ma image z grida (GRID ID)
-                        obj.x=obj.x*4
-                        obj.drawY = obj.y*4
-                        obj.y=obj.drawY-48 -- we do this to fool sort method
-                        obj.h = obj.height
-                        obj.draw = function (self, x ,y)
-                            x = x or self.x
-                            y = y or self.drawY
-                            love.graphics.draw(
-                                objectsSheet,
-                                objectsQuad[self.gid],
-                                x,
-                                y-128,
-                                0,
-                                4, 4
-                            )
-                        end
+    for i, lay in ipairs(rawMap.layers) do
+        if lay.type == "objectgroup" then
+            for index, obj in ipairs(lay.objects) do
+                if obj.gid and (lay.name=="Drzewa" or lay.name=="Meble") then --gid oznacza ze ma image z grida (GRID ID)
+                    obj.x=obj.x*4
+                    obj.drawY = obj.y*4
+                    obj.y=obj.drawY-48 -- we do this to fool sort method
+                    obj.h = obj.height
+                    obj.draw = function (self, x ,y)
+                        x = x or self.x
+                        y = y or self.drawY
+                        love.graphics.draw(
+                            tilesetsGids[self.gid],
+                            tilesetsQuad[self.gid],
+                            x,
+                            y-128,
+                            0,
+                            5, 5
+                        )
+                    end
 
-                        table.insert(objects, obj)
-                    end
-                    if obj.name == "siema" then
-                        table.insert(hitboxes, obj)
-                    end
+                    table.insert(objects, obj)
+                end
+                if obj.name == "siema" then
+                    table.insert(hitboxes, obj)
                 end
             end
         end
@@ -92,7 +95,7 @@ function gameMap:getHitboxes(playerX, playerY)
         for x = 0, 499 do
             --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
             --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
-            if rawTiles[1+(y*gameMap.layers[1].width+x)] == 5 then
+            if rawTiles[1+(y*rawMap.layers[1].width+x)] == 5 then
                 table.insert(hitboxes, {
                     x=x*16-1,
                     y=y*16,
