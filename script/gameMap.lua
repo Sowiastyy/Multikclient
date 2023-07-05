@@ -1,7 +1,7 @@
 local gameMap = {}
 local rawMap = require("maps/mapa5")
 local rawTiles = rawMap.layers[1].data
-
+gameMap.hitboxes = {}
 local tilesets = {}
 local tilesetsQuad = {}
 local tilesetsGids = {}
@@ -23,6 +23,16 @@ for key, tileset in pairs(rawMap.tilesets) do
         
             table.insert(tilesetsGids, tilesets[key])
             table.insert(tilesetsQuad, quad)
+        end
+    end
+    if tileset.tiles[1] then
+        print("hitbox dodan")
+        for index, tile in pairs(tileset.tiles) do
+            for _, hitbox in pairs(tile.objectGroup.objects) do
+                print("hitbox",tile.id+tileset.firstgid, "width:"..hitbox.width)
+                
+                gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
+            end
         end
     end
 end
@@ -78,18 +88,16 @@ function gameMap:getHitboxes(playerX, playerY)
                             4, 4
                         )
                     end
-                    
-                    for key, value in pairs(rawMap.tilesets) do
-                        if value.tiles[1] then
-                            if  value.tiles[1].objectGroup.draworder == "index" and  value.tiles[1].objectGroup.objects[1].name == obj.name then
-                                obj.x = value.tiles[1].objectGroup.objects[1].x * 4 + obj.x
-                                obj.y = value.tiles[1].objectGroup.objects[1].y * 4 + obj.y
-                                obj.height = value.tiles[1].objectGroup.objects[1].height
-                                obj.width = value.tiles[1].objectGroup.objects[1].width
-                                print("Kochanie Duisa")
-                            end
-                        end
-                        
+
+                    if gameMap.hitboxes[obj.gid] then
+                        table.insert(
+                            hitboxes, {
+                            x=gameMap.hitboxes[obj.gid].x+ obj.x/4,
+                            y=gameMap.hitboxes[obj.gid].y-20 +obj.y/4,
+                            width=gameMap.hitboxes[obj.gid].width,
+                            height=gameMap.hitboxes[obj.gid].height
+                        }
+                    )
                     end
 
                     table.insert(objects, obj)
