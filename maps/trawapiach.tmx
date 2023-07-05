@@ -604,9 +604,15 @@
   <object id="94" gid="172" x="832" y="288" width="256" height="256"/>
  </objectgroup>
  <objectgroup id="10" name="Tawerna2">
+  <properties>
+   <property name="z" type="int" value="1"/>
+  </properties>
   <object id="95" gid="173" x="832" y="288" width="256" height="256"/>
  </objectgroup>
  <objectgroup id="11" name="Tawerna3" visible="0">
+  <properties>
+   <property name="z" type="int" value="2"/>
+  </properties>
   <object id="96" gid="174" x="832" y="288" width="256" height="256"/>
  </objectgroup>
  <objectgroup id="8" name="Meble">

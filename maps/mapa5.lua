@@ -1467,7 +1467,9 @@ return {
       offsety = 0,
       parallaxx = 1,
       parallaxy = 1,
-      properties = {},
+      properties = {
+        ["z"] = 1
+      },
       objects = {
         {
           id = 95,
@@ -1497,7 +1499,9 @@ return {
       offsety = 0,
       parallaxx = 1,
       parallaxy = 1,
-      properties = {},
+      properties = {
+        ["z"] = 2
+      },
       objects = {
         {
           id = 96,

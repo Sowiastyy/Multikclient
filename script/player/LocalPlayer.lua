@@ -37,7 +37,7 @@ local old_armor =  ""
 local def_based = 0
 
 local spd_based = 500
-
+LocalPlayer.z = 0
 local typeBullet= {}
 typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1, "warrior", 1}
 typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
