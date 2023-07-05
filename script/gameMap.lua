@@ -77,6 +77,7 @@ function gameMap:getHitboxes(playerX, playerY)
                     obj.x=obj.x*4
                     obj.drawY = obj.y*4
                     obj.y=obj.drawY-48 -- we do this to fool sort method
+                    obj.drawY=obj.drawY-(obj.height*4)
                     obj.h = obj.height
                     obj.z = lay.properties.z or 0
                     obj.draw = function (self, x ,y)
@@ -86,7 +87,7 @@ function gameMap:getHitboxes(playerX, playerY)
                             tilesetsGids[self.gid],
                             tilesetsQuad[self.gid],
                             x,
-                            y-128,
+                            y,
                             0,
                             4, 4
                         )
@@ -95,8 +96,8 @@ function gameMap:getHitboxes(playerX, playerY)
                     if gameMap.hitboxes[obj.gid] then
                         table.insert(
                             hitboxes, {
-                            x=gameMap.hitboxes[obj.gid].x+ obj.x/4,
-                            y=gameMap.hitboxes[obj.gid].y-20 +obj.y/4,
+                            x=gameMap.hitboxes[obj.gid].x+ (obj.x/4),
+                            y=gameMap.hitboxes[obj.gid].y+(obj.drawY/4),
                             width=gameMap.hitboxes[obj.gid].width,
                             height=gameMap.hitboxes[obj.gid].height
                         }
@@ -111,7 +112,7 @@ function gameMap:getHitboxes(playerX, playerY)
                                 tilesetsGids[self.gid],
                                 tilesetsQuad[self.gid],
                                 x,
-                                y-256,
+                                y,
                                 0,
                                 4, 4
                             )
@@ -126,7 +127,7 @@ function gameMap:getHitboxes(playerX, playerY)
                                 tilesetsGids[self.gid],
                                 tilesetsQuad[self.gid],
                                 x,
-                                y-640,
+                                y,
                                 0,
                                 4, 4
                             )
