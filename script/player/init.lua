@@ -19,6 +19,7 @@ function Player:new(x, y, size, hero)
     local player = {
         x = x,
         y = y,
+        z=0,
         size = size or 80,
         hero = hero,
         hp = 100,
@@ -155,6 +156,7 @@ function Player:fromString(str)
     self.hero = parts[7]
     self.rotate = tonumber(parts[8])
     self.frame =  tonumber(parts[9])
+    self.z =  tonumber(parts[10])
 end
 
 

@@ -2587,20 +2587,6 @@ return {
           gid = 156,
           visible = true,
           properties = {}
-        },
-        {
-          id = 103,
-          name = "",
-          type = "",
-          shape = "rectangle",
-          x = 1004.25,
-          y = 215.75,
-          width = 64,
-          height = 64,
-          rotation = 0,
-          gid = 158,
-          visible = true,
-          properties = {}
         }
       }
     },

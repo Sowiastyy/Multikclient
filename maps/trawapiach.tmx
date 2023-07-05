@@ -696,7 +696,6 @@
   </properties>
   <object id="100" gid="155" x="946.5" y="222.5" width="64" height="64"/>
   <object id="102" gid="156" x="941" y="230.5" width="64" height="64"/>
-  <object id="103" gid="158" x="1004.25" y="215.75" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="8" name="Meble">
   <object id="51" gid="155" x="288" y="126.25" width="64" height="64"/>

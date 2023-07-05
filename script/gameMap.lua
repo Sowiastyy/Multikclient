@@ -1,9 +1,15 @@
 local gameMap = {}
 local rawMap = require("maps/mapa5")
+local Zbox = require("script.gameMap.Zbox")
+local Zboxes = {
+Zbox:new(3680, 900, 100, 100, 0),Zbox:new(3680, 800, 100, 100, 1),
+Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1)
+}
 local rawTiles = rawMap.layers[1].data
 gameMap.hitboxes = {}
 local tilesets = {}
 local tilesetsQuad = {}
+
 local tilesetsGids = {}
 for key, tileset in pairs(rawMap.tilesets) do
     if love.filesystem.getInfo(tileset.image) then
@@ -31,7 +37,7 @@ for key, tileset in pairs(rawMap.tilesets) do
             for _, hitbox in pairs(tile.objectGroup.objects) do
                 print("hitbox",tile.id+tileset.firstgid, "width:"..hitbox.width)
                 
-                gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
+                --gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
             end
         end
     end
@@ -118,20 +124,11 @@ function gameMap:getHitboxes(playerX, playerY)
                             )
                         end
                     end
-                    if lay.name=="Tawerna2" then
+                    if lay.name=="Tawerna3" then
                         obj.y=-200
-                        obj.draw = function (self, x ,y)
-                            x = x or self.x
-                            y = y or self.drawY
-                            love.graphics.draw(
-                                tilesetsGids[self.gid],
-                                tilesetsQuad[self.gid],
-                                x,
-                                y,
-                                0,
-                                4, 4
-                            )
-                        end
+                    end
+                    if lay.name=="Tawerna2" then
+                        obj.y=-300
                     end
 
                     table.insert(objects, obj)
@@ -165,7 +162,6 @@ local function distanceTo(x1, y1, x2, y2)
     local dy = math.abs(y2 - y1)
     return (dx<objectRenderDistance and dy<objectRenderDistance)
 end
-
 local function sortowanie(...)
     gameMap.sort = {}
     local args = {...}
@@ -179,10 +175,12 @@ local function sortowanie(...)
     end
 
     table.sort(gameMap.sort, function(a, b)
-        --Im wiekszy y tym pozniej sie rysuje
-        return a.y < b.y
-    end
-    )
+        if a.z == b.z then
+            return a.y < b.y
+        else
+            return a.z < b.z
+        end
+    end)
     for _, value in ipairs(gameMap.sort) do
         value:draw()
     end
@@ -197,6 +195,10 @@ function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
     drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
     love.graphics.scale(0.25,0.25)
     sortowanie({LocalPlayer}, Enemies, Players, LootContainers, objects)
+    for _, value in pairs(Zboxes) do
+        value:update(LocalPlayer)
+        value:draw()
+    end
 end
 function gameMap:drawUnderthewater()
     if not gameMap.sort then

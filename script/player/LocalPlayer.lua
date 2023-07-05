@@ -37,7 +37,7 @@ local old_armor =  ""
 local def_based = 0
 
 local spd_based = 500
-LocalPlayer.z = 1
+LocalPlayer.z = 0
 local typeBullet= {}
 typeBullet["Warrior"] = {"warrior_spell", 3, "player", 0.1, "warrior", 1}
 typeBullet["Archer"] = {"archer_spell", 1 , "player" ,0 , "arrow", 4}
@@ -168,14 +168,17 @@ function LocalPlayer:draw(x, y)
 end
 
 function LocalPlayer:toString()
-    return string.format("PLAYER|%d|%d|%d|%f|%d|%s|%d|%d",
-        self.id, self.x, self.y, self.hp, self.size, self.hero, self.rotate, animation.position)
+    return string.format("PLAYER|%d|%d|%d|%f|%d|%s|%d|%d|%d",
+        self.id, self.x, self.y, self.hp, self.size, self.hero, self.rotate, animation.position, self.z)
 end
 
 ---comment
 function LocalPlayer:controller()
     local stateChanged = false
     local stateChanged2 = false
+    if love.keyboard.isDown("k") then
+        print(self.x, self.y)
+    end
     if love.keyboard.isDown("w") then
         stateChanged=true
         self.vy = -1 * self.spd
