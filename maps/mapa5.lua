@@ -9,8 +9,8 @@ return {
   height = 500,
   tilewidth = 16,
   tileheight = 16,
-  nextlayerid = 12,
-  nextobjectid = 100,
+  nextlayerid = 13,
+  nextobjectid = 104,
   properties = {},
   tilesets = {
     {
@@ -1431,7 +1431,7 @@ return {
       id = 9,
       name = "Tawerna",
       class = "",
-      visible = true,
+      visible = false,
       opacity = 1,
       offsetx = 0,
       offsety = 0,
@@ -1514,6 +1514,66 @@ return {
           height = 256,
           rotation = 0,
           gid = 174,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 12,
+      name = "Obiekty2",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {
+        ["z"] = 1
+      },
+      objects = {
+        {
+          id = 100,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 946.5,
+          y = 222.5,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 155,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 102,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 941,
+          y = 230.5,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 156,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 103,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 1004.25,
+          y = 215.75,
+          width = 64,
+          height = 64,
+          rotation = 0,
+          gid = 158,
           visible = true,
           properties = {}
         }

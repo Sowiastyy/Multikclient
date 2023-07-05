@@ -41,7 +41,7 @@ local tileMap = love.graphics.newSpriteBatch(tilesets[2], 1000)
 
 local widthRender = 40
 local heightRender =  22
-local objectRenderDistance = 1800
+local objectRenderDistance = 2000
 if love.system.getOS() == 'iOS' or love.system.getOS() == 'Android' then
     widthRender = 20
     heightRender =  10
@@ -71,11 +71,14 @@ function gameMap:getHitboxes(playerX, playerY)
     for i, lay in ipairs(rawMap.layers) do
         if lay.type == "objectgroup" then
             for index, obj in ipairs(lay.objects) do
-                if obj.gid and (lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3") then --gid oznacza ze ma image z grida (GRID ID)
+                if obj.gid and (
+                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2"
+                ) then --gid oznacza ze ma image z grida (GRID ID)
                     obj.x=obj.x*4
                     obj.drawY = obj.y*4
                     obj.y=obj.drawY-48 -- we do this to fool sort method
                     obj.h = obj.height
+                    obj.z = lay.properties.z or 0
                     obj.draw = function (self, x ,y)
                         x = x or self.x
                         y = y or self.drawY
@@ -98,6 +101,36 @@ function gameMap:getHitboxes(playerX, playerY)
                             height=gameMap.hitboxes[obj.gid].height
                         }
                     )
+                    end
+                    if lay.name=="Tawerna" then
+                        obj.draw = function (self, x ,y)
+                            x = x or self.x
+                            y = y or self.drawY
+                            if gameMap.playerZnormal~=0 then return end
+                            love.graphics.draw(
+                                tilesetsGids[self.gid],
+                                tilesetsQuad[self.gid],
+                                x,
+                                y-256,
+                                0,
+                                4, 4
+                            )
+                        end
+                    end
+                    if lay.name=="Tawerna2" then
+                        obj.y=-200
+                        obj.draw = function (self, x ,y)
+                            x = x or self.x
+                            y = y or self.drawY
+                            love.graphics.draw(
+                                tilesetsGids[self.gid],
+                                tilesetsQuad[self.gid],
+                                x,
+                                y-640,
+                                0,
+                                4, 4
+                            )
+                        end
                     end
 
                     table.insert(objects, obj)
@@ -137,13 +170,18 @@ local function sortowanie(...)
     local args = {...}
     for _, tab in pairs(args) do
         for _, value in pairs(tab) do
-            if distanceTo(value.x, value.y, gameMap.playerXnormal, gameMap.playerYnormal) then
+            if distanceTo(value.x, (value.drawY or value.y), gameMap.playerXnormal, gameMap.playerYnormal)
+            and gameMap.playerZnormal>=(value.z or 0) then
                 table.insert(gameMap.sort, value)
             end
         end
     end
 
-    table.sort(gameMap.sort, function(a, b) return a.y < b.y end)
+    table.sort(gameMap.sort, function(a, b)
+        --Im wiekszy y tym pozniej sie rysuje
+        return a.y < b.y
+    end
+    )
     for _, value in ipairs(gameMap.sort) do
         value:draw()
     end
@@ -152,7 +190,7 @@ local function sortowanie(...)
 end
 
 function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
-    gameMap.playerXnormal, gameMap.playerYnormal=LocalPlayer.x, LocalPlayer.y
+    gameMap.playerXnormal, gameMap.playerYnormal, gameMap.playerZnormal=LocalPlayer.x, LocalPlayer.y, LocalPlayer.z
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
     drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
