@@ -72,9 +72,9 @@ function gameMap:getHitboxes(playerX, playerY)
         if lay.type == "objectgroup" then
             for index, obj in ipairs(lay.objects) do
                 if obj.gid and (
-                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2"
+                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
                 ) then --gid oznacza ze ma image z grida (GRID ID)
-                    obj.x=obj.x*4
+                    obj.x=obj.x*4 
                     obj.drawY = obj.y*4
                     obj.y=obj.drawY-48 -- we do this to fool sort method
                     obj.h = obj.height
