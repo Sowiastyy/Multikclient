@@ -34,10 +34,10 @@ for key, tileset in pairs(rawMap.tilesets) do
     if tileset.tiles[1] then
         print("hitbox dodan")
         for index, tile in pairs(tileset.tiles) do
+            gameMap.hitboxes[tile.id+tileset.firstgid] = {}
             for _, hitbox in pairs(tile.objectGroup.objects) do
                 print("hitbox",tile.id+tileset.firstgid, "width:"..hitbox.width)
-                
-                gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
+                gameMap.hitboxes[tile.id+tileset.firstgid][hitbox.id]= hitbox
             end
         end
     end
@@ -104,18 +104,19 @@ function gameMap:getHitboxes(playerX, playerY)
                     end
 
                     if gameMap.hitboxes[obj.gid] then
-                        local xOffset = gameMap.hitboxes[obj.gid].x*(obj.scaleX/4)
-                        local yOffset = gameMap.hitboxes[obj.gid].y*(obj.scaleY/4)
-                        local width =gameMap.hitboxes[obj.gid].width*(obj.scaleX/4)
-                        local height =gameMap.hitboxes[obj.gid].height*(obj.scaleY/4)
-                        table.insert(
-                            hitboxes, {
-                            x=xOffset + (obj.x/4),
-                            y=yOffset+(obj.drawY/obj.scaleY),
-                            width=width,
-                            height=height
-                        }
-                    )
+                        for _, hitbox in pairs(gameMap.hitboxes[obj.gid]) do
+                            local xOffset = hitbox.x*(obj.scaleX/4)
+                            local yOffset = hitbox.y*(obj.scaleY/4)
+                            local width =hitbox.width*(obj.scaleX/4)
+                            local height =hitbox.height*(obj.scaleY/4)
+                            table.insert(
+                                hitboxes, {
+                                x=xOffset + (obj.x/4),
+                                y=yOffset+(obj.drawY/obj.scaleY),
+                                width=width,
+                                height=height
+                            })
+                        end 
                     end
                     if lay.name=="Tawerna" then
                         obj.draw = function (self, x ,y)
