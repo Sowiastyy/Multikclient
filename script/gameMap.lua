@@ -82,7 +82,7 @@ function gameMap:getHitboxes(playerX, playerY)
                 ) then --gid oznacza ze ma image z grida (GRID ID)
                     obj.x=obj.x*4 
                     obj.drawY = obj.y*4
-                    obj.y=obj.drawY-48 -- we do this to fool sort method
+                    obj.y=obj.drawY-(obj.height*1.5)-- we do this to fool sort method
                     obj.drawY=obj.drawY-(obj.height*4)
                     obj.h = obj.height
                     obj.z = lay.properties.z or 0
@@ -175,6 +175,8 @@ local function sortowanie(...)
     end
 
     table.sort(gameMap.sort, function(a, b)
+        a.z = a.z or 0
+        b.z = b.z or 0
         if a.z == b.z then
             return a.y < b.y
         else
