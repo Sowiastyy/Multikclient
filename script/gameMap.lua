@@ -119,6 +119,7 @@ function gameMap:getHitboxes(playerX, playerY)
                         end 
                     end
                     if lay.name=="Tawerna" then
+                        obj.y=obj.y-200
                         obj.draw = function (self, x ,y)
                             x = x or self.x
                             y = y or self.drawY
