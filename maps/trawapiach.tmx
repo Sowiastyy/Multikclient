@@ -47,8 +47,22 @@
  <tileset firstgid="172" name="tavern" tilewidth="256" tileheight="256" tilecount="3" columns="3">
   <image source="../img/tawerna.png" width="768" height="256"/>
   <tile id="0">
+   <objectgroup draworder="index" id="2">
+    <object id="1" x="44.375" y="190" width="44.5" height="9"/>
+   </objectgroup>
+  </tile>
+  <tile id="1">
    <objectgroup draworder="index" id="3">
-    <object id="2" x="34" y="65.3333" width="186.667" height="137.667"/>
+    <object id="2" x="43.3333" y="187.667" width="46" height="11.3333"/>
+    <object id="4" x="108.182" y="189.273" width="109.273" height="10.1818"/>
+    <object id="5" x="176.545" y="199.273" width="30.9091" height="2.54545"/>
+    <object id="7" x="214.182" y="136.909" width="4.18182" height="51.4545"/>
+    <object id="8" x="189.091" y="150.364" width="4.54545" height="20.1818"/>
+    <object id="9" x="217.818" y="71.0909" width="10.1818" height="107.455"/>
+    <object id="11" x="206.909" y="77.8182" width="9.63636" height="44.9091"/>
+    <object id="15" x="147.818" y="78.5455" width="68.9091" height="13.6364"/>
+    <object id="17" x="41.75" y="60.5" width="178.5" height="24"/>
+    <object id="21" x="42.75" y="83.75" width="5.25" height="103.25"/>
    </objectgroup>
   </tile>
  </tileset>
@@ -676,19 +690,19 @@
   <object id="90" name="tree2" gid="2" x="512.909" y="402" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="Tawerna" visible="0">
-  <object id="94" gid="172" x="832" y="288" width="256" height="256"/>
+  <object id="94" gid="172" x="792" y="320" width="320" height="320"/>
  </objectgroup>
  <objectgroup id="10" name="Tawerna2">
   <properties>
    <property name="z" type="int" value="1"/>
   </properties>
-  <object id="95" gid="173" x="832" y="288" width="256" height="256"/>
+  <object id="95" gid="173" x="792" y="320" width="320" height="320"/>
  </objectgroup>
  <objectgroup id="11" name="Tawerna3" visible="0">
   <properties>
    <property name="z" type="int" value="2"/>
   </properties>
-  <object id="96" gid="174" x="832" y="288" width="256" height="256"/>
+  <object id="96" gid="174" x="792" y="320" width="320" height="320"/>
  </objectgroup>
  <objectgroup id="12" name="Obiekty2">
   <properties>

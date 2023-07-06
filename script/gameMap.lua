@@ -37,7 +37,7 @@ for key, tileset in pairs(rawMap.tilesets) do
             for _, hitbox in pairs(tile.objectGroup.objects) do
                 print("hitbox",tile.id+tileset.firstgid, "width:"..hitbox.width)
                 
-                --gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
+                gameMap.hitboxes[tile.id+tileset.firstgid]= hitbox
             end
         end
     end
@@ -80,10 +80,14 @@ function gameMap:getHitboxes(playerX, playerY)
                 if obj.gid and (
                     lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
                 ) then --gid oznacza ze ma image z grida (GRID ID)
-                    obj.x=obj.x*4 
-                    obj.drawY = obj.y*4
+                    local qx, qy, qw, qh = tilesetsQuad[obj.gid]:getViewport()
+                    obj.scaleX = (obj.width/qw)*4
+                    obj.scaleY = (obj.height/qh)*4
+                    print(lay.name, obj.scaleX, obj.scaleY)
+                    obj.x=obj.x*4
+                    obj.drawY = obj.y*obj.scaleX
                     obj.y=obj.drawY-(obj.height*1.5)-- we do this to fool sort method
-                    obj.drawY=obj.drawY-(obj.height*4)
+                    obj.drawY=obj.drawY-(obj.height*obj.scaleY)
                     obj.h = obj.height
                     obj.z = lay.properties.z or 0
                     obj.draw = function (self, x ,y)
@@ -95,17 +99,21 @@ function gameMap:getHitboxes(playerX, playerY)
                             x,
                             y,
                             0,
-                            4, 4
+                            self.scaleX, self.scaleY
                         )
                     end
 
                     if gameMap.hitboxes[obj.gid] then
+                        local xOffset = gameMap.hitboxes[obj.gid].x*(obj.scaleX/4)
+                        local yOffset = gameMap.hitboxes[obj.gid].y*(obj.scaleY/4)
+                        local width =gameMap.hitboxes[obj.gid].width*(obj.scaleX/4)
+                        local height =gameMap.hitboxes[obj.gid].height*(obj.scaleY/4)
                         table.insert(
                             hitboxes, {
-                            x=gameMap.hitboxes[obj.gid].x+ (obj.x/4),
-                            y=gameMap.hitboxes[obj.gid].y+(obj.drawY/4),
-                            width=gameMap.hitboxes[obj.gid].width,
-                            height=gameMap.hitboxes[obj.gid].height
+                            x=xOffset + (obj.x/4),
+                            y=yOffset+(obj.drawY/obj.scaleY),
+                            width=width,
+                            height=height
                         }
                     )
                     end
@@ -120,7 +128,7 @@ function gameMap:getHitboxes(playerX, playerY)
                                 x,
                                 y,
                                 0,
-                                4, 4
+                                self.scaleX, self.scaleY
                             )
                         end
                     end
