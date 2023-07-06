@@ -151,9 +151,26 @@ function gameMap:getHitboxes(playerX, playerY)
     end
     for y = 0, 499 do
         for x = 0, 499 do
+            local id =1+(y*rawMap.layers[1].width+x)
+            local gid = rawTiles[id]
             --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
             --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
-            if rawTiles[1+(y*rawMap.layers[1].width+x)] == 5 then
+            if gameMap.hitboxes[gid] then
+                for _, hitbox in pairs(gameMap.hitboxes[gid]) do
+                    local xOffset = hitbox.x
+                    local yOffset = hitbox.y
+                    local width =hitbox.width
+                    local height =hitbox.height
+                    table.insert(
+                        hitboxes, {
+                        x=xOffset + (x*16),
+                        y=yOffset+ (y*16),
+                        width=width,
+                        height=height
+                    })
+                end 
+            end
+            if gid == 5 then
                 table.insert(hitboxes, {
                     x=x*16-1,
                     y=y*16,
