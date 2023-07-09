@@ -49,12 +49,12 @@ stats["testBoss2"] = {
     offsetY = 81,
     xp = 3000
 }
-local clubMan = love.graphics.newImage("img/cyclop_enemy/clubman.png")
-local clubManFrames = {}
+local cyclops = love.graphics.newImage("img/cyclop_enemy/cyclops.png")
+local cyclopsFrames = {}
 
-for x = 2, clubMan:getWidth()/32 do
-    local quad = love.graphics.newQuad(x * 32 , 0, 32, 32, clubMan:getWidth(), clubMan:getHeight())
-    table.insert(clubManFrames, quad) -- Dodanie quada do tablicy
+for x = 0, cyclops:getWidth()/32 do
+    local quad = love.graphics.newQuad(x * 32 , 0, 32, 32, cyclops:getWidth(), cyclops:getHeight())
+    table.insert(cyclopsFrames, quad) -- Dodanie quada do tablicy
 end
 
 local twinLogs =  love.graphics.newImage("img/logTwins.png")
@@ -171,9 +171,21 @@ stats["PimpLogger"] = {
     xp = 200
 }
 stats["Club"] = {
-    image = clubMan,
+    image = cyclops,
     drawableData = function (frame)
-        return clubMan, clubManFrames[frame]
+        return cyclops, cyclopsFrames[frame]
+    end,
+    hp = 450,
+    width = 80,
+    height = 85,
+    bulletCollisionOffsetY = 40,
+    bulletCollisionOffsetX = 0,
+    xp = 200
+}
+stats["Jumper"] = {
+    image = cyclops,
+    drawableData = function (frame)
+        return cyclops, cyclopsFrames[frame+5]
     end,
     hp = 450,
     width = 80,

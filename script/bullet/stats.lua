@@ -170,4 +170,15 @@ stats["magic_bullet_boss"] = {
     height=4,
     updatePattern = "returnBack"
 }
+stats["Club"] = {
+    speed=700,
+    damage=20,
+    life=1,
+    xoffset=0,
+    yoffset=1,
+    width=8,
+    height=6,
+    img=2,
+    updatePattern = "speedUp"
+}
 return stats
