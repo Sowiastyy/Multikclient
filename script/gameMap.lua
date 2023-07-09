@@ -5,6 +5,29 @@ local Zboxes = {
 Zbox:new(3680, 900, 100, 100, 0),Zbox:new(3680, 800, 100, 100, 1),
 Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1)
 }
+function table_to_json(t, indent)
+    indent = indent or ""
+    if type(t) ~= "table" then
+        if type(t) == "string" then
+            return string.format("%q", t)
+        else
+            return tostring(t)
+        end
+    else
+        local isArray = #t > 0
+        local json = isArray and "[\n" or "{\n"
+        local indent2 = indent .. "  "
+        for k, v in pairs(t) do
+            if not isArray then
+                json = json .. indent2 .. '"' .. k .. '": '
+            end
+            json = json .. table_to_json(v, indent2) .. ",\n"
+        end
+        json = json:sub(1, -3) .. "\n" .. indent .. (isArray and "]" or "}")
+        return json
+    end
+end
+
 local rawTiles = rawMap.layers[1].data
 gameMap.hitboxes = {}
 local tilesets = {}
@@ -144,6 +167,7 @@ function gameMap:getHitboxes(playerX, playerY)
                     table.insert(objects, obj)
                 end
                 if obj.name == "siema" then
+                    obj.properties = nil
                     table.insert(hitboxes, obj)
                 end
             end
@@ -181,7 +205,11 @@ function gameMap:getHitboxes(playerX, playerY)
             
         end
     end
+    --local file = io.open('gameMap.json', 'w')
+    --file:write(table_to_json(hitboxes))
+    --file:close()
     return hitboxes
+
 end
 
 local function distanceTo(x1, y1, x2, y2)
