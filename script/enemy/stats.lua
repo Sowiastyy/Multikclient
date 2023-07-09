@@ -49,6 +49,14 @@ stats["testBoss2"] = {
     offsetY = 81,
     xp = 3000
 }
+local clubMan = love.graphics.newImage("img/cyclop_enemy/clubman.png")
+local clubManFrames = {}
+
+for x = 2, clubMan:getWidth()/32 do
+    local quad = love.graphics.newQuad(x * 32 , 0, 32, 32, clubMan:getWidth(), clubMan:getHeight())
+    table.insert(clubManFrames, quad) -- Dodanie quada do tablicy
+end
+
 local twinLogs =  love.graphics.newImage("img/logTwins.png")
 local twinLogsFrames = {}
 for x = 0, twinLogs:getWidth()/172 do
@@ -154,6 +162,18 @@ stats["PimpLogger"] = {
     image = loggerSheet,
     drawableData = function (frame)
         return loggerSheet, LoggerFrames[frame+6]
+    end,
+    hp = 450,
+    width = 80,
+    height = 85,
+    bulletCollisionOffsetY = 40,
+    bulletCollisionOffsetX = 0,
+    xp = 200
+}
+stats["Club"] = {
+    image = clubMan,
+    drawableData = function (frame)
+        return clubMan, clubManFrames[frame]
     end,
     hp = 450,
     width = 80,
