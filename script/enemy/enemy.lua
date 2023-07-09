@@ -94,6 +94,7 @@ function Enemy:fromString(str)
     self.type = parts[6]
     self.rotate = tonumber(parts[7])
     self.frame = tonumber(parts[8])
+    self.z = tonumber(parts[9])
     self.w = stats[self.type or "testEnemy"].width
     self.h = stats[self.type or "testEnemy"].height
     self.bulletCollisionOffsetY = stats[self.type or "testEnemy"].bulletCollisionOffsetY

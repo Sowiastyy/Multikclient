@@ -179,6 +179,11 @@ function LocalPlayer:controller()
     if love.keyboard.isDown("k") then
         print(self.x, self.y)
     end
+    if love.keyboard.isDown("h") then
+        spd_based = 5000
+    else
+        spd_based =500
+    end
     if love.keyboard.isDown("w") then
         stateChanged=true
         self.vy = -1 * self.spd

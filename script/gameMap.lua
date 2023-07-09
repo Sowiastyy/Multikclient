@@ -2,7 +2,7 @@ local gameMap = {}
 local rawMap = require("maps/mapa5")
 local Zbox = require("script.gameMap.Zbox")
 local Zboxes = {
-Zbox:new(3680, 900, 100, 100, 0),Zbox:new(3680, 800, 100, 100, 1),
+Zbox:new(3580, 900, 100, 100, 0),Zbox:new(3580, 800, 100, 100, 1),
 Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1)
 }
 function table_to_json(t, indent)
@@ -55,7 +55,6 @@ for key, tileset in pairs(rawMap.tilesets) do
         end
     end
     if tileset.tiles[1] then
-        print("hitbox dodan")
         for index, tile in pairs(tileset.tiles) do
             gameMap.hitboxes[tile.id+tileset.firstgid] = {}
             for _, hitbox in pairs(tile.objectGroup.objects) do
@@ -101,7 +100,7 @@ function gameMap:getHitboxes(playerX, playerY)
         if lay.type == "objectgroup" then
             for index, obj in ipairs(lay.objects) do
                 if obj.gid and (
-                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
+                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Obiekty3" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
                 ) then --gid oznacza ze ma image z grida (GRID ID)
                     local qx, qy, qw, qh = tilesetsQuad[obj.gid]:getViewport()
                     obj.scaleX = (obj.width/qw)*4
@@ -111,6 +110,7 @@ function gameMap:getHitboxes(playerX, playerY)
                     obj.drawY = obj.y*obj.scaleX
                     obj.y=obj.drawY-(obj.height*1.5)-- we do this to fool sort method
                     obj.drawY=obj.drawY-(obj.height*obj.scaleY)
+
                     obj.h = obj.height
                     obj.z = lay.properties.z or 0
                     obj.draw = function (self, x ,y)
@@ -140,6 +140,9 @@ function gameMap:getHitboxes(playerX, playerY)
                                 height=height
                             })
                         end 
+                    end
+                    if lay.name=="Obiekty3" then
+                        obj.drawY=obj.drawY-100
                     end
                     if lay.name=="Tawerna" then
                         obj.y=obj.y-200
