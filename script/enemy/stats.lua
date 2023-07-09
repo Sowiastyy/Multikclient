@@ -176,8 +176,8 @@ stats["Club"] = {
         return cyclops, cyclopsFrames[frame]
     end,
     hp = 450,
-    width = 80,
-    height = 85,
+    width = 32,
+    height = 32,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
     xp = 200
@@ -188,8 +188,20 @@ stats["Jumper"] = {
         return cyclops, cyclopsFrames[frame+5]
     end,
     hp = 450,
-    width = 80,
-    height = 85,
+    width = 32,
+    height = 32,
+    bulletCollisionOffsetY = 40,
+    bulletCollisionOffsetX = 0,
+    xp = 200
+}
+stats["Roller"] = {
+    image = cyclops,
+    drawableData = function (frame)
+        return cyclops, cyclopsFrames[frame+11]
+    end,
+    hp = 450,
+    width = 32,
+    height = 32,
     bulletCollisionOffsetY = 40,
     bulletCollisionOffsetX = 0,
     xp = 200
