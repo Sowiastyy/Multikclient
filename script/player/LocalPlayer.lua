@@ -72,7 +72,7 @@ function LocalPlayer:xpAdd(x, y, type)
     x = tonumber(x)
     y = tonumber(y)
     if self.x - 1500 < x and self.x + 1500 > x and self.y - 1500 < y and self.y + 1500 > y then
-        self.xp = self.xp + enemy[type].xp
+        self.xp = self.xp + (enemy[type].xp*2)
     end
     
 end

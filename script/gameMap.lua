@@ -3,7 +3,9 @@ local rawMap = require("maps/mapa5")
 local Zbox = require("script.gameMap.Zbox")
 local Zboxes = {
 Zbox:new(3580, 900, 100, 100, 0),Zbox:new(3580, 800, 100, 100, 1),
-Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1)
+Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1),
+
+Zbox:new(30035,  22537, 100, 100, 0),Zbox:new(30035,  22437, 100, 100, -1)
 }
 function table_to_json(t, indent)
     indent = indent or ""
@@ -100,7 +102,7 @@ function gameMap:getHitboxes(playerX, playerY)
         if lay.type == "objectgroup" then
             for index, obj in ipairs(lay.objects) do
                 if obj.gid and (
-                    lay.name=="Drzewa" or lay.name=="Meble" or lay.name=="Obiekty3" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
+                    lay.name=="Drzewa" or lay.name=="underground" or lay.name=="Meble" or lay.name=="Obiekty3" or lay.name=="Tawerna" or lay.name=="Tawerna2" or lay.name=="Tawerna3" or lay.name=="Obiekty2" or lay.name== "caveprops"
                 ) then --gid oznacza ze ma image z grida (GRID ID)
                     local qx, qy, qw, qh = tilesetsQuad[obj.gid]:getViewport()
                     obj.scaleX = (obj.width/qw)*4
@@ -143,7 +145,7 @@ function gameMap:getHitboxes(playerX, playerY)
                         end 
                     end
                     if lay.name=="Obiekty3" then
-                        obj.drawY=obj.drawY-50
+                        obj.drawY=obj.drawY-(obj.drawY/obj.scaleY)
                     end
                     if lay.name=="Tawerna" then
                         obj.y=obj.y-200
@@ -151,6 +153,22 @@ function gameMap:getHitboxes(playerX, playerY)
                             x = x or self.x
                             y = y or self.drawY
                             if gameMap.playerZnormal~=0 then return end
+                            love.graphics.draw(
+                                tilesetsGids[self.gid],
+                                tilesetsQuad[self.gid],
+                                x,
+                                y,
+                                0,
+                                self.scaleX, self.scaleY
+                            )
+                        end
+                    end
+                    if lay.name=="underground" then
+                        obj.y=obj.y-10000
+                        obj.draw = function (self, x ,y)
+                            x = x or self.x
+                            y = y or self.drawY
+                            if gameMap.playerZnormal>=0 then return end
                             love.graphics.draw(
                                 tilesetsGids[self.gid],
                                 tilesetsQuad[self.gid],
@@ -253,7 +271,10 @@ function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
     gameMap.playerXnormal, gameMap.playerYnormal, gameMap.playerZnormal=LocalPlayer.x, LocalPlayer.y, LocalPlayer.z
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
-    drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
+    if LocalPlayer.z>=0 then
+        drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
+    end
+
     love.graphics.scale(0.25,0.25)
     sortowanie({LocalPlayer}, Enemies, Players, LootContainers, objects)
     for _, value in pairs(Zboxes) do
