@@ -12,7 +12,12 @@ Game.chat = require("script.chat")
 local gui = require("script.gui")
 require("script.helpers")
 local client = require("script.client")
-local world = require("lib.windfield").newWorld(0, 0)
+local wf = require("lib.windfield")
+local world = {}
+world[-1] = wf.newWorld(0, 0)
+world[0] = wf.newWorld(0, 0)
+world[1] = wf.newWorld(0, 0)
+world[2] = wf.newWorld(0, 0)
 -- main.lua
 local inventory = require('script.inv')
 
@@ -35,6 +40,7 @@ end
 local MobileController
 local mobileController
 local mobileController2
+local lastZ = 0
 if mobile then
     MobileController = require("script.player.mobileController")
     mobileController = MobileController:new()
@@ -59,12 +65,12 @@ end
 LocalPlayer.shootMobile = LocalPlayer.shoot
 local gameMap = require("script.gameMap")
 
-local PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
+local PlayerCollider = world[LocalPlayer.z]:newBSGRectangleCollider(610, 400, 30, 10,1)
 PlayerCollider:setFixedRotation(true)
 local walls = {}
 
 for index, obj in ipairs(gameMap:getHitboxes(LocalPlayer.x, LocalPlayer.y)) do
-    local wall = world:newRectangleCollider(obj.x*4, obj.y*4, obj.width*4, obj.height*4)
+    local wall = world[(obj.z or 0)]:newRectangleCollider(obj.x*4, obj.y*4, obj.width*4, obj.height*4)
     wall:setType('static')
     table.insert(walls,wall)
 end
@@ -173,7 +179,6 @@ function Game:update(dt)
             end
         end
         if LocalPlayer:checkBulletCollision(bullet) then
-            print("DEF HERE22", LocalPlayer.def)
             LocalPlayer.hp = LocalPlayer.hp - bullet.dmg * (100/(100+LocalPlayer.def))
             table.remove(EnemyBullets, key)
         end
@@ -203,16 +208,27 @@ function Game:update(dt)
     updateBullets(EnemyBullets, dt)
 
     cam:lookAt(LocalPlayer.x, LocalPlayer.y)
+
     if LocalPlayer.hp<0 then
         PlayerCollider:destroy()
-        PlayerCollider = world:newBSGRectangleCollider(610, 400, 30, 10,1)
+        LocalPlayer.z = 0
+        PlayerCollider = world[LocalPlayer.z]:newBSGRectangleCollider(610, 400, 30, 10,1)
         PlayerCollider:setFixedRotation(true)
         LocalPlayer.hp = 100
     end
-    world:update(dt)
+    world[LocalPlayer.z]:update(dt)
     PlayerCollider:setLinearVelocity(LocalPlayer.vx,LocalPlayer.vy)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-38
+    if LocalPlayer.z~=lastZ then
+        print("PRZELSZE")
+        local xColl = PlayerCollider:getX()-15
+        local yColl = PlayerCollider:getY()
+        PlayerCollider:destroy()
+        PlayerCollider = world[LocalPlayer.z]:newBSGRectangleCollider(xColl, yColl, 30, 10,1)
+        PlayerCollider:setFixedRotation(true)
+    end
+    lastZ=LocalPlayer.z
 end
 function Game:draw()
     cam:attach()
@@ -222,7 +238,6 @@ function Game:draw()
         drawObjectsArray(AllyBullets)
         drawObjectsArray(EnemyBullets)
         Bullet:drawBatch()
-        --world:draw()
     cam:detach()
     gui:draw()
     Game.chat:draw()

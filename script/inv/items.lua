@@ -78,7 +78,7 @@ local items  = {
         name="stafft3",
         class="Wizard",
         --Attack
-        dmg=16,
+        dmg=20,
         bulletType="wizard",
         count = 2,
         spread = 0.1,
@@ -133,5 +133,4 @@ local items  = {
     }),
 
 }
-print("check2", items.bowt1.stats.bulletType)
 return items

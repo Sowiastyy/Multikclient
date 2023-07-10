@@ -23,6 +23,7 @@ end
 
 function ZBox:update(Player)
     if Player:checkBulletCollision(self) then
+        Player.y=Player.y-(10*(Player.z-self.zChange))
         Player.z = self.zChange
     end
 end

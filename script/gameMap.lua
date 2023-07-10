@@ -137,12 +137,13 @@ function gameMap:getHitboxes(playerX, playerY)
                                 x=xOffset + (obj.x/4),
                                 y=yOffset+(obj.drawY/obj.scaleY),
                                 width=width,
-                                height=height
+                                height=height,
+                                z=obj.z
                             })
                         end 
                     end
                     if lay.name=="Obiekty3" then
-                        obj.drawY=obj.drawY-100
+                        obj.drawY=obj.drawY-50
                     end
                     if lay.name=="Tawerna" then
                         obj.y=obj.y-200

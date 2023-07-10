@@ -1111,7 +1111,7 @@
  </objectgroup>
  <objectgroup id="15" name="Obiekty3">
   <properties>
-   <property name="z" type="int" value="0"/>
+   <property name="z" type="int" value="2"/>
   </properties>
   <object id="255" gid="162" x="990.727" y="172.545" width="80" height="80"/>
   <object id="257" gid="165" x="955.756" y="197.568" width="80" height="80"/>

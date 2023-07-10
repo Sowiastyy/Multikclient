@@ -5884,7 +5884,7 @@ return {
       parallaxx = 1,
       parallaxy = 1,
       properties = {
-        ["z"] = 0
+        ["z"] = 2
       },
       objects = {
         {
