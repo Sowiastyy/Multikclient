@@ -31,11 +31,48 @@ function table_to_json(t, indent)
 end
 
 local rawTiles = rawMap.layers[1].data
+local undergroundTiles =  rawMap.layers[2].data
 gameMap.hitboxes = {}
 local tilesets = {}
 local tilesetsQuad = {}
+local undertileMap = {}
 
 local tilesetsGids = {}
+local function loadTilesHitboxes(hitboxes, tiles, z)
+    for y = 0, 499 do
+        for x = 0, 499 do
+            local id =1+(y*rawMap.layers[1].width+x)
+            local gid = tiles[id]
+            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
+            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
+            if gameMap.hitboxes[gid] then
+                for _, hitbox in pairs(gameMap.hitboxes[gid]) do
+                    local xOffset = hitbox.x
+                    local yOffset = hitbox.y
+                    local width =hitbox.width
+                    local height =hitbox.height
+                    table.insert(
+                        hitboxes, {
+                        x=xOffset + (x*16),
+                        y=yOffset+ (y*16),
+                        width=width,
+                        height=height,
+                        z = z or 0
+                    })
+                end 
+            end
+            if gid == 5 then
+                table.insert(hitboxes, {
+                    x=x*16-1,
+                    y=y*16,
+                    width = 16-1,
+                    height = 16 
+            })
+            end
+            
+        end
+    end
+end
 for key, tileset in pairs(rawMap.tilesets) do
     if love.filesystem.getInfo(tileset.image) then
         table.insert(tilesets, love.graphics.newImage(tileset.image))
@@ -43,6 +80,9 @@ for key, tileset in pairs(rawMap.tilesets) do
         table.insert(tilesets, love.graphics.newImage("maps/"..tileset.image))
     elseif love.filesystem.getInfo(tileset.image:sub(4)) then
         table.insert(tilesets, love.graphics.newImage(tileset.image:sub(4)))
+    end
+    if tileset.name=="newDung" then
+        undertileMap = love.graphics.newSpriteBatch(tilesets[key], 1000)
     end
     for y = 0, (tileset.imageheight/tileset.tileheight)-1 do
         for x = 0, (tileset.imagewidth/tileset.tilewidth)-1 do
@@ -67,8 +107,7 @@ for key, tileset in pairs(rawMap.tilesets) do
     end
 end
 --!tutaj id idzie do podmianki z zmiana mapy
-local tileMap = love.graphics.newSpriteBatch(tilesets[2], 1000)
-
+local tileMap0 = love.graphics.newSpriteBatch(tilesets[2], 1000)
 local widthRender = 40
 local heightRender =  22
 local objectRenderDistance = 2000
@@ -81,12 +120,20 @@ end
 local function drawNearestTiles(playerX, playerY)
     gameMap.playerY=math.floor((playerY/64)-(heightRender/2))
     gameMap.playerX=math.floor((playerX/64)-(widthRender/2))
+    local tiles = rawTiles
+    local tileMap = tileMap0
+    local placeholder = 17
+    if gameMap.playerZnormal<0 then
+        tiles=undergroundTiles
+        tileMap = undertileMap
+        placeholder = 0
+    end
     for y = gameMap.playerY, gameMap.playerY+heightRender do
         for x = gameMap.playerX, gameMap.playerX+widthRender do
-            if tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]] then
-                tileMap:add(tilesetsQuad[rawTiles[1+(y*rawMap.layers[1].width+x)]], x*16, y*16)
-            else
-                tileMap:add(tilesetsQuad[17], x*16, y*16)
+            if tilesetsQuad[tiles[1+(y*rawMap.layers[1].width+x)]] then
+                tileMap:add(tilesetsQuad[tiles[1+(y*rawMap.layers[1].width+x)]], x*16, y*16)
+            elseif placeholder>0 then
+                tileMap:add(tilesetsQuad[placeholder], x*16, y*16)
             end
         end
     end
@@ -195,38 +242,8 @@ function gameMap:getHitboxes(playerX, playerY)
             end
         end
     end
-    for y = 0, 499 do
-        for x = 0, 499 do
-            local id =1+(y*rawMap.layers[1].width+x)
-            local gid = rawTiles[id]
-            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
-            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
-            if gameMap.hitboxes[gid] then
-                for _, hitbox in pairs(gameMap.hitboxes[gid]) do
-                    local xOffset = hitbox.x
-                    local yOffset = hitbox.y
-                    local width =hitbox.width
-                    local height =hitbox.height
-                    table.insert(
-                        hitboxes, {
-                        x=xOffset + (x*16),
-                        y=yOffset+ (y*16),
-                        width=width,
-                        height=height
-                    })
-                end 
-            end
-            if gid == 5 then
-                table.insert(hitboxes, {
-                    x=x*16-1,
-                    y=y*16,
-                    width = 16-1,
-                    height = 16 
-            })
-            end
-            
-        end
-    end
+    loadTilesHitboxes(hitboxes, rawTiles, 0)
+    loadTilesHitboxes(hitboxes, undergroundTiles, -1)
     --local file = io.open('gameMap.json', 'w')
     --file:write(table_to_json(hitboxes))
     --file:close()
@@ -271,10 +288,7 @@ function gameMap:draw(LocalPlayer, Enemies, Players, LootContainers)
     gameMap.playerXnormal, gameMap.playerYnormal, gameMap.playerZnormal=LocalPlayer.x, LocalPlayer.y, LocalPlayer.z
     love.graphics.scale(4,4)
     --gameMap:drawLayer(gameMap.layers[1])
-    if LocalPlayer.z>=0 then
-        drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
-    end
-
+    drawNearestTiles(LocalPlayer.x, LocalPlayer.y)
     love.graphics.scale(0.25,0.25)
     sortowanie({LocalPlayer}, Enemies, Players, LootContainers, objects)
     for _, value in pairs(Zboxes) do
