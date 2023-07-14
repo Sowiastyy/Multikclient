@@ -213,4 +213,14 @@ stats["Club"] = {
     img=2,
     updatePattern = "speedUp"
 }
+stats["Roller"] = {
+    speed=300,
+    damage=20,
+    life=2,
+    xoffset=0,
+    yoffset=1,
+    width=64,
+    height=64,
+    img=2,
+}
 return stats
