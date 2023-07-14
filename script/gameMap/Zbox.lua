@@ -24,12 +24,12 @@ end
 function ZBox:update(Player)
     if Player:checkBulletCollision(self) then
         Player.y=Player.y-(10*(Player.z-self.zChange))
-        Player.z = self.zChange
         if self.zChange<0 then
             love.graphics.setBackgroundColor(0, 0, 0)
         else
             love.graphics.setBackgroundColor(0.29, 0.55, 0.62)
         end
+        Player.z = self.zChange
     end
 end
 

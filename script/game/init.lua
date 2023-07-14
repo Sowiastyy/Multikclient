@@ -79,6 +79,9 @@ local function getEntity(s)
     if s:find("^ENEMY") then
         local newEnemyData= Enemy:new(0)
         newEnemyData:fromString(s)
+        if newEnemyData.z~=LocalPlayer.z then
+            return
+        end
         Enemies[newEnemyData.id]=newEnemyData
         if Enemies[newEnemyData.id].hp<=0 then
             table.remove(Enemies, newEnemyData.id)
@@ -93,6 +96,14 @@ local function getEntity(s)
         end
     elseif s:find("^ATTACK") then
         local bullets = Attack(s)
+        if bullets[1] then
+            if bullets[1].z then
+                if bullets[1].z~=LocalPlayer.z then
+                    return
+                end
+            end
+        end
+
         for _, newBulletData in ipairs(bullets) do
             local parts = {}
             for part in newBulletData.parent:gmatch("([^|]+)") do
@@ -221,7 +232,6 @@ function Game:update(dt)
     LocalPlayer.x = PlayerCollider:getX()
     LocalPlayer.y = PlayerCollider:getY()-38
     if LocalPlayer.z~=lastZ then
-        print("PRZELSZE")
         local xColl = PlayerCollider:getX()-15
         local yColl = PlayerCollider:getY()
         PlayerCollider:destroy()

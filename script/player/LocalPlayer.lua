@@ -125,7 +125,7 @@ function LocalPlayer:useSpell(LocalBullets, dt)
             attackFrom["click"] = {self.x + x - 0.5*love.graphics.getWidth(), self.y + y - love.graphics.getHeight()*0.5} 
 
             local angle = Bullet:getAngle(0.5*love.graphics.getWidth(), love.graphics.getHeight()*0.5, x, y )
-            local bullet = Bullet:new( attackFrom[typeBullet[self.hero][3]][1], attackFrom[typeBullet[self.hero][3]][2] , angle, "plr|"..self.id, typeBullet[self.hero][1])
+            local bullet = Bullet:new( attackFrom[typeBullet[self.hero][3]][1], attackFrom[typeBullet[self.hero][3]][2] , angle, "plr|"..self.id, typeBullet[self.hero][1], self.z)
             local bullets = Attack(bullet, "shotgun", {count=typeBullet[self.hero][2], spread=typeBullet[self.hero][4]}) 
             for _, bullet in ipairs(bullets) do
                 client:send(bullet:toString())
@@ -253,10 +253,10 @@ function LocalPlayer:shoot(LocalBullets, dt, condition, presetAngle)
                 angle = presetAngle
             end
 
-            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, "nut" )
+            local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, "nut", self.z)
             local bullets = Attack(bullet, "shotgun", {count=1 , spread=0.1})
             if self.weapon then
-                local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, self.weapon.bulletType )
+                local bullet = Bullet:new(self.x, self.y, angle, "plr|"..THIS_ID, self.weapon.bulletType, self.z)
                 bullets = Attack(bullet, "shotgun", {count=self.weapon.count , spread=0.1})
             end
             

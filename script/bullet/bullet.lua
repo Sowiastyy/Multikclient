@@ -12,11 +12,36 @@ local quad = {
     love.graphics.newQuad(32, 0, 6, 4, bulletIMG:getDimensions()),
     love.graphics.newQuad(40, 0, 8, 7, bulletIMG:getDimensions()),
     love.graphics.newQuad(48, 0, 5, 3, bulletIMG:getDimensions()),
+
+    love.graphics.newQuad(0, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(8, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(16, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(24, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(32, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(40, 8, 8, 8, bulletIMG:getDimensions()),
+    love.graphics.newQuad(48, 8, 8, 8, bulletIMG:getDimensions()),
+
+    love.graphics.newQuad(0, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(8, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(16, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(24, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(32, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(40, 16+2, 8, 3, bulletIMG:getDimensions()),
+    love.graphics.newQuad(48, 16+2, 8, 3, bulletIMG:getDimensions()),
+
+    love.graphics.newQuad(0, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(8, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(16, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(24, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(32, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(40, 24+2, 7, 4, bulletIMG:getDimensions()),
+    love.graphics.newQuad(48, 24+2, 7, 4, bulletIMG:getDimensions()),
 }
-function Bullet:new(x, y, angle, parent, type)
+function Bullet:new(x, y, angle, parent, type, z)
     local bullet = {
     x = x,
     y = y,
+    z = z or 0,
     ox = x, --Origin X
     oy= y, --Origin Y
     angle = angle,
@@ -53,7 +78,7 @@ end
 
 local scale = 4
 function Bullet:draw()
-    bulletBatch:add(quad[stats[self.type].img], self.x, self.y, self.angle, scale, scale)
+    bulletBatch:add(quad[stats[self.type].img], self.x, self.y, self.angle+(stats[self.type].rot or 0), scale, scale)
 end
 function Bullet:drawBatch()
     love.graphics.draw(bulletBatch)
@@ -61,7 +86,7 @@ function Bullet:drawBatch()
 end
 
 function Bullet:toString()
-    return string.format("BULLET|%f|%f|%f|%s|%s", self.x, self.y, self.angle, self.type, self.parent)
+    return string.format("BULLET|%f|%f|%f|%s|%s|%d", self.x, self.y, self.angle, self.type, self.parent, self.z)
 end
 
 function Bullet:fromString(str)
@@ -75,6 +100,7 @@ function Bullet:fromString(str)
     self.angle = tonumber(parts[4])
     self.type = parts[5]
     self.parent = parts[6]
+    self.z = tonumber(parts[7] or 0)
     self.w = stats[self.type or "basic"].width
     self.h = stats[self.type or "basic"].height
     self.life = stats[self.type or "basic"].life

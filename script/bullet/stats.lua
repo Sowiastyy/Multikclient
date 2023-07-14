@@ -7,9 +7,40 @@ stats["warrior"] = {
     yoffset=3,
     width=8,
     height=2,
-    img=1,
+    img=8,
     --updatePattern = "sideToSide"
 }
+for i = 1, 6 do
+    stats["swordt"..i] = {
+        speed=400,
+        damage=30,
+        life=0.7,
+        xoffset=0,
+        yoffset=3,
+        width=8,
+        height=2,
+        img=7+i,
+        rot=0.78
+    }
+    stats["bowt"..i] = {
+        speed=1000,
+        damage=4,
+        life=1,
+        width=8,
+        height=3,
+        updatePattern = "slowDown",
+        img=14+i,
+    }
+    stats["stafft"..i] = {
+        speed=400,
+        damage=12,
+        life=1.2,
+        width=7,
+        height=4,
+        --updatePattern = "returnBack"
+        img=21+i,
+    }
+end
 stats["warrior_spell"] = {
     speed=500,
     damage=100,
@@ -104,6 +135,7 @@ stats["arrow"] = {
     img=3,
     updatePattern = "slowDown"
 }
+
 stats["magic_bullet"] = {
     speed=200,
     damage=12,

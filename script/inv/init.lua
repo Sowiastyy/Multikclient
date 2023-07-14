@@ -26,6 +26,10 @@ equipment.slots[2].type = "armor"
 --Adding the items to inventory
 storage:setItem(Items.stafft6, 2)
 storage:setItem(Items.togat6, 3)
+storage:setItem(Items.swordt6, 4)
+storage:setItem(Items.heavyt6, 5)
+storage:setItem(Items.leathert6, 6)
+storage:setItem(Items.bowt6, 7)
 storage:setItem(Items.bowt2, 1)
 equipment:setItem(Items.bowt1, 1)
 --Setting fields in Player for stats

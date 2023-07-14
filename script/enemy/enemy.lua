@@ -42,8 +42,12 @@ function Enemy:draw(x, y)
         local quad2 = quad
 
         --quad2:setViewport()
-        
-        love.graphics.draw(drawable, quad2, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
+        if quad then
+            love.graphics.draw(drawable, quad2, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
+        else
+            love.graphics.draw(drawable, x-40, y, 0, self.rotate*5, 5,self.ox,self.oy)
+        end
+
         local ox, oy = self.ox or 0, self.oy or 0
         if drawBar then
             love.graphics.setColor(1, 0, 0)
@@ -94,7 +98,7 @@ function Enemy:fromString(str)
     self.type = parts[6]
     self.rotate = tonumber(parts[7])
     self.frame = tonumber(parts[8])
-    self.z = tonumber(parts[9])
+    self.z = tonumber(parts[9] or 0)
     self.w = stats[self.type or "testEnemy"].width
     self.h = stats[self.type or "testEnemy"].height
     self.bulletCollisionOffsetY = stats[self.type or "testEnemy"].bulletCollisionOffsetY

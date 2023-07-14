@@ -204,5 +204,8 @@ local items  = {
 }
 for key, value in pairs(items) do
     value.stats.name = key
+    if value.type=="weapon" then
+        value.stats.bulletType = key
+    end
 end
 return items

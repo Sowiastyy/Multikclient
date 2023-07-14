@@ -4,8 +4,7 @@ local Zbox = require("script.gameMap.Zbox")
 local Zboxes = {
 Zbox:new(3580, 900, 100, 100, 0),Zbox:new(3580, 800, 100, 100, 1),
 Zbox:new(4090, 650, 100, 100, 2),Zbox:new(4090, 750, 100, 100, 1),
-
-Zbox:new(30035,  22537, 100, 100, 0),Zbox:new(30035,  22437, 100, 100, -1)
+Zbox:new(30080,  22550, 100, 50, 0),Zbox:new(30080,  22400, 100, 50, -1)
 }
 function table_to_json(t, indent)
     indent = indent or ""
@@ -299,6 +298,11 @@ end
 function gameMap:drawUnderthewater()
     if not gameMap.sort then
         return
+    end
+    if gameMap.playerZnormal then
+        if gameMap.playerZnormal<0 then
+            return
+        end
     end
     love.graphics.push()
     love.graphics.scale(1, -1) -- This flips the Y-axis

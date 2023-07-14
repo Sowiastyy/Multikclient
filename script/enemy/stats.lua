@@ -32,7 +32,10 @@ stats["testBoss"] = {
     hp = 5000,
     width = 114,
     height = 138,
-    xp = 600
+    xp = 600,
+    drawableData = function (frame)
+        return love.graphics.newImage("img/bossTest.png"), nil
+    end,
 }
 stats["testBoss2"] = {
     image = cyklop,

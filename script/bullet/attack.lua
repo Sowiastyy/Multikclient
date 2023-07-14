@@ -1,10 +1,10 @@
 local Bullet = require("script.bullet")
 local attacks = {
-    shotgun = function (x, y, angle, parent, bulletType, spread, count)
+    shotgun = function (x, y, angle, parent, bulletType, spread, count, z)
         local bullets = {}
         for i = 1, count do
             local bulletAngle = angle + ((i-(count+1)/2)-spread) * spread
-            table.insert(bullets, Bullet:new(x, y, bulletAngle, parent, bulletType))
+            table.insert(bullets, Bullet:new(x, y, bulletAngle, parent, bulletType, z))
         end
         return bullets
     end
@@ -25,7 +25,8 @@ local function Attack_fromString(str)
     local attackType = parts[8]
     local spread = tonumber(parts[9])
     local count = tonumber(parts[10])
-    return attacks[attackType](x, y, angle, parent, bulletType, spread, count)
+    local z = tonumber(parts[11])
+    return attacks[attackType](x, y, angle, parent, bulletType, spread, count, z)
 end
 local function Attack(bullet, typeAtttack, settings)
     if type(bullet)=="string" then

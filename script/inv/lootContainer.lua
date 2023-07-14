@@ -25,7 +25,7 @@ function TableConcat(t1,t2)
 end
 local chosen = 1
 -- Constructor for the LootContainer
-function LootContainer.new(id, x, y, quadID, slotTable)
+function LootContainer.new(id, x, y, quadID, slotTable, z)
     local instance = {}
     setmetatable(instance, LootContainer)
     
@@ -40,7 +40,7 @@ function LootContainer.new(id, x, y, quadID, slotTable)
     instance.h = 80
     instance.xOffset = 0
     instance.yOffset = -20
-
+    instance.z = z or 0
     instance.slotTable = SlotTable.new(50, 200, 64, 0, 2, 4) -- Example values\f
     if slotTable then
         instance.stringTable= slotTable
@@ -74,7 +74,6 @@ end
 function LootContainer:draw(x, y)
     x = x or self.x
     y = y or self.y
-    love.graphics.rectangle('line', x+self.xOffset, y+self.yOffset, self.width, self.height)
     love.graphics.draw(spritesheet, quads[self.quadID], x, y+self.yOffset, 0, 4, 4)
 end
 function LootContainer:setData(key, slotTable)
@@ -102,7 +101,7 @@ function LootContainer.sendData(key)
 
 end
 function LootContainer:toString()
-    local str = "LOOT|"..self.id.."|"..self.x.."|"..self.y.."|"..self.quadID
+    local str = "LOOT|"..self.id.."|"..self.x.."|"..self.y.."|"..self.z.."|"..self.quadID
     for key, value in pairs(self.slotTable.items) do
         if value.stats then
             str = str .. "|"..value.stats.name
@@ -128,13 +127,15 @@ function LootContainer.fromString(str)
     table.remove(values, 1)
     local x = tonumber(values[1])
     local y = tonumber(values[2])
-    local quadID = tonumber(values[3]) -- convert to int as quadID is an int
+    local z = tonumber(values[3])
+    local quadID = tonumber(values[4]) -- convert to int as quadID is an int
 
     -- Remove these from the values table so that only items remain
     table.remove(values, 1)
     table.remove(values, 1)
     table.remove(values, 1)
-    LootContainer.new(id, x, y, quadID, values)
+    table.remove(values, 1)
+    LootContainer.new(id, x, y, quadID, values, z)
 end
 
 -- Return the LootContainer class
