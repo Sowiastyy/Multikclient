@@ -13,11 +13,11 @@ local j = 0
     end
 
 
-
+local testEnemy = love.graphics.newImage("img/crang_kun.png")
 stats["testEnemy"] = {
     bulletCollisionOffsetY = 0,
     bulletCollisionOffsetX = 0,
-    image = love.graphics.newImage("img/crang_kun.png"),
+    image = testEnemy,
     speed = 100,
     hp = 200,
     width = 133,
@@ -26,15 +26,16 @@ stats["testEnemy"] = {
     offsetY = 0,
     xp = 20
 }
+local bossTest = love.graphics.newImage("img/bossTest.png")
 stats["testBoss"] = {
-    image = love.graphics.newImage("img/bossTest.png"),
+    image = bossTest,
     speed = 50,
     hp = 5000,
     width = 114,
     height = 138,
     xp = 600,
     drawableData = function (frame)
-        return love.graphics.newImage("img/bossTest.png"), nil
+        return bossTest, nil
     end,
 }
 stats["testBoss2"] = {

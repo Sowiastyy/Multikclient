@@ -37,41 +37,78 @@ local tilesetsQuad = {}
 local undertileMap = {}
 
 local tilesetsGids = {}
+local function mergeWithExistingRectangle(hitboxes, new_rect)
+    local epsilon = 0.01  -- Choose an appropriate value for your use case
+
+    for i = 1, #hitboxes do
+        local old_rect = hitboxes[i]
+
+        -- Check if rectangles can be merged horizontally
+        if old_rect.y == new_rect.y and old_rect.height == new_rect.height and 
+        (old_rect.x + old_rect.width == new_rect.x or new_rect.x + new_rect.width == old_rect.x) then
+            local merged_rect = {
+                x = math.min(old_rect.x, new_rect.x),
+                y = old_rect.y, -- As both y are same
+                width = old_rect.width + new_rect.width,
+                height = old_rect.height, -- As both heights are same
+                z = old_rect.z -- Assuming z remains the same in a merged rectangle
+            }
+            hitboxes[i] = merged_rect -- Replace old rectangle with the merged one
+            return true -- Rectangle merged successfully
+        end
+
+        -- Check if rectangles can be merged vertically
+        if math.abs(old_rect.x - new_rect.x) < epsilon and old_rect.width == new_rect.width and
+        (old_rect.y + old_rect.height == new_rect.y or new_rect.y + new_rect.height == old_rect.y) then
+            local merged_rect = {
+                x = old_rect.x, -- As both x are same
+                y = math.min(old_rect.y, new_rect.y),
+                width = old_rect.width, -- As both widths are same
+                height = old_rect.height + new_rect.height,
+                z = old_rect.z -- Assuming z remains the same in a merged rectangle
+            }
+            hitboxes[i] = merged_rect -- Replace old rectangle with the merged one
+            return true -- Rectangle merged successfully
+        end
+    end
+
+    return false -- No successful merge
+end
+
+
 local function loadTilesHitboxes(hitboxes, tiles, z)
     for y = 0, 499 do
         for x = 0, 499 do
-            local id =1+(y*rawMap.layers[1].width+x)
+            local id = 1 + (y * rawMap.layers[1].width + x)
             local gid = tiles[id]
-            --gameMap.layers[1].data[y*gameMap.layers[1].width+x]
-            --print("TILE", rawTiles[1+(y*gameMap.layers[1].width+x)])
+
             if gameMap.hitboxes[gid] then
                 for _, hitbox in pairs(gameMap.hitboxes[gid]) do
                     local xOffset = hitbox.x
                     local yOffset = hitbox.y
-                    local width =hitbox.width
-                    local height =hitbox.height
-                    table.insert(
-                        hitboxes, {
-                        x=xOffset + (x*16),
-                        y=yOffset+ (y*16),
-                        width=width,
-                        height=height,
+                    local width = hitbox.width
+                    local height = hitbox.height
+                    local new_rect = {
+                        x = math.ceil(xOffset + (x * 16)),
+                        y = math.ceil(yOffset + (y * 16)),
+                        width = math.ceil(width),
+                        height = math.ceil(height),
                         z = z or 0
-                    })
-                end 
+                    }
+
+                    -- Attempt to merge the new rectangle with an existing one
+                    if not mergeWithExistingRectangle(hitboxes, new_rect) then
+                        -- If no successful merge, add the new rectangle to the table
+                        table.insert(hitboxes, new_rect)
+                    end
+                end
             end
-            if gid == 5 then
-                table.insert(hitboxes, {
-                    x=x*16-1,
-                    y=y*16,
-                    width = 16-1,
-                    height = 16 
-            })
-            end
-            
         end
     end
 end
+
+
+
 for key, tileset in pairs(rawMap.tilesets) do
     if love.filesystem.getInfo(tileset.image) then
         table.insert(tilesets, love.graphics.newImage(tileset.image))
@@ -153,7 +190,6 @@ function gameMap:getHitboxes(playerX, playerY)
                     local qx, qy, qw, qh = tilesetsQuad[obj.gid]:getViewport()
                     obj.scaleX = (obj.width/qw)*4
                     obj.scaleY = (obj.height/qh)*4
-                    print(lay.name, obj.scaleX, obj.scaleY)
                     obj.x=obj.x*4
                     obj.drawY = obj.y*obj.scaleX
                     obj.y=obj.drawY-(obj.height*1.5)-- we do this to fool sort method
